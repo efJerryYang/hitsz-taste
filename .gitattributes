@@ -1,0 +1,11 @@
+# Set the text encoding for all text files
+*.txt text=auto
+
+# Set the line endings for all text files in the src/ directory
+src/*.txt eol=lf
+
+# Set the merge strategy for the LICENSE file
+LICENSE merge=union
+
+# Set the diff algorithm for the src/models/ directory
+src/models/* diff=myers
