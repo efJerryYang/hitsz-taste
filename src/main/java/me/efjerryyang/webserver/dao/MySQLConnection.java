@@ -1,49 +1,70 @@
 package me.efjerryyang.webserver.dao;
 
-import org.springframework.beans.factory.annotation.Value;
+import me.efjerryyang.webserver.ApplicationProperties;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.sql.DataSource;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.Key;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Base64;
-import java.util.Properties;
 
 
 @Component
 public class MySQLConnection {
 
-    @Value("${database.driver}")
-    private String databaseDriver;
+    private final ApplicationProperties applicationProperties;
 
-    @Value("${database.url}")
-    private String databaseUrl;
+    private final String databaseDriver;
 
-    @Value("${database.username}")
-    private String databaseUsername;
+    private final String databaseUrl;
 
-    @Value("${database.password}")
-    private String encryptedPassword;
+    private final String databaseUsername;
 
-    @Value("${database.")
+    private final String databasePassword;
 
+    private final String keyString;
+
+    private final String iv;
     // The JDBC connection object
     private Connection connection;
 
-    public MySQLConnection() {
+    public MySQLConnection(ApplicationProperties applicationProperties) throws IOException, SQLException {
+        this.applicationProperties = applicationProperties;
+
+        this.databaseDriver = applicationProperties.getDriverClassName();
+        System.out.println("databaseDriver: " + databaseDriver);
+
+        this.databaseUrl = applicationProperties.getDatabaseUrl();
+        System.out.println("databaseUrl: " + databaseUrl);
+
+        this.databaseUsername = applicationProperties.getDatabaseUsername();
+        System.out.println("databaseUsername: " + databaseUsername);
+
+        this.databasePassword = applicationProperties.getDatabasePassword();
+        System.out.println("databasePassword: " + databasePassword);
+
+        this.keyString = applicationProperties.getKey();
+        System.out.println("keyString: " + keyString);
+
+        this.iv = applicationProperties.getIv();
+        System.out.println("iv: " + iv);
         // Load the JDBC driver class
         try {
-            Class.forName(databaseDriver);
+            Class.forName(this.databaseDriver);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
+
+        // Create a connection to the MySQL server using the DriverManager class
+        connection = DriverManager.getConnection(this.databaseUrl, this.databaseUsername, this.databasePassword);
     }
+
 
     public Connection getConnection(DataSource dataSource) throws SQLException {
         if (connection == null) {
@@ -56,12 +77,10 @@ public class MySQLConnection {
 
         if (connection == null) {
             try {
-                String encryptedPassword = System.getenv("ENCRYPTED_PASSWORD");
-                String decryptedPassword = decryptPassword(encryptedPassword);
+            String encryptedPassword = System.getenv("ENCRYPTED_PASSWORD");
+            String decryptedPassword = decryptPassword(encryptedPassword);
                 Class.forName(databaseDriver);
-                connection = DriverManager.getConnection(
-                        databaseUrl, databaseUsername, decryptedPassword
-                );
+                connection = DriverManager.getConnection(databaseUrl, databaseUsername, decryptedPassword);
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -72,17 +91,7 @@ public class MySQLConnection {
     }
 
     public String decryptPassword(String encryptedPassword) throws Exception {
-        // Read the key from the application.properties file
-        // Create a new Properties instance
 
-        Properties properties = new Properties();
-
-        // Load the properties file
-        properties.load(new FileInputStream("application.properties"));
-
-        // Get the value of the "database.password" property
-        String keyString = properties.getProperty("database.key");
-        String iv = properties.getProperty("database.iv");
 
         byte[] keyBytes = Base64.getDecoder().decode(keyString);
         Key key = new SecretKeySpec(keyBytes, "AES");

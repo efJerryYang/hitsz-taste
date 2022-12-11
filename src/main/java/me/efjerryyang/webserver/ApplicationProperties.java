@@ -3,6 +3,7 @@ package me.efjerryyang.webserver;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Component;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -36,6 +37,10 @@ public class ApplicationProperties {
 
     @Value("${spring.datasource.password}")
     private String databasePassword;
+
+
+    public ApplicationProperties() {
+    }
 
     public int getPort() {
         System.out.println("port: " + port);
