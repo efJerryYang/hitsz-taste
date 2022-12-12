@@ -12,7 +12,7 @@ public class UserController {
         this.userDAO = userDAO;
     }
 
-    public User getUserById(long id) throws SQLException {
+    public User getUserById(Long id) throws SQLException {
         return userDAO.getUserById(id);
     }
 }

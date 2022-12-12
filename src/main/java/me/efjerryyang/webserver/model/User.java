@@ -1,7 +1,7 @@
 package me.efjerryyang.webserver.model;
 
 public class User {
-    private long userId;
+    private Long userId;
     private String name;
     private String phone;
     private String password;
@@ -11,7 +11,7 @@ public class User {
     public User(){
 
     }
-    public User(long userId, String name, String phone, String password, String address, String email) {
+    public User(Long userId, String name, String phone, String password, String address, String email) {
         this.userId = userId;
         this.name = name;
         this.phone = phone;
@@ -20,7 +20,7 @@ public class User {
         this.email = email;
     }
 
-    public long getUserId() {
+    public Long getUserId() {
         return userId;
     }
 
@@ -44,7 +44,7 @@ public class User {
         return email;
     }
 
-    public void setUserId(long userId) {
+    public void setUserId(Long userId) {
         this.userId = userId;
     }
 
