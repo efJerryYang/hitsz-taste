@@ -18,8 +18,8 @@ public class UserDAO {
 
     @Autowired
     public UserDAO(MySQLConnection mySQLConnection) throws SQLException {
-        System.out.println("hello world");
         this.mysqlConnection = mySQLConnection;
+        logger.debug("Obtaining connection to database");
         this.connection = mySQLConnection.getConnection();
     }
 
@@ -52,6 +52,7 @@ public class UserDAO {
         String sql = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, address = ? WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the user in the SQL statement
+            logger.debug("Setting user values in SQL statement: name = {}, email = {}, password = {}, phone = {}, address = {}, user_id = {}, active = {}", user.getName(), user.getEmail(), user.getPassword(), user.getPhone(), user.getAddress(), user.getUserId(), user.getIsActive());
             statement.setObject(1, user.getName());
             statement.setObject(2, user.getEmail());
             statement.setObject(3, user.getPassword());
@@ -84,10 +85,10 @@ public class UserDAO {
         }
     }
 
-    public User activeUserById(Long userId){
+    public User activeUserById(Long userId) {
         logger.info("Activating user with id {}", userId);
         String sql = "UPDATE users SET active = true WHERE user_id= ?";
-        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, userId);
             statement.executeUpdate();
             logger.info("Successfully active user with id {}", userId);
@@ -99,10 +100,10 @@ public class UserDAO {
         return new User();
     }
 
-    public User disableUserById(Long userId){
+    public User disableUserById(Long userId) {
         logger.info("Disabling user with id {}", userId);
         String sql = "UPDATE users SET active = false WHERE user_id= ?";
-        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, userId);
             statement.executeUpdate();
             logger.info("Successfully disabled user with id {}", userId);
@@ -138,8 +139,7 @@ public class UserDAO {
         logger.info("Getting all users from database");
         String sql = "SELECT * FROM users";
         List<User> users = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(sql);
-             ResultSet resultSet = statement.executeQuery()) {
+        try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 User user = getUserFromResultSet(resultSet);
                 users.add(user);
