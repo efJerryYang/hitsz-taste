@@ -1,7 +1,6 @@
 package me.efjerryyang.webserver;
 
 import lombok.Data;
-import lombok.ToString;
 import me.efjerryyang.webserver.util.CryptoUtilAES;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
