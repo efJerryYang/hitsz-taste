@@ -2,6 +2,8 @@ package me.efjerryyang.webserver.dao;
 
 import me.efjerryyang.webserver.ApplicationProperties;
 import me.efjerryyang.webserver.util.CryptoUtilAES;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,7 @@ import java.sql.SQLException;
 @Component
 public class MySQLConnection {
 
+    private static Logger logger = LoggerFactory.getLogger(MySQLConnection.class);
     private final ApplicationProperties applicationProperties;
 
     private final String databaseDriver;
@@ -30,22 +33,12 @@ public class MySQLConnection {
 
     @Autowired
     public MySQLConnection(ApplicationProperties applicationProperties) throws IOException, SQLException {
-        System.out.println("===================== In MySQLConnection <Constructor> =====================");
         this.applicationProperties = applicationProperties;
         this.databaseDriver = applicationProperties.getDriverClassName();
-        System.out.println("databaseDriver: " + databaseDriver);
-
         this.databaseUrl = applicationProperties.getDatabaseUrl();
-        System.out.println("databaseUrl: " + databaseUrl);
-
         this.databaseUsername = applicationProperties.getDatabaseUsername();
-        System.out.println("databaseUsername: " + databaseUsername);
-
         this.keyString = applicationProperties.getKey();
-        System.out.println("keyString: " + keyString);
-
         this.iv = applicationProperties.getIv();
-        System.out.println("iv: " + iv);
         // Load the JDBC driver class
         try {
             Class.forName(this.databaseDriver);
@@ -63,16 +56,18 @@ public class MySQLConnection {
     }
 
     public Connection getConnection() throws SQLException {
+        logger.debug("Creating connection to database: {}", databaseUrl);
         if (connection == null) {
-            System.out.println("Creating connection...");
             try {
                 String encryptedPassword = System.getenv("ENCRYPTED_PASSWORD");
                 System.out.println("encryptedPassword: " + encryptedPassword);
                 Class.forName(databaseDriver);
                 connection = DriverManager.getConnection(databaseUrl, databaseUsername, decryptPassword(encryptedPassword));
             } catch (ClassNotFoundException e) {
+                logger.error("Failed to load JDBC driver class: {}", databaseDriver, e);
                 e.printStackTrace();
             } catch (Exception e) {
+                logger.error("Exception while creating connection to database: {}", databaseUrl, e);
                 e.printStackTrace();
             }
         }
