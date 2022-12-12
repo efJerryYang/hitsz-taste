@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -21,7 +20,7 @@ public class AppConfig {
     public ApplicationProperties applicationProperties() {
         System.out.println("===================== In AppConfig.applicationProperties() =====================");
         return new ApplicationProperties();
-    };
+    }
 
     @Bean
     public MySQLConnection mySQLConnection() throws SQLException, IOException {
@@ -35,7 +34,6 @@ public class AppConfig {
         System.out.println("iv: " + applicationProperties.getIv());
         System.out.println("databaseUrl: " + applicationProperties.getDatabaseUrl());
         System.out.println("databaseUsername: " + applicationProperties.getDatabaseUsername());
-        System.out.println("databasePassword: " + applicationProperties.getDatabasePassword());
         MySQLConnection mySQLConnection = new MySQLConnection(applicationProperties);
         return mySQLConnection;
     }

@@ -3,7 +3,6 @@ package me.efjerryyang.webserver.dao;
 import me.efjerryyang.webserver.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -28,8 +27,6 @@ public class MySQLConnection {
 
     private final String databaseUsername;
 
-    private final String databasePassword;
-
     private final String keyString;
 
     private final String iv;
@@ -49,9 +46,6 @@ public class MySQLConnection {
         this.databaseUsername = applicationProperties.getDatabaseUsername();
         System.out.println("databaseUsername: " + databaseUsername);
 
-        this.databasePassword = applicationProperties.getDatabasePassword();
-        System.out.println("databasePassword: " + databasePassword);
-
         this.keyString = applicationProperties.getKey();
         System.out.println("keyString: " + keyString);
 
@@ -63,9 +57,6 @@ public class MySQLConnection {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        System.out.println("Creating connection...");
-        // Create a connection to the MySQL server using the DriverManager class
-        connection = DriverManager.getConnection(this.databaseUrl, this.databaseUsername, this.databasePassword);
     }
 
 
@@ -77,13 +68,13 @@ public class MySQLConnection {
     }
 
     public Connection getConnection() throws SQLException {
-
         if (connection == null) {
+            System.out.println("Creating connection...");
             try {
-            String encryptedPassword = System.getenv("ENCRYPTED_PASSWORD");
-            String decryptedPassword = decryptPassword(encryptedPassword);
+                String encryptedPassword = System.getenv("ENCRYPTED_PASSWORD");
+                System.out.println("encryptedPassword: " + encryptedPassword);
                 Class.forName(databaseDriver);
-                connection = DriverManager.getConnection(databaseUrl, databaseUsername, decryptedPassword);
+                connection = DriverManager.getConnection(databaseUrl, databaseUsername, decryptPassword(encryptedPassword));
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -100,7 +91,7 @@ public class MySQLConnection {
         Key key = new SecretKeySpec(keyBytes, "AES");
 
         // Initialize the cipher in decrypt mode using the key and the specified IV and mode
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding");
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
         cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(iv)));
 
         // Decrypt the password using the cipher
