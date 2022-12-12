@@ -1,5 +1,12 @@
 package me.efjerryyang.webserver.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.Objects;
+
+@Getter
+@Setter
 public class User {
     private Long userId;
     private String name;
@@ -8,9 +15,9 @@ public class User {
     private String address;
     private String email;
 
-    public User(){
-
+    public User() {
     }
+
     public User(Long userId, String name, String phone, String password, String address, String email) {
         this.userId = userId;
         this.name = name;
@@ -20,51 +27,26 @@ public class User {
         this.email = email;
     }
 
-    public Long getUserId() {
-        return userId;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        User user = (User) o;
+        return Objects.equals(userId, user.userId) &&
+                Objects.equals(name, user.name) &&
+                Objects.equals(email, user.email) &&
+                Objects.equals(password, user.password) &&
+                Objects.equals(phone, user.phone) &&
+                Objects.equals(address, user.address);
     }
 
-    public String getName() {
-        return name;
+    @Override
+    public int hashCode() {
+        return Objects.hash(userId, name, email, password, phone, address);
     }
 
-    public String getPhone() {
-        return phone;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 }
