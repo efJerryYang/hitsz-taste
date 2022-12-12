@@ -51,7 +51,7 @@ public class UserDAO {
 
             return new User(userID, name, email, password, phone, address);
         } else {
-            return new User(); // Todo: return an empty user object
+            return new User();
         }
 
     }
