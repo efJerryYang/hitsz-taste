@@ -5,6 +5,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
+
 @Configuration
 @PropertySource("classpath:application.properties")
 @Service
@@ -111,4 +123,21 @@ public class ApplicationProperties {
     public void setDatabaseUsername(String databaseUsername) {
         this.databaseUsername = databaseUsername;
     }
-}
+
+    public String getDatabasePassword() throws NoSuchPaddingException, NoSuchAlgorithmException, IllegalBlockSizeException, BadPaddingException, InvalidAlgorithmParameterException, InvalidKeyException {
+        // ! Should only be called in Unit Test
+        String encryptedPassword = System.getenv("ENCRYPTED_PASSWORD");
+        byte[] keyBytes = Base64.getDecoder().decode(getKey());
+        Key key = new SecretKeySpec(keyBytes, "AES");
+
+        // Initialize the cipher in decrypt mode using the key and the specified IV and mode
+        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(iv)));
+
+        // Decrypt the password using the cipher
+        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword));
+
+        // Return the decrypted password as a string
+        return new String(decryptedBytes);
+    }
+} // ApplicationProperties.java
