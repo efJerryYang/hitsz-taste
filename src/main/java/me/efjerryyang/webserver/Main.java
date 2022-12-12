@@ -1,7 +1,13 @@
 package me.efjerryyang.webserver;
 
 import me.efjerryyang.webserver.dao.MySQLConnection;
+import org.apache.catalina.core.ApplicationContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -10,29 +16,28 @@ import java.sql.SQLException;
 
 import static org.testng.AssertJUnit.assertNotNull;
 
-
-@Component
+@SpringBootApplication
+@Configuration
 public class Main {
+    public static void main(String[] args) throws SQLException {
+        // Initialize the Spring Framework
+        AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext();
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
+        // Register the AppConfig class as a configuration class
+        context.register(AppConfig.class);
 
-    @Autowired
-    private MySQLConnection mySQLConnection;
+        // Refresh the context to load the registered configuration class(es)
+        context.refresh();
 
-    public static void main(String[] args) throws SQLException, IOException {
-        // Create a new instance of the Main class
-        Main main = new Main();
+        // Get an instance of the MySQLConnection class using the Spring container
+        MySQLConnection mySqlConnection = context.getBean(MySQLConnection.class);
 
-        // Call the run() method to execute the code
-        main.run();
-    }
+        // Use the MySQLConnection instance to get a connection to the database
+        Connection connection = mySqlConnection.getConnection();
 
-    public void run() throws SQLException, IOException {
-        // Use the mySQLConnection object to get a connection to the MySQL server
-        Connection connection = mySQLConnection.getConnection();
-        // Use the connection to execute SQL statements
-        // ...
+        // Do something with the connection...
         assertNotNull(connection);
+        // Close the Spring Framework context
+        context.close();
     }
 }

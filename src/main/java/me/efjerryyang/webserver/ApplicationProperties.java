@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 @Configuration
 @PropertySource("classpath:application.properties")
+@Service
 public class ApplicationProperties {
     @Value("${server.port}")
     private int port;
@@ -38,58 +40,87 @@ public class ApplicationProperties {
     @Value("${spring.datasource.password}")
     private String databasePassword;
 
-
-    public ApplicationProperties() {
+    public ApplicationProperties(){
+        System.out.println("===================== In ApplicationProperties <Constructor> =====================");
     }
 
     public int getPort() {
-        System.out.println("port: " + port);
         return port;
     }
 
     public String getServletContextPath() {
-        System.out.println("servletContextPath: " + servletContextPath);
         return servletContextPath;
     }
 
     public String getDriverClassName() {
-        System.out.println("driverClassName: " + driverClassName);
         return driverClassName;
     }
 
     public String getDatabasePlatform() {
-        System.out.println("databasePlatform: " + databasePlatform);
         return databasePlatform;
     }
 
     public String getDdlAuto() {
-        System.out.println("ddlAuto: " + ddlAuto);
         return ddlAuto;
     }
 
     public String getKey() {
-        System.out.println("key: " + key);
         return key;
     }
 
     public String getIv() {
-        System.out.println("iv: " + iv);
         return iv;
     }
 
     public String getDatabaseUrl() {
-        System.out.println("databaseUrl: " + databaseUrl);
         return databaseUrl;
     }
 
     public String getDatabaseUsername() {
-        System.out.println("databaseUsername: " + databaseUsername);
         return databaseUsername;
     }
 
     public String getDatabasePassword() {
-        System.out.println("databasePassword: " + databasePassword);
         return databasePassword;
     }
 
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setServletContextPath(String servletContextPath) {
+        this.servletContextPath = servletContextPath;
+    }
+
+    public void setDriverClassName(String driverClassName) {
+        this.driverClassName = driverClassName;
+    }
+
+    public void setDatabasePlatform(String databasePlatform) {
+        this.databasePlatform = databasePlatform;
+    }
+
+    public void setDdlAuto(String ddlAuto) {
+        this.ddlAuto = ddlAuto;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public void setIv(String iv) {
+        this.iv = iv;
+    }
+
+    public void setDatabaseUrl(String databaseUrl) {
+        this.databaseUrl = databaseUrl;
+    }
+
+    public void setDatabaseUsername(String databaseUsername) {
+        this.databaseUsername = databaseUsername;
+    }
+
+    public void setDatabasePassword(String databasePassword) {
+        this.databasePassword = databasePassword;
+    }
 }

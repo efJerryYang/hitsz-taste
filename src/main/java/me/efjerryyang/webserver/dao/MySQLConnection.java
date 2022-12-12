@@ -1,7 +1,9 @@
 package me.efjerryyang.webserver.dao;
 
 import me.efjerryyang.webserver.ApplicationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -34,9 +36,10 @@ public class MySQLConnection {
     // The JDBC connection object
     private Connection connection;
 
+    @Autowired
     public MySQLConnection(ApplicationProperties applicationProperties) throws IOException, SQLException {
+        System.out.println("===================== In MySQLConnection <Constructor> =====================");
         this.applicationProperties = applicationProperties;
-
         this.databaseDriver = applicationProperties.getDriverClassName();
         System.out.println("databaseDriver: " + databaseDriver);
 
@@ -60,7 +63,7 @@ public class MySQLConnection {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-
+        System.out.println("Creating connection...");
         // Create a connection to the MySQL server using the DriverManager class
         connection = DriverManager.getConnection(this.databaseUrl, this.databaseUsername, this.databasePassword);
     }
