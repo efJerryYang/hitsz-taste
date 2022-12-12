@@ -9,8 +9,9 @@ import lombok.*;
 public class User {
     private Long userId;
     private String name;
-    private String phone;
-    private String password;
-    private String address;
     private String email;
+    private String password;
+    private String phone;
+    private String address;
+    private Boolean isActive;
 }

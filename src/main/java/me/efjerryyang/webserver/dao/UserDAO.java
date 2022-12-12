@@ -1,8 +1,8 @@
 package me.efjerryyang.webserver.dao;
 
 import me.efjerryyang.webserver.model.User;
-import me.efjerryyang.webserver.util.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -18,13 +18,14 @@ public class UserDAO {
 
     @Autowired
     public UserDAO(MySQLConnection mySQLConnection) throws SQLException {
+        System.out.println("hello world");
         this.mysqlConnection = mySQLConnection;
         this.connection = mySQLConnection.getConnection();
     }
 
     public User createUser(User user) {
         logger.info("Creating user with id {} and name {}", user.getUserId(), user.getName());
-        String sql = "INSERT INTO users (user_id, name, email, password, phone, address) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (user_id, name, email, password, phone, address, active) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, user.getUserId());
             statement.setObject(2, user.getName());
@@ -32,6 +33,7 @@ public class UserDAO {
             statement.setObject(4, user.getPassword());
             statement.setObject(5, user.getPhone());
             statement.setObject(6, user.getAddress());
+            statement.setObject(7, user.getIsActive());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -56,6 +58,7 @@ public class UserDAO {
             statement.setObject(4, user.getPhone());
             statement.setObject(5, user.getAddress());
             statement.setObject(6, user.getUserId());
+            statement.setObject(7, user.getIsActive());
             statement.executeUpdate();
             logger.info("Successfully updated user with id {}", user.getUserId());
             return user;
@@ -81,8 +84,39 @@ public class UserDAO {
         }
     }
 
-    public User getUserById(Long queryId) throws SQLException {
-        String sql = "SELECT * FROM users WHERE userID = ?";
+    public User activeUserById(Long userId){
+        logger.info("Activating user with id {}", userId);
+        String sql = "UPDATE users SET active = true WHERE user_id= ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, userId);
+            statement.executeUpdate();
+            logger.info("Successfully active user with id {}", userId);
+            return new User();
+        } catch (SQLException e) {
+            logger.error("Error activating user from database", e);
+            e.printStackTrace();
+        }
+        return new User();
+    }
+
+    public User disableUserById(Long userId){
+        logger.info("Disabling user with id {}", userId);
+        String sql = "UPDATE users SET active = false WHERE user_id= ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, userId);
+            statement.executeUpdate();
+            logger.info("Successfully disabled user with id {}", userId);
+            return new User();
+        } catch (SQLException e) {
+            logger.error("Error disabling user from database", e);
+            e.printStackTrace();
+        }
+        return new User();
+    }
+
+    public User getUserById(Long queryId) {
+        logger.info("Getting user by id {}", queryId);
+        String sql = "SELECT * FROM users WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, queryId);
             ResultSet resultSet = statement.executeQuery();
@@ -104,8 +138,8 @@ public class UserDAO {
         logger.info("Getting all users from database");
         String sql = "SELECT * FROM users";
         List<User> users = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            ResultSet resultSet = statement.executeQuery();
+        try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 User user = getUserFromResultSet(resultSet);
                 users.add(user);
@@ -127,8 +161,9 @@ public class UserDAO {
             String password = resultSet.getString("password");
             String phone = resultSet.getString("phone");
             String address = resultSet.getString("address");
+            Boolean isActive = resultSet.getBoolean("active");
             logger.info("Successfully retrieved user from ResultSet");
-            return new User(userID, name, email, password, phone, address);
+            return new User(userID, name, email, password, phone, address, isActive);
         } catch (SQLException e) {
             // Log the exception and return a default user
             logger.error("Error retrieving user from ResultSet: ", e);
