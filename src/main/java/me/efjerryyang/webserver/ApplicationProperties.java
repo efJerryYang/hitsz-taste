@@ -1,11 +1,14 @@
 package me.efjerryyang.webserver;
 
+import lombok.Data;
+import lombok.ToString;
 import me.efjerryyang.webserver.util.CryptoUtilAES;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
+@Data
 @Configuration
 @PropertySource("classpath:application.properties")
 @Service
@@ -36,82 +39,6 @@ public class ApplicationProperties {
 
     @Value("${spring.datasource.username}")
     private String databaseUsername;
-
-    public ApplicationProperties() {
-        System.out.println("===================== In ApplicationProperties <Constructor> =====================");
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public String getServletContextPath() {
-        return servletContextPath;
-    }
-
-    public void setServletContextPath(String servletContextPath) {
-        this.servletContextPath = servletContextPath;
-    }
-
-    public String getDriverClassName() {
-        return driverClassName;
-    }
-
-    public void setDriverClassName(String driverClassName) {
-        this.driverClassName = driverClassName;
-    }
-
-    public String getDatabasePlatform() {
-        return databasePlatform;
-    }
-
-    public void setDatabasePlatform(String databasePlatform) {
-        this.databasePlatform = databasePlatform;
-    }
-
-    public String getDdlAuto() {
-        return ddlAuto;
-    }
-
-    public void setDdlAuto(String ddlAuto) {
-        this.ddlAuto = ddlAuto;
-    }
-
-    public String getKey() {
-        return key;
-    }
-
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getIv() {
-        return iv;
-    }
-
-    public void setIv(String iv) {
-        this.iv = iv;
-    }
-
-    public String getDatabaseUrl() {
-        return databaseUrl;
-    }
-
-    public void setDatabaseUrl(String databaseUrl) {
-        this.databaseUrl = databaseUrl;
-    }
-
-    public String getDatabaseUsername() {
-        return databaseUsername;
-    }
-
-    public void setDatabaseUsername(String databaseUsername) {
-        this.databaseUsername = databaseUsername;
-    }
 
     public String getDatabasePassword() {
         // Should only be called in Unit Test

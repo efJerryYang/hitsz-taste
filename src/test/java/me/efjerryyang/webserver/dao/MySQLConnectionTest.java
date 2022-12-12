@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 @SpringBootApplication
 @Configuration
 public class MySQLConnectionTest {
-    private static MySQLConnection mySqlConnection;
+    private static MySQLConnection mySQLConnection;
     private static AnnotationConfigApplicationContext context;
 
     @BeforeAll
@@ -42,7 +42,7 @@ public class MySQLConnectionTest {
         context.refresh();
 
         // Get an instance of the MySQLConnection class using the Spring container
-        mySqlConnection = context.getBean(MySQLConnection.class);
+        mySQLConnection = context.getBean(MySQLConnection.class);
     }
 
     @AfterAll
@@ -54,7 +54,7 @@ public class MySQLConnectionTest {
     @Test
     public void testGetConnection() throws SQLException {
         // Use the MySQLConnection instance to get a connection to the database
-        Connection connection = mySqlConnection.getConnection();
+        Connection connection = mySQLConnection.getConnection();
 
         // Check that the connection is not null
         assertNotNull(connection);
