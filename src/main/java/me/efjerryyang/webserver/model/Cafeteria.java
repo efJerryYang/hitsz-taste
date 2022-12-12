@@ -13,4 +13,5 @@ public class Cafeteria {
     private Long cafeteriaId;
     private String name;
     private String location;
+    private Boolean isActive;
 }

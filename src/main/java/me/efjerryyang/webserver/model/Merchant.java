@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class Merchant {
     private Long merchantId;
     private String name;
+    private Boolean isActive;
 }
