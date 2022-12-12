@@ -4,13 +4,13 @@ import me.efjerryyang.webserver.model.User;
 import me.efjerryyang.webserver.util.LoggerFactory;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Repository
 public class UserDAO {
     private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
     private MySQLConnection mysqlConnection;
