@@ -1,19 +1,15 @@
 package me.efjerryyang.webserver.dao;
 
 import me.efjerryyang.webserver.ApplicationProperties;
+import me.efjerryyang.webserver.util.CryptoUtilAES;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.security.Key;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Base64;
 
 
 @Component
@@ -84,21 +80,9 @@ public class MySQLConnection {
         return connection;
     }
 
-    public String decryptPassword(String encryptedPassword) throws Exception {
-
-
-        byte[] keyBytes = Base64.getDecoder().decode(keyString);
-        Key key = new SecretKeySpec(keyBytes, "AES");
-
-        // Initialize the cipher in decrypt mode using the key and the specified IV and mode
-        Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, key, new IvParameterSpec(Base64.getDecoder().decode(iv)));
-
-        // Decrypt the password using the cipher
-        byte[] decryptedBytes = cipher.doFinal(Base64.getDecoder().decode(encryptedPassword));
-
-        // Return the decrypted password as a string
-        return new String(decryptedBytes);
+    public String decryptPassword(String encryptedPassword) {
+        CryptoUtilAES utilAES = new CryptoUtilAES(keyString, iv);
+        return utilAES.decrypter(encryptedPassword);
     }
 
     public void close() throws SQLException {
