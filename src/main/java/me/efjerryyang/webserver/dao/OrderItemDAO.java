@@ -18,10 +18,10 @@ public class OrderItemDAO implements DAO<OrderItem> {
     private Connection connection;
 
     @Autowired
-    public OrderItemDAO(MySQLConnection mySQLConnection) throws SQLException {
-        this.mysqlConnection = mySQLConnection;
+    public OrderItemDAO(MySQLConnection mysqlConnection) throws SQLException {
+        this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
-        this.connection = mySQLConnection.getConnection();
+        this.connection = mysqlConnection.getConnection();
     }
 
     @Override

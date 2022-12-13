@@ -18,10 +18,10 @@ public class DishDAO implements DAO<Dish> {
     private Connection connection;
 
     @Autowired
-    public DishDAO(MySQLConnection mySQLConnection) throws SQLException {
-        this.mysqlConnection = mySQLConnection;
+    public DishDAO(MySQLConnection mysqlConnection) throws SQLException {
+        this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
-        this.connection = mySQLConnection.getConnection();
+        this.connection = mysqlConnection.getConnection();
     }
 
     @Override
