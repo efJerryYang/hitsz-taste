@@ -17,10 +17,10 @@ public class CafeteriaDAO implements DAO<Cafeteria> {
     private Connection connection;
 
     @Autowired
-    public CafeteriaDAO(MySQLConnection mySQLConnection) throws SQLException {
-        this.mysqlConnection = mySQLConnection;
+    public CafeteriaDAO(MySQLConnection mysqlConnection) throws SQLException {
+        this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
-        this.connection = mySQLConnection.getConnection();
+        this.connection = mysqlConnection.getConnection();
     }
 
     @Override

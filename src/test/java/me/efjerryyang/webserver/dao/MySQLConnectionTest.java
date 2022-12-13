@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 @SpringBootApplication
 @Configuration
 public class MySQLConnectionTest {
-    private static MySQLConnection mySQLConnection;
+    private static MySQLConnection mysqlConnection;
     private static AnnotationConfigApplicationContext context;
 
     @BeforeAll
@@ -42,7 +42,7 @@ public class MySQLConnectionTest {
         context.refresh();
 
         // Get an instance of the MySQLConnection class using the Spring container
-        mySQLConnection = context.getBean(MySQLConnection.class);
+        mysqlConnection = context.getBean(MySQLConnection.class);
     }
 
     @AfterAll
@@ -54,7 +54,7 @@ public class MySQLConnectionTest {
     @Test
     public void testGetConnection() throws SQLException {
         // Use the MySQLConnection instance to get a connection to the database
-        Connection connection = mySQLConnection.getConnection();
+        Connection connection = mysqlConnection.getConnection();
 
         // Check that the connection is not null
         assertNotNull(connection);
@@ -88,10 +88,10 @@ public class MySQLConnectionTest {
         when(applicationProperties.getDatabaseUsername()).thenReturn("invalid_username");
 
         // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mySqlConnection = new MySQLConnection(applicationProperties);
+        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
 
         // Verify that the getConnection method throws a SQLException when given invalid database credentials
-        assertThrows(SQLException.class, mySqlConnection::getConnection);
+        assertThrows(SQLException.class, mysqlConnection::getConnection);
     }
 
 
@@ -102,10 +102,10 @@ public class MySQLConnectionTest {
         when(applicationProperties.getDriverClassName()).thenReturn("com.mysql.cj.jdbc.Driver");
 
         // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mySqlConnection = new MySQLConnection(applicationProperties);
+        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
 
         // Get a connection to the database
-        Connection connection = mySqlConnection.getConnection();
+        Connection connection = mysqlConnection.getConnection();
 
         // Verify that the connection is open
         assertFalse(connection.isClosed());
@@ -123,20 +123,20 @@ public class MySQLConnectionTest {
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
         when(applicationProperties.getDatabaseUrl()).thenReturn("jdbc:mysql://localhost:3306/invalid_database");
         // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mySqlConnection = new MySQLConnection(applicationProperties);
+        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
 
         // Verify that the getConnection method throws a SQLException when given invalid database credentials
-        assertThrows(SQLException.class, mySqlConnection::getConnection);
+        assertThrows(SQLException.class, mysqlConnection::getConnection);
 
         // Verify that the correct error message is thrown
         try {
-            mySqlConnection.getConnection();
+            mysqlConnection.getConnection();
         } catch (SQLException e) {
             assertEquals("Failed to create connection to database", e.getMessage());
         }
 
         // Clean up
-        mySqlConnection.close();
+        mysqlConnection.close();
     }
 
     @Test
@@ -148,10 +148,10 @@ public class MySQLConnectionTest {
         when(applicationProperties.getDatabasePassword()).thenReturn("invalid_password");
 
 // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mySqlConnection = new MySQLConnection(applicationProperties);
+        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
 
 // Verify that the getConnection method throws a SQLException when given invalid database credentials
-        assertThrows(SQLException.class, mySqlConnection::getConnection);
+        assertThrows(SQLException.class, mysqlConnection::getConnection);
 
     }
 
@@ -165,10 +165,10 @@ public class MySQLConnectionTest {
         when(applicationProperties.getDatabasePassword()).thenReturn("hitsz_taste_password");
 
         // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mySqlConnection = new MySQLConnection(applicationProperties);
+        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
 
         // Get a connection to the database
-        Connection connection = mySqlConnection.getConnection();
+        Connection connection = mysqlConnection.getConnection();
 
         // Verify that the connection is open
         assertFalse(connection.isClosed());

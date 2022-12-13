@@ -17,10 +17,10 @@ public class UserDAO implements DAO<User> {
     private Connection connection;
 
     @Autowired
-    public UserDAO(MySQLConnection mySQLConnection) throws SQLException {
-        this.mysqlConnection = mySQLConnection;
+    public UserDAO(MySQLConnection mysqlConnection) throws SQLException {
+        this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
-        this.connection = mySQLConnection.getConnection();
+        this.connection = mysqlConnection.getConnection();
     }
 
     @Override
