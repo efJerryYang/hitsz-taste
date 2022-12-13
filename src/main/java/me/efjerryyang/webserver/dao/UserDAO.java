@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class UserDAO {
+public class UserDAO implements DAO<User> {
     private static final Logger logger = LoggerFactory.getLogger(UserDAO.class);
     private MySQLConnection mysqlConnection;
     private Connection connection;
@@ -23,7 +23,8 @@ public class UserDAO {
         this.connection = mySQLConnection.getConnection();
     }
 
-    public User createUser(User user) {
+    @Override
+    public User create(User user) {
         logger.info("Creating user with id {} and name {}", user.getUserId(), user.getName());
         String sql = "INSERT INTO users (user_id, name, email, password, phone, address, active) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -47,7 +48,8 @@ public class UserDAO {
         }
     }
 
-    public User updateUser(User user) {
+    @Override
+    public User update(User user) {
         logger.info("Updating user with id {} and name {}", user.getUserId(), user.getName());
         String sql = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, address = ? WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -69,90 +71,29 @@ public class UserDAO {
         }
     }
 
-
-    public User deleteUserById(Long userId) {
-        logger.info("Deleting user with id {}", userId);
-        String sql = "DELETE FROM users WHERE user_id = ?";
+    @Override
+    public User update(User objectOld, User objectNew) {
+        logger.info("Updating user with id {}", objectOld.getUserId());
+        String sql = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, address = ?, active = ? WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            // Set the user id for the user to be deleted in the SQL statement
-            statement.setObject(1, userId);
+            statement.setObject(1, objectNew.getName());
+            statement.setObject(2, objectNew.getEmail());
+            statement.setObject(3, objectNew.getPassword());
+            statement.setObject(4, objectNew.getPhone());
+            statement.setObject(5, objectNew.getAddress());
+            statement.setObject(6, objectNew.getIsActive());
+            statement.setObject(7, objectOld.getUserId());
             statement.executeUpdate();
-            logger.info("Successfully deleted user with id {}", userId);
-            return new User();
+            logger.info("Successfully updated user with id {}", objectOld.getUserId());
+            return objectNew;
         } catch (SQLException e) {
-            logger.error("Error deleting user from database", e);
+            logger.error("Error updating user in database", e);
             return null;
         }
     }
 
-    public User activeUserById(Long userId) {
-        logger.info("Activating user with id {}", userId);
-        String sql = "UPDATE users SET active = true WHERE user_id= ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, userId);
-            statement.executeUpdate();
-            logger.info("Successfully active user with id {}", userId);
-            return new User();
-        } catch (SQLException e) {
-            logger.error("Error activating user from database", e);
-            e.printStackTrace();
-        }
-        return new User();
-    }
-
-    public User disableUserById(Long userId) {
-        logger.info("Disabling user with id {}", userId);
-        String sql = "UPDATE users SET active = false WHERE user_id= ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, userId);
-            statement.executeUpdate();
-            logger.info("Successfully disabled user with id {}", userId);
-            return new User();
-        } catch (SQLException e) {
-            logger.error("Error disabling user from database", e);
-            e.printStackTrace();
-        }
-        return new User();
-    }
-
-    public User getUserById(Long queryId) {
-        logger.info("Getting user by id {}", queryId);
-        String sql = "SELECT * FROM users WHERE user_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, queryId);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                logger.info("User with id {} was found in the database", queryId);
-                return getUserFromResultSet(resultSet);
-            } else {
-                logger.warn("No user with id {} was found in the database", queryId);
-                return new User();
-            }
-        } catch (SQLException e) {
-            logger.error("An exception was thrown while querying the database", e);
-            return null;
-        }
-
-    }
-
-    public List<User> getAllUsers() {
-        logger.info("Getting all users from database");
-        String sql = "SELECT * FROM users";
-        List<User> users = new ArrayList<>();
-        try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
-            while (resultSet.next()) {
-                User user = getUserFromResultSet(resultSet);
-                users.add(user);
-            }
-            logger.info("Successfully retrieved {} users from database", users.size());
-            return users;
-        } catch (SQLException e) {
-            logger.error("Error getting users from database", e);
-            return null;
-        }
-    }
-
-    private User getUserFromResultSet(ResultSet resultSet) {
+    @Override
+    public User getFromResultSet(ResultSet resultSet) {
         try {
             // Retrieve the data for the user
             Long userID = resultSet.getLong("user_id");
@@ -170,4 +111,113 @@ public class UserDAO {
             return new User();
         }
     }
+
+    @Override
+    public List<User> getAll() {
+        logger.info("Getting all users from database");
+        String sql = "SELECT * FROM users";
+        List<User> users = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                User user = getFromResultSet(resultSet);
+                users.add(user);
+            }
+            logger.info("Successfully retrieved {} users from database", users.size());
+            return users;
+        } catch (SQLException e) {
+            logger.error("Error getting users from database", e);
+            return null;
+        }
+    }
+
+    @Override
+    public void deleteAll() {
+        logger.info("Deleting all users");
+        String sql = "DELETE FROM users";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.executeUpdate();
+            logger.info("Successfully deleted all users");
+        } catch (SQLException e) {
+            logger.error("Error deleting all users in database", e);
+        }
+    }
+
+    @Override
+    public void delete(User user) {
+        logger.info("Deleting user with id {}", user.getUserId());
+        String sql = "DELETE FROM users WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, user.getUserId());
+            statement.executeUpdate();
+            logger.info("Successfully deleted user with id {}", user.getUserId());
+        } catch (SQLException e) {
+            logger.error("Error deleting user in database", e);
+        }
+    }
+
+    public User deleteById(Long userId) {
+        logger.info("Deleting user with id {}", userId);
+        String sql = "DELETE FROM users WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            // Set the user id for the user to be deleted in the SQL statement
+            statement.setObject(1, userId);
+            statement.executeUpdate();
+            logger.info("Successfully deleted user with id {}", userId);
+            return new User();
+        } catch (SQLException e) {
+            logger.error("Error deleting user from database", e);
+            return null;
+        }
+    }
+
+    public User activeById(Long userId) {
+        logger.info("Activating user with id {}", userId);
+        String sql = "UPDATE users SET active = true WHERE user_id= ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, userId);
+            statement.executeUpdate();
+            logger.info("Successfully active user with id {}", userId);
+            return new User();
+        } catch (SQLException e) {
+            logger.error("Error activating user from database", e);
+            e.printStackTrace();
+        }
+        return new User();
+    }
+
+    public User disableById(Long userId) {
+        logger.info("Disabling user with id {}", userId);
+        String sql = "UPDATE users SET active = false WHERE user_id= ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, userId);
+            statement.executeUpdate();
+            logger.info("Successfully disabled user with id {}", userId);
+            return new User();
+        } catch (SQLException e) {
+            logger.error("Error disabling user from database", e);
+            e.printStackTrace();
+        }
+        return new User();
+    }
+
+    public User getById(Long queryId) {
+        logger.info("Getting user by id {}", queryId);
+        String sql = "SELECT * FROM users WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, queryId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                logger.info("User with id {} was found in the database", queryId);
+                return getFromResultSet(resultSet);
+            } else {
+                logger.warn("No user with id {} was found in the database", queryId);
+                return new User();
+            }
+        } catch (SQLException e) {
+            logger.error("An exception was thrown while querying the database", e);
+            return null;
+        }
+
+    }
+
 }
