@@ -11,7 +11,7 @@ import java.sql.Date;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+public class Order implements Model {
     private Long orderId;
     private Long userId;
     private Long reviewId;

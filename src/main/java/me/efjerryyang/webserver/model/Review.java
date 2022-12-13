@@ -5,14 +5,16 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Data
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review {
+public class Review implements Model {
     private Long reviewId;
     private Long userId;
-    private Long dishId;
     private Integer rating;
     private String comment;
+    private Date timestamp;
 }

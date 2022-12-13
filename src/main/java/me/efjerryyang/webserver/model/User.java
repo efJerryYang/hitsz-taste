@@ -1,12 +1,15 @@
 package me.efjerryyang.webserver.model;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class User {
+public class User implements Model {
     private Long userId;
     private String name;
     private String email;
