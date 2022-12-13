@@ -1,5 +1,6 @@
 package me.efjerryyang.webserver;
 
+import me.efjerryyang.webserver.dao.DAOFactory;
 import me.efjerryyang.webserver.dao.MySQLConnection;
 import me.efjerryyang.webserver.dao.UserDAO;
 import org.slf4j.Logger;
@@ -37,9 +38,9 @@ public class AppConfig {
     }
 
     @Bean
-    public UserDAO userDAO() throws SQLException {
-        logger.debug("Creating user DAO bean");
-        return new UserDAO(mySQLConnection);
+    public DAOFactory daoFactory() throws SQLException {
+        logger.debug("Creating DAO factory bean");
+        return new DAOFactory(mySQLConnection);
     }
 
 }

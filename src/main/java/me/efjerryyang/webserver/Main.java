@@ -48,7 +48,7 @@ public class Main {
         userDAO = context.getBean(UserDAO.class);
 
         // Get a user by their ID
-        var userList = userDAO.getAllUsers();
+        var userList = userDAO.getAll();
         for (User user : userList) {
             // Print the user's information
             logger.info("User: " + user.getName() + " (" + user.getEmail() + ")");
