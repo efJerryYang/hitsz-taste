@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public class MerchantUserDAO implements DAO<MerchantUser> {
-    private static Logger logger = LoggerFactory.getLogger(MerchantUserDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private static final Logger logger = LoggerFactory.getLogger(MerchantUserDAO.class);
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public MerchantUserDAO(MySQLConnection mysqlConnection) throws SQLException {

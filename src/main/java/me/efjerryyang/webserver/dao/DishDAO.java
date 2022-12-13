@@ -14,8 +14,8 @@ import java.util.List;
 @Repository
 public class DishDAO implements DAO<Dish> {
     private static final Logger logger = LoggerFactory.getLogger(DishDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public DishDAO(MySQLConnection mysqlConnection) throws SQLException {

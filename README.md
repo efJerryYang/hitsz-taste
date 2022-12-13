@@ -39,3 +39,7 @@
 ### Add properties file to classpath
 
 - Copy the generated `application.properties` file to the `src/main/resources/` directory in your project. This will ensure that the project has access to the encrypted database password.
+
+## References
+
+1. https://projectlombok.org/features/SneakyThrows

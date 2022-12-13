@@ -16,7 +16,7 @@ import java.sql.SQLException;
 @Component
 public class MySQLConnection {
 
-    private static Logger logger = LoggerFactory.getLogger(MySQLConnection.class);
+    private static final Logger logger = LoggerFactory.getLogger(MySQLConnection.class);
     private final ApplicationProperties applicationProperties;
 
     private final String databaseDriver;

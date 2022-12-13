@@ -14,8 +14,8 @@ import java.util.List;
 @Repository
 public class OrderItemDAO implements DAO<OrderItem> {
     private static final Logger logger = LoggerFactory.getLogger(OrderItemDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public OrderItemDAO(MySQLConnection mysqlConnection) throws SQLException {

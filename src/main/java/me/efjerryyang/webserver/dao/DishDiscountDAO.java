@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public class DishDiscountDAO implements DAO<DishDiscount> {
     private static final Logger logger = LoggerFactory.getLogger(DishDiscountDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public DishDiscountDAO(MySQLConnection mysqlConnection) throws SQLException {

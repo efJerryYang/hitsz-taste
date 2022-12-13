@@ -12,9 +12,9 @@ import java.util.List;
 
 @Repository
 public class ReviewDAO implements DAO<Review> {
-    private static Logger logger = LoggerFactory.getLogger(ReviewDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private static final Logger logger = LoggerFactory.getLogger(ReviewDAO.class);
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public ReviewDAO(MySQLConnection mysqlConnection) throws SQLException {

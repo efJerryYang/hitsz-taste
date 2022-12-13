@@ -14,8 +14,8 @@ import java.util.List;
 public class DiscountDAO implements DAO<Discount> {
     private static final Logger logger = LoggerFactory.getLogger(DiscountDAO.class);
 
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public DiscountDAO(MySQLConnection mysqlConnection) throws SQLException {

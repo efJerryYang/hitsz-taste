@@ -13,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class RoleDAO implements DAO<Role>{
+public class RoleDAO implements DAO<Role> {
     private static final Logger logger = LoggerFactory.getLogger(RoleDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public RoleDAO(MySQLConnection mysqlConnection) throws SQLException {
