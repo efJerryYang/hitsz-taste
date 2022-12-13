@@ -14,7 +14,10 @@ import java.sql.Date;
 public class Order {
     private Long orderId;
     private Long userId;
-    private Long cafeteriaId;
-    private Float price;
-    private Date orderDate;
+    private Long reviewId;
+    private Float totalPrice;
+    private String address;
+    private String contact;
+    private String status;
+    private Date timestamp;
 }
