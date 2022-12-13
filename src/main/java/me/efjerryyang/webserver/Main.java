@@ -1,11 +1,13 @@
 package me.efjerryyang.webserver;
 
+import me.efjerryyang.webserver.controller.UserController;
 import me.efjerryyang.webserver.dao.DAOFactory;
 import me.efjerryyang.webserver.dao.MySQLConnection;
 import me.efjerryyang.webserver.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +31,9 @@ public class Main {
     private DAOFactory daoFactory;
 
     public static void main(String[] args) throws Exception {
-//        SpringApplication.run(Main.class, args);
-        Main main = new Main();
-        main.run(args);
+        SpringApplication.run(Main.class, args);
+//        Main main = new Main();
+//        main.run(args);
     }
 
     public void run(String... args) throws Exception {
@@ -99,6 +101,10 @@ public class Main {
         for (var model : modelList) {
             logger.info(model.toString());
         }
+
+        UserController userController = context.getBean(UserController.class);
+        userController.login("555-555-1212", "p@ssw0rd");
+        userController.login("555-555-1213", "password");
     }
 }
 

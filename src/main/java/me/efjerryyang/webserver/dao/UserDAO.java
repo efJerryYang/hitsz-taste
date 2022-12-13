@@ -155,6 +155,26 @@ public class UserDAO implements DAO<User> {
         }
     }
 
+    public User getByPhone(String phone) {
+        logger.info("Getting user with phone {}", phone);
+        String sql = "SELECT * FROM users WHERE phone = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, phone);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = getFromResultSet(resultSet);
+                logger.info("Successfully retrieved user with phone {}", phone);
+                return user;
+            } else {
+                logger.info("No user with phone {} found", phone);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting user with phone {} from database", phone, e);
+            return null;
+        }
+    }
+
     public User deleteById(Long userId) {
         logger.info("Deleting user with id {}", userId);
         String sql = "DELETE FROM users WHERE user_id = ?";
