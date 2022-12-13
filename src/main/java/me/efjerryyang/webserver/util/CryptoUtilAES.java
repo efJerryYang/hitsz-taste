@@ -18,12 +18,12 @@ public class CryptoUtilAES {
     /**
      * The secret key used for encryption and decryption
      */
-    private Key key;
+    private final Key key;
 
     /**
      * The initialization vector used for encryption and decryption
      */
-    private IvParameterSpec iv;
+    private final IvParameterSpec iv;
 
     /**
      * Constructs a new CryptoUtilAES instance with the given key and initialization vector (IV) strings.

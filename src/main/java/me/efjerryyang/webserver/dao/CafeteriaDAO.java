@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public class CafeteriaDAO implements DAO<Cafeteria> {
     private static final Logger logger = LoggerFactory.getLogger(CafeteriaDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public CafeteriaDAO(MySQLConnection mysqlConnection) throws SQLException {

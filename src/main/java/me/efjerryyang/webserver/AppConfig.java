@@ -18,7 +18,7 @@ import java.sql.SQLException;
 @ComponentScan(basePackages = {"me.efjerryyang.webserver"})
 public class AppConfig {
 
-    private static Logger logger = LoggerFactory.getLogger(AppConfig.class);
+    private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);
 
     @Autowired
     private ApplicationProperties applicationProperties;

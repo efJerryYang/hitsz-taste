@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public class ContractDAO implements DAO<Contract> {
     private static final Logger logger = LoggerFactory.getLogger(ContractDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public ContractDAO(MySQLConnection mysqlConnection) throws SQLException {

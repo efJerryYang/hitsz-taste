@@ -13,8 +13,8 @@ import java.util.List;
 @Repository
 public class OrderDAO implements DAO<Order> {
     private static final Logger logger = LoggerFactory.getLogger(OrderDAO.class);
-    private MySQLConnection mysqlConnection;
-    private Connection connection;
+    private final MySQLConnection mysqlConnection;
+    private final Connection connection;
 
     @Autowired
     public OrderDAO(MySQLConnection mysqlConnection) throws SQLException {
