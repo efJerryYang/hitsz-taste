@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Cafeteria {
+public class Cafeteria implements Model {
     private Long cafeteriaId;
     private String name;
     private String location;

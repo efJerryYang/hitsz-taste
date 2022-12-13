@@ -7,7 +7,7 @@ import java.sql.SQLException;
 
 @Component
 public class DAOFactory {
-    private MySQLConnection mysqlConnection;
+    private final MySQLConnection mysqlConnection;
 
     @Autowired
     public DAOFactory(MySQLConnection mysqlConnection) {
@@ -44,5 +44,29 @@ public class DAOFactory {
 
     public UserDAO getUserDAO() throws SQLException {
         return new UserDAO(mysqlConnection);
+    }
+
+    public UserRoleDAO getUserRoleDAO() throws SQLException {
+        return new UserRoleDAO(mysqlConnection);
+    }
+
+    public CategoryDAO getCategoryDAO() throws SQLException {
+        return new CategoryDAO(mysqlConnection);
+    }
+
+    public DishDiscountDAO getDishDiscountDAO() throws SQLException {
+        return new DishDiscountDAO(mysqlConnection);
+    }
+
+    public MerchantUserDAO getMerchantUserDAO() throws SQLException {
+        return new MerchantUserDAO(mysqlConnection);
+    }
+
+    public ReviewDAO getReviewDAO() throws SQLException {
+        return new ReviewDAO(mysqlConnection);
+    }
+
+    public RoleDAO getRoleDAO() throws SQLException {
+        return new RoleDAO(mysqlConnection);
     }
 }

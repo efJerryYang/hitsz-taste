@@ -2,6 +2,7 @@ package me.efjerryyang.webserver;
 
 import me.efjerryyang.webserver.dao.DAOFactory;
 import me.efjerryyang.webserver.dao.MySQLConnection;
+import me.efjerryyang.webserver.model.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import org.springframework.context.annotation.Configuration;
 
 import java.sql.Connection;
+import java.util.ArrayList;
 
 @SpringBootApplication
 @Configuration
@@ -49,49 +51,54 @@ public class Main {
 
         daoFactory = context.getBean(DAOFactory.class);
         var cafeteriaDAO = daoFactory.getCafeteriaDAO();
+        var categoryDAO = daoFactory.getCategoryDAO();
         var contractDAO = daoFactory.getContractDAO();
-        var dishDAO = daoFactory.getDishDAO();
         var discountDAO = daoFactory.getDiscountDAO();
+        var dishDAO = daoFactory.getDishDAO();
+        var dishDiscountDAO = daoFactory.getDishDiscountDAO();
         var merchantDAO = daoFactory.getMerchantDAO();
+        var merchantUserDAO = daoFactory.getMerchantUserDAO();
         var orderDAO = daoFactory.getOrderDAO();
         var orderItemDAO = daoFactory.getOrderItemDAO();
+        var reviewDAO = daoFactory.getReviewDAO();
+        var roleDAO = daoFactory.getRoleDAO();
+        var userRoleDAO = daoFactory.getUserRoleDAO();
         var userDAO = daoFactory.getUserDAO();
 
+
         var cafeteriaList = cafeteriaDAO.getAll();
+        var categoryList = categoryDAO.getAll();
         var contractList = contractDAO.getAll();
-        var dishList = dishDAO.getAll();
         var discountList = discountDAO.getAll();
+        var dishList = dishDAO.getAll();
+        var dishDiscountList = dishDiscountDAO.getAll();
         var merchantList = merchantDAO.getAll();
+        var merchantUserList = merchantUserDAO.getAll();
         var orderList = orderDAO.getAll();
         var orderItemList = orderItemDAO.getAll();
+        var reviewList = reviewDAO.getAll();
+        var roleList = roleDAO.getAll();
+        var userRoleList = userRoleDAO.getAll();
         var userList = userDAO.getAll();
 
-        for (var cafeteria : cafeteriaList) {
-            System.out.println(cafeteria);
+        var modelList = new ArrayList<Model>();
+        modelList.addAll(cafeteriaList);
+        modelList.addAll(categoryList);
+        modelList.addAll(contractList);
+        modelList.addAll(discountList);
+        modelList.addAll(dishList);
+        modelList.addAll(dishDiscountList);
+        modelList.addAll(merchantList);
+        modelList.addAll(merchantUserList);
+        modelList.addAll(orderList);
+        modelList.addAll(orderItemList);
+        modelList.addAll(reviewList);
+        modelList.addAll(roleList);
+        modelList.addAll(userRoleList);
+        modelList.addAll(userList);
+        for (var model : modelList) {
+            logger.info(model.toString());
         }
-        for (var contract : contractList) {
-            System.out.println(contract);
-        }
-        for (var dish : dishList) {
-            System.out.println(dish);
-        }
-        for (var discount : discountList) {
-            System.out.println(discount);
-        }
-        for (var merchant : merchantList) {
-            System.out.println(merchant);
-        }
-        for (var order : orderList) {
-            System.out.println(order);
-        }
-        for (var orderItem : orderItemList) {
-            System.out.println(orderItem);
-        }
-        for (var user : userList) {
-            System.out.println(user);
-        }
-
-        logger.info("Closing connection");
     }
 }
 
