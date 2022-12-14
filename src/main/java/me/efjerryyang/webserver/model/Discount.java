@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Discount implements Model {
+public class Discount implements IModel {
     private Long discountId;
     private String name;
     private Float percentage;

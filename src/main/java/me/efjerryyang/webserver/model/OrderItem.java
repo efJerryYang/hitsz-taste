@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItem implements Model {
+public class OrderItem implements IModel {
     private Long orderId;
     private Long dishId;
     private Long quantity;

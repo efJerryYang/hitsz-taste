@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Role implements Model {
+public class Role implements IModel {
     private Integer roleId;
     private String name;
 }
