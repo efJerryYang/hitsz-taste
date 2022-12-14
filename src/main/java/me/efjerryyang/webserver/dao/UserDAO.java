@@ -155,6 +155,89 @@ public class UserDAO implements DAO<User> {
         }
     }
 
+    public User getByEmail(String email) {
+        logger.info("Getting user with email {}", email);
+        String sql = "SELECT * FROM users WHERE email = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = getFromResultSet(resultSet);
+                logger.info("Successfully retrieved user with email {}", email);
+                return user;
+            } else {
+                logger.info("No user with email {} found", email);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting user with email {} from database", email, e);
+            return null;
+        }
+    }
+
+    public User getByNameAndPassword(String name, String password){
+        logger.info("Getting user with name {} and password {}", name, password);
+        String sql = "SELECT * FROM users WHERE name = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, name);
+            statement.setObject(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = getFromResultSet(resultSet);
+                logger.info("Successfully retrieved user with name {} and password {}", name, password);
+                return user;
+            } else {
+                logger.info("No user with name {} and password {} found", name, password);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting user with name {} and password {}", name, password, e);
+            return null;
+        }
+    }
+
+    public User getByEmailAndPassword(String email, String password) {
+        logger.info("Getting user with email {} and password {}", email, password);
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, email);
+            statement.setObject(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = getFromResultSet(resultSet);
+                logger.info("Successfully retrieved user with email {} and password {}", email, password);
+                return user;
+            } else {
+                logger.info("No user with email {} and password {} found", email, password);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting user with email {} and password {}", email, password, e);
+            return null;
+        }
+    }
+
+    public User getByPhoneAndPassword(String phone, String password) {
+        logger.info("Getting user with phone {} and password {}", phone, password);
+        String sql = "SELECT * FROM users WHERE phone = ? AND password = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, phone);
+            statement.setObject(2, password);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                User user = getFromResultSet(resultSet);
+                logger.info("Successfully retrieved user with phone {} and password {}", phone, password);
+                return user;
+            } else {
+                logger.info("No user with phone {} and password {} found", phone, password);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting user with phone {} and password {} from database", phone, password, e);
+            return null;
+        }
+    }
+
     public User getByPhone(String phone) {
         logger.info("Getting user with phone {}", phone);
         String sql = "SELECT * FROM users WHERE phone = ?";
