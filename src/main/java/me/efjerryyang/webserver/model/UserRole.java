@@ -12,7 +12,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class UserRole implements Model {
+public class UserRole implements IModel {
     private Long userId;
     private Long roleId;
     private Date grantDate;

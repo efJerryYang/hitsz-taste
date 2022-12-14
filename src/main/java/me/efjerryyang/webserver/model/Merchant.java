@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Merchant implements Model {
+public class Merchant implements IModel {
     private Long merchantId;
     private String name;
     private Boolean isActive;

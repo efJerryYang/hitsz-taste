@@ -11,7 +11,7 @@ import java.sql.Date;
 @EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor
-public class Review implements Model {
+public class Review implements IModel {
     private Long reviewId;
     private Long userId;
     private Integer rating;

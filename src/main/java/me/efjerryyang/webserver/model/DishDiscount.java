@@ -12,7 +12,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class DishDiscount implements Model {
+public class DishDiscount implements IModel {
     private Long dishId;
     private Long discountId;
     private Date startDate;

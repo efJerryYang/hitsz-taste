@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class Dish implements Model {
+public class Dish implements IModel {
     private Long dishId;
     private Long merchantId;
     private Long categoryId;

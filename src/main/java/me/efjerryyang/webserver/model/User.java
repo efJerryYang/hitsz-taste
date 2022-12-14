@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode
-public class User implements Model {
+public class User implements IModel {
     private Long userId;
     private String name;
     private String email;

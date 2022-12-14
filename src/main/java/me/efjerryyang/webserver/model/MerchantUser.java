@@ -11,7 +11,7 @@ import java.sql.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class MerchantUser implements Model {
+public class MerchantUser implements IModel {
     private Long merchantId;
     private Long userId;
     private Date updateTime;
