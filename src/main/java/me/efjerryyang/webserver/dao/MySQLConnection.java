@@ -60,9 +60,9 @@ public class MySQLConnection {
         if (connection == null) {
             try {
                 String encryptedPassword = System.getenv("ENCRYPTED_PASSWORD");
-                System.out.println("encryptedPassword: " + encryptedPassword);
                 Class.forName(databaseDriver);
                 connection = DriverManager.getConnection(databaseUrl, databaseUsername, decryptPassword(encryptedPassword));
+                logger.debug("Connection to database {} successful", databaseUrl);
             } catch (ClassNotFoundException e) {
                 logger.error("Failed to load JDBC driver class: {}", databaseDriver, e);
                 e.printStackTrace();
