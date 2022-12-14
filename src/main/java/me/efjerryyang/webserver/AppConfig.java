@@ -1,7 +1,9 @@
 package me.efjerryyang.webserver;
 
+import me.efjerryyang.webserver.controller.ExampleController;
 import me.efjerryyang.webserver.dao.DAOFactory;
 import me.efjerryyang.webserver.dao.MySQLConnection;
+import me.efjerryyang.webserver.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +19,48 @@ public class AppConfig {
     private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);
 
     @Autowired
+    private ExampleController exampleController;
+
+    @Autowired
+    private MySQLConnection mysqlConnection;
+
+    @Autowired
     private ApplicationProperties applicationProperties;
 
+    @Autowired
+    private DAOFactory daoFactory;
+
+
+//    @Bean
+//    @Scope("singleton")
+//    @Primary
+//    public MySQLConnection mysqlConnection() throws SQLException, IOException {
+//        logger.debug("Creating MySQL connection bean");
+//        return new MySQLConnection(applicationProperties);
+//    }
+
     @Bean
     @Scope("singleton")
     @Primary
-    public DAOFactory daoFactory() throws SQLException, IOException {
+    public DAOFactory daoFactory() {
         logger.debug("Creating DAO factory bean");
-        return new DAOFactory(mysqlConnection());
+        return new DAOFactory(mysqlConnection);
     }
 
     @Bean
     @Scope("singleton")
     @Primary
-    public MySQLConnection mysqlConnection() throws SQLException, IOException {
-        logger.debug("Creating MySQL connection bean");
-        return new MySQLConnection(applicationProperties);
+    public UserService userService() throws SQLException {
+        logger.debug("Creating User service bean");
+        return new UserService(daoFactory.getUserDAO());
     }
+
+//    @Bean
+//    @Scope("singleton")
+//    @Primary
+//    public ExampleController exampleController() throws SQLException {
+//        logger.debug("Creating Example controller bean");
+//        return new ExampleController(daoFactory.getUserDAO());
+//    }
 
 }

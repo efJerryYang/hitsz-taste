@@ -1,9 +1,7 @@
 package me.efjerryyang.webserver;
 
-import me.efjerryyang.webserver.controller.UserController;
-import me.efjerryyang.webserver.dao.DAOFactory;
-import me.efjerryyang.webserver.dao.MySQLConnection;
-import me.efjerryyang.webserver.model.Model;
+import me.efjerryyang.webserver.dao.*;
+import me.efjerryyang.webserver.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootApplication
 @Configuration
@@ -52,38 +51,38 @@ public class Main {
         Connection conn = mysqlConnection.getConnection();
 
         daoFactory = context.getBean(DAOFactory.class);
-        var cafeteriaDAO = daoFactory.getCafeteriaDAO();
-        var categoryDAO = daoFactory.getCategoryDAO();
-        var contractDAO = daoFactory.getContractDAO();
-        var discountDAO = daoFactory.getDiscountDAO();
-        var dishDAO = daoFactory.getDishDAO();
-        var dishDiscountDAO = daoFactory.getDishDiscountDAO();
-        var merchantDAO = daoFactory.getMerchantDAO();
-        var merchantUserDAO = daoFactory.getMerchantUserDAO();
-        var orderDAO = daoFactory.getOrderDAO();
-        var orderItemDAO = daoFactory.getOrderItemDAO();
-        var reviewDAO = daoFactory.getReviewDAO();
-        var roleDAO = daoFactory.getRoleDAO();
-        var userRoleDAO = daoFactory.getUserRoleDAO();
-        var userDAO = daoFactory.getUserDAO();
+        CafeteriaDAO cafeteriaDAO = daoFactory.getCafeteriaDAO();
+        CategoryDAO categoryDAO = daoFactory.getCategoryDAO();
+        ContractDAO contractDAO = daoFactory.getContractDAO();
+        DiscountDAO discountDAO = daoFactory.getDiscountDAO();
+        DishDAO dishDAO = daoFactory.getDishDAO();
+        DishDiscountDAO dishDiscountDAO = daoFactory.getDishDiscountDAO();
+        MerchantDAO merchantDAO = daoFactory.getMerchantDAO();
+        MerchantUserDAO merchantUserDAO = daoFactory.getMerchantUserDAO();
+        OrderDAO orderDAO = daoFactory.getOrderDAO();
+        OrderItemDAO orderItemDAO = daoFactory.getOrderItemDAO();
+        ReviewDAO reviewDAO = daoFactory.getReviewDAO();
+        RoleDAO roleDAO = daoFactory.getRoleDAO();
+        UserRoleDAO userRoleDAO = daoFactory.getUserRoleDAO();
+        UserDAO userDAO = daoFactory.getUserDAO();
 
 
-        var cafeteriaList = cafeteriaDAO.getAll();
-        var categoryList = categoryDAO.getAll();
-        var contractList = contractDAO.getAll();
-        var discountList = discountDAO.getAll();
-        var dishList = dishDAO.getAll();
-        var dishDiscountList = dishDiscountDAO.getAll();
-        var merchantList = merchantDAO.getAll();
-        var merchantUserList = merchantUserDAO.getAll();
-        var orderList = orderDAO.getAll();
-        var orderItemList = orderItemDAO.getAll();
-        var reviewList = reviewDAO.getAll();
-        var roleList = roleDAO.getAll();
-        var userRoleList = userRoleDAO.getAll();
-        var userList = userDAO.getAll();
+        List<Cafeteria> cafeteriaList = cafeteriaDAO.getAll();
+        List<Category> categoryList = categoryDAO.getAll();
+        List<Contract> contractList = contractDAO.getAll();
+        List<Discount> discountList = discountDAO.getAll();
+        List<Dish> dishList = dishDAO.getAll();
+        List<DishDiscount> dishDiscountList = dishDiscountDAO.getAll();
+        List<Merchant> merchantList = merchantDAO.getAll();
+        List<MerchantUser> merchantUserList = merchantUserDAO.getAll();
+        List<Order> orderList = orderDAO.getAll();
+        List<OrderItem> orderItemList = orderItemDAO.getAll();
+        List<Review> reviewList = reviewDAO.getAll();
+        List<Role> roleList = roleDAO.getAll();
+        List<UserRole> userRoleList = userRoleDAO.getAll();
+        List<User> userList = userDAO.getAll();
 
-        var modelList = new ArrayList<Model>();
+        List<IModel> modelList = new ArrayList<IModel>();
         modelList.addAll(cafeteriaList);
         modelList.addAll(categoryList);
         modelList.addAll(contractList);
@@ -98,13 +97,13 @@ public class Main {
         modelList.addAll(roleList);
         modelList.addAll(userRoleList);
         modelList.addAll(userList);
-        for (var model : modelList) {
+        for (IModel model : modelList) {
             logger.info(model.toString());
         }
 
-        UserController userController = context.getBean(UserController.class);
-        userController.login("555-555-1212", "p@ssw0rd");
-        userController.login("555-555-1213", "password");
+//        UserController userController = context.getBean(UserController.class);
+//        userController.login("555-555-1212", "p@ssw0rd");
+//        userController.login("555-555-1213", "password");
     }
 }
 
