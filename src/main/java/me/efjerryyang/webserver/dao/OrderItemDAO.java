@@ -14,11 +14,11 @@ import java.util.List;
 @Repository
 public class OrderItemDAO implements DAO<OrderItem> {
     private static final Logger logger = LoggerFactory.getLogger(OrderItemDAO.class);
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
     private final Connection connection;
 
     @Autowired
-    public OrderItemDAO(MySQLConnection mysqlConnection) throws SQLException {
+    public OrderItemDAO(MysqlConnection mysqlConnection) throws SQLException {
         this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
         this.connection = mysqlConnection.getConnection();

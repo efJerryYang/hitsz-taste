@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public class CafeteriaDAO implements DAO<Cafeteria> {
     private static final Logger logger = LoggerFactory.getLogger(CafeteriaDAO.class);
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
     private final Connection connection;
 
     @Autowired
-    public CafeteriaDAO(MySQLConnection mysqlConnection) throws SQLException {
+    public CafeteriaDAO(MysqlConnection mysqlConnection) throws SQLException {
         this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
         this.connection = mysqlConnection.getConnection();

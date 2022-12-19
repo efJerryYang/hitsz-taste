@@ -12,10 +12,10 @@ import java.util.List;
 @Repository
 public class CategoryDAO implements DAO<Category> {
     private static final Logger logger = LoggerFactory.getLogger(CategoryDAO.class);
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
     private final Connection connection;
 
-    public CategoryDAO(MySQLConnection mysqlConnection) throws SQLException {
+    public CategoryDAO(MysqlConnection mysqlConnection) throws SQLException {
         logger.debug("Creating CategoryDAO");
         this.mysqlConnection = mysqlConnection;
         logger.debug("Getting connection to MySQL server");

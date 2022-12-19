@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public class UserRoleDAO implements DAO<UserRole> {
     private static final Logger logger = LoggerFactory.getLogger(UserRoleDAO.class);
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
     private final Connection connection;
 
     @Autowired
-    public UserRoleDAO(MySQLConnection mysqlConnection) throws SQLException {
+    public UserRoleDAO(MysqlConnection mysqlConnection) throws SQLException {
         this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
         this.connection = mysqlConnection.getConnection();

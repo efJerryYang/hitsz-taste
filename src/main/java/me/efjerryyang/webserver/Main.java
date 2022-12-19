@@ -24,7 +24,7 @@ public class Main {
     private ApplicationProperties applicationProperties;
 
     @Autowired
-    private MySQLConnection mysqlConnection;
+    private MysqlConnection mysqlConnection;
 
     @Autowired
     private DAOFactory daoFactory;
@@ -45,8 +45,8 @@ public class Main {
         // Refresh the context to load the registered configuration class(es)
         context.refresh();
 
-        // Get an instance of the MySQLConnection class using the Spring container
-        mysqlConnection = context.getBean(MySQLConnection.class);
+        // Get an instance of the MysqlConnection class using the Spring container
+        mysqlConnection = context.getBean(MysqlConnection.class);
         // Create a connection to the MySQL server
         Connection conn = mysqlConnection.getConnection();
 

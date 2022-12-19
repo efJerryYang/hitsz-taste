@@ -7,10 +7,10 @@ import java.sql.SQLException;
 
 @Component
 public class DAOFactory {
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
 
     @Autowired
-    public DAOFactory(MySQLConnection mysqlConnection) {
+    public DAOFactory(MysqlConnection mysqlConnection) {
         this.mysqlConnection = mysqlConnection;
     }
 
