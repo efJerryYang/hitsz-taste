@@ -2,6 +2,7 @@ package me.efjerryyang.webserver;
 
 import me.efjerryyang.webserver.dao.*;
 import me.efjerryyang.webserver.model.*;
+import org.apache.log4j.PropertyConfigurator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
