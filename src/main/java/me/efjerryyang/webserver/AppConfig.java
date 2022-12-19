@@ -2,7 +2,7 @@ package me.efjerryyang.webserver;
 
 import me.efjerryyang.webserver.controller.ExampleController;
 import me.efjerryyang.webserver.dao.DAOFactory;
-import me.efjerryyang.webserver.dao.MySQLConnection;
+import me.efjerryyang.webserver.dao.MysqlConnection;
 import me.efjerryyang.webserver.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,10 +19,7 @@ public class AppConfig {
     private static final Logger logger = LoggerFactory.getLogger(AppConfig.class);
 
     @Autowired
-    private ExampleController exampleController;
-
-    @Autowired
-    private MySQLConnection mysqlConnection;
+    private MysqlConnection mysqlConnection;
 
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -34,9 +31,9 @@ public class AppConfig {
 //    @Bean
 //    @Scope("singleton")
 //    @Primary
-//    public MySQLConnection mysqlConnection() throws SQLException, IOException {
+//    public MysqlConnection mysqlConnection() throws SQLException, IOException {
 //        logger.debug("Creating MySQL connection bean");
-//        return new MySQLConnection(applicationProperties);
+//        return new MysqlConnection(applicationProperties);
 //    }
 
     @Bean

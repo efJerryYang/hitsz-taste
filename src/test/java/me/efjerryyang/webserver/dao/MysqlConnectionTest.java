@@ -26,8 +26,8 @@ import static org.mockito.Mockito.when;
 
 @SpringBootApplication
 @Configuration
-public class MySQLConnectionTest {
-    private static MySQLConnection mysqlConnection;
+public class MysqlConnectionTest {
+    private static MysqlConnection mysqlConnection;
     private static AnnotationConfigApplicationContext context;
 
     @BeforeAll
@@ -41,8 +41,8 @@ public class MySQLConnectionTest {
         // Refresh the context to load the registered configuration class(es)
         context.refresh();
 
-        // Get an instance of the MySQLConnection class using the Spring container
-        mysqlConnection = context.getBean(MySQLConnection.class);
+        // Get an instance of the MysqlConnection class using the Spring container
+        mysqlConnection = context.getBean(MysqlConnection.class);
     }
 
     @AfterAll
@@ -53,7 +53,7 @@ public class MySQLConnectionTest {
 
     @Test
     public void testGetConnection() throws SQLException {
-        // Use the MySQLConnection instance to get a connection to the database
+        // Use the MysqlConnection instance to get a connection to the database
         Connection connection = mysqlConnection.getConnection();
 
         // Check that the connection is not null
@@ -65,8 +65,8 @@ public class MySQLConnectionTest {
         // Create a mock ApplicationProperties instance with an invalid driver class name
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
         when(applicationProperties.getDriverClassName()).thenReturn("invalid.driver.class.Name");
-        // Verify that the MySQLConnection constructor throws a SQLException when given an invalid driver class name
-        assertThrows(SQLException.class, () -> new MySQLConnection(applicationProperties));
+        // Verify that the MysqlConnection constructor throws a SQLException when given an invalid driver class name
+        assertThrows(SQLException.class, () -> new MysqlConnection(applicationProperties));
     }
 
     @Test
@@ -75,8 +75,8 @@ public class MySQLConnectionTest {
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
         when(applicationProperties.getDriverClassName()).thenReturn("com.mysql.cj.jdbc.Driver");
 
-        // Verify that the MySQLConnection constructor does not throw a SQLException when given a valid driver class name
-        assertDoesNotThrow(() -> new MySQLConnection(applicationProperties));
+        // Verify that the MysqlConnection constructor does not throw a SQLException when given a valid driver class name
+        assertDoesNotThrow(() -> new MysqlConnection(applicationProperties));
     }
 
     @Test
@@ -87,8 +87,8 @@ public class MySQLConnectionTest {
         when(applicationProperties.getDatabaseUrl()).thenReturn("jdbc:mysql://localhost:3306/invalid_database");
         when(applicationProperties.getDatabaseUsername()).thenReturn("invalid_username");
 
-        // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
+        // Create a MysqlConnection instance with the mock ApplicationProperties instance
+        MysqlConnection mysqlConnection = new MysqlConnection(applicationProperties);
 
         // Verify that the getConnection method throws a SQLException when given invalid database credentials
         assertThrows(SQLException.class, mysqlConnection::getConnection);
@@ -101,8 +101,8 @@ public class MySQLConnectionTest {
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
         when(applicationProperties.getDriverClassName()).thenReturn("com.mysql.cj.jdbc.Driver");
 
-        // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
+        // Create a MysqlConnection instance with the mock ApplicationProperties instance
+        MysqlConnection mysqlConnection = new MysqlConnection(applicationProperties);
 
         // Get a connection to the database
         Connection connection = mysqlConnection.getConnection();
@@ -122,8 +122,8 @@ public class MySQLConnectionTest {
         // Create a mock ApplicationProperties instance with an invalid database URL
         ApplicationProperties applicationProperties = mock(ApplicationProperties.class);
         when(applicationProperties.getDatabaseUrl()).thenReturn("jdbc:mysql://localhost:3306/invalid_database");
-        // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
+        // Create a MysqlConnection instance with the mock ApplicationProperties instance
+        MysqlConnection mysqlConnection = new MysqlConnection(applicationProperties);
 
         // Verify that the getConnection method throws a SQLException when given invalid database credentials
         assertThrows(SQLException.class, mysqlConnection::getConnection);
@@ -147,8 +147,8 @@ public class MySQLConnectionTest {
         when(applicationProperties.getDatabaseUsername()).thenReturn("invalid_username");
         when(applicationProperties.getDatabasePassword()).thenReturn("invalid_password");
 
-// Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
+// Create a MysqlConnection instance with the mock ApplicationProperties instance
+        MysqlConnection mysqlConnection = new MysqlConnection(applicationProperties);
 
 // Verify that the getConnection method throws a SQLException when given invalid database credentials
         assertThrows(SQLException.class, mysqlConnection::getConnection);
@@ -164,8 +164,8 @@ public class MySQLConnectionTest {
         when(applicationProperties.getDatabaseUsername()).thenReturn("hitsz_taste");
         when(applicationProperties.getDatabasePassword()).thenReturn("hitsz_taste_password");
 
-        // Create a MySQLConnection instance with the mock ApplicationProperties instance
-        MySQLConnection mysqlConnection = new MySQLConnection(applicationProperties);
+        // Create a MysqlConnection instance with the mock ApplicationProperties instance
+        MysqlConnection mysqlConnection = new MysqlConnection(applicationProperties);
 
         // Get a connection to the database
         Connection connection = mysqlConnection.getConnection();

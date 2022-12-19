@@ -14,11 +14,11 @@ import java.util.List;
 public class DiscountDAO implements DAO<Discount> {
     private static final Logger logger = LoggerFactory.getLogger(DiscountDAO.class);
 
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
     private final Connection connection;
 
     @Autowired
-    public DiscountDAO(MySQLConnection mysqlConnection) throws SQLException {
+    public DiscountDAO(MysqlConnection mysqlConnection) throws SQLException {
         this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
         this.connection = mysqlConnection.getConnection();

@@ -14,9 +14,9 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Component
-public class MySQLConnection {
+public class MysqlConnection {
 
-    private static final Logger logger = LoggerFactory.getLogger(MySQLConnection.class);
+    private static final Logger logger = LoggerFactory.getLogger(MysqlConnection.class);
     private final ApplicationProperties applicationProperties;
 
     private final String databaseDriver;
@@ -32,7 +32,7 @@ public class MySQLConnection {
     private Connection connection;
 
     @Autowired
-    public MySQLConnection(ApplicationProperties applicationProperties) throws IOException, SQLException {
+    public MysqlConnection(ApplicationProperties applicationProperties) throws IOException, SQLException {
         this.applicationProperties = applicationProperties;
         this.databaseDriver = applicationProperties.getDriverClassName();
         this.databaseUrl = applicationProperties.getDatabaseUrl();

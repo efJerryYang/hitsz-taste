@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public class ReviewDAO implements DAO<Review> {
     private static final Logger logger = LoggerFactory.getLogger(ReviewDAO.class);
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
     private final Connection connection;
 
     @Autowired
-    public ReviewDAO(MySQLConnection mysqlConnection) throws SQLException {
+    public ReviewDAO(MysqlConnection mysqlConnection) throws SQLException {
         this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
         this.connection = mysqlConnection.getConnection();

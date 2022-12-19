@@ -13,11 +13,11 @@ import java.util.List;
 @Repository
 public class MerchantUserDAO implements DAO<MerchantUser> {
     private static final Logger logger = LoggerFactory.getLogger(MerchantUserDAO.class);
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
     private final Connection connection;
 
     @Autowired
-    public MerchantUserDAO(MySQLConnection mysqlConnection) throws SQLException {
+    public MerchantUserDAO(MysqlConnection mysqlConnection) throws SQLException {
         logger.debug("Creating MerchantUserDAO");
         this.mysqlConnection = mysqlConnection;
         this.connection = mysqlConnection.getConnection();

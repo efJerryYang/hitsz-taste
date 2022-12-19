@@ -14,11 +14,11 @@ import java.util.List;
 @Repository
 public class DishDAO implements DAO<Dish> {
     private static final Logger logger = LoggerFactory.getLogger(DishDAO.class);
-    private final MySQLConnection mysqlConnection;
+    private final MysqlConnection mysqlConnection;
     private final Connection connection;
 
     @Autowired
-    public DishDAO(MySQLConnection mysqlConnection) throws SQLException {
+    public DishDAO(MysqlConnection mysqlConnection) throws SQLException {
         this.mysqlConnection = mysqlConnection;
         logger.debug("Obtaining connection to database");
         this.connection = mysqlConnection.getConnection();
