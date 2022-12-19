@@ -22,9 +22,9 @@ public class ExampleController {
     }
 
     @RequestMapping("/")
-    public String example(@ModelAttribute("model") ModelMap model) {
+    public String example(@ModelAttribute("model") ModelMap model, @RequestParam(value = "name", required = false, defaultValue = "World") String name) {
         logger.info("ExampleController example() is executed!");
-        model.addAttribute("name", "John Doe");
+        model.addAttribute("name", name);
         return "example";
     }
 

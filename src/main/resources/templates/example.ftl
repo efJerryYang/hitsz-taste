@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Example</title>
+    <title>Example Template</title>
 </head>
 <body>
-<h1>Hello, ${name}!</h1>
+<h1>Hello, ${model.name}!</h1>
 </body>
 </html>
