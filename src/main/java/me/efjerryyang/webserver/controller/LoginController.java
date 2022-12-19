@@ -16,8 +16,8 @@ public class LoginController {
 
     @PostMapping("/login")
     public String login(@RequestParam("username") String username,
-            @RequestParam("password") String password,
-            Model model) {
+                        @RequestParam("password") String password,
+                        Model model) {
         // the username passed in can be either phone or email or username
         // check if the usernamme is a phone number, the phone number can be in the format of 555-555-1234 or 12345678901
         if (username.matches("\\d{3}-\\d{3}-\\d{4}") || username.matches("\\d{10}")) {

@@ -12,7 +12,6 @@ public class UserService {
     private UserDAO userDAO;
 
 
-
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
@@ -32,6 +31,7 @@ public class UserService {
     public void create(User user) {
         userDAO.create(user);
     }
+
     public User getByUsernameAndPassword(String username, String password) {
         return userDAO.getByNameAndPassword(username, password);
     }
@@ -39,6 +39,7 @@ public class UserService {
     public User getByEmailAndPassword(String email, String password) {
         return userDAO.getByEmailAndPassword(email, password);
     }
+
     public User getByPhoneAndPassword(String phone, String password) {
         return userDAO.getByPhoneAndPassword(phone, password);
     }

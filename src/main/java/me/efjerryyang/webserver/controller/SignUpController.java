@@ -2,7 +2,6 @@ package me.efjerryyang.webserver.controller;
 
 import me.efjerryyang.webserver.model.User;
 import me.efjerryyang.webserver.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
