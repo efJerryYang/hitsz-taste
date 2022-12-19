@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HITSZ Taste</title>
+    <style>
+        /* Add some styling to position the form on the right side of the page */
+        form {
+            float: right;
+            width: 250px;
+            margin: 0;
+        }
+
+        /* Add some spacing between form fields */
+        form div {
+            margin: 10px 0;
+        }
+
+        /* Center the form on the page */
+        form, h1 {
+            text-align: center;
+        }
+
+        /* Center the title and description */
+        h1, p {
+            text-align: center;
+        }
+
+        /* Align and set the same size for the input boxes */
+        label, input {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        /* Set the size of the login button */
+        input[type="submit"] {
+            width: auto;
+            margin-right: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Welcome to HITSZ Taste!</h1>
+<p>
+    This is a timely, affordable, safe, tasty, and easy to use platform for campus food delivery.
+</p>
+<p>
+    With HITSZ Taste, you can order food from your favorite cafeteria and have it delivered right to your doorstep.
+    Simply login or sign up to start ordering.
+</p>
+<form action="login" method="post">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username"/>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password"/>
+    </div>
+    <div>
+        <input type="submit" value="Login"/>
+    </div>
+</form>
+<p>
+    Don't have an account? <a href="signup">Sign up here</a>.
+</p>
+</body>
+</html>

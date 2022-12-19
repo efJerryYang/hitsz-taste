@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sign Up</title>
+    <style>
+        /* Add some styling to position the form on the right side of the page */
+        form {
+            float: right;
+            width: 250px;
+            margin: 0;
+            /*cursor: crosshair;*/
+        }
+
+        /* Add some spacing between form fields */
+        form div {
+            margin: 10px 0;
+        }
+
+        /* Center the form on the page */
+        form, h1 {
+            text-align: center;
+        }
+
+        /* Center the title and description */
+        h1, p {
+            text-align: center;
+        }
+
+        /* Align and set the same size for the input boxes */
+        label, input {
+            display: inline-block;
+            width: 100px;
+            text-align: right;
+            margin-right: 10px;
+        }
+
+        /* Set the size of the login button */
+        input[type="submit"] {
+            width: auto;
+            margin-right: 100px;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Sign Up</h1>
+<!-- Use javascript to handle the action -->
+<script>
+    function validateForm() {
+        var username = document.forms["signupForm"]["username"].value;
+        var password = document.forms["signupForm"]["password"].value;
+        var email = document.forms["signupForm"]["email"].value;
+
+        if (username == "") {
+            alert("Username must be filled out");
+            return false;
+        }
+
+        if (password == "") {
+            alert("Password must be filled out");
+            return false;
+        }
+
+        if (email == "") {
+            alert("Email must be filled out");
+            return false;
+        }
+
+        // TODO: Add additional validation checks for the form fields as needed
+    }
+</script>
+<!-- Use the form to get the user's input -->
+<form name="signupForm" th:action="@{/signup}" onsubmit="return validateForm()" method="post">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br><br>
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password"><br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email"><br><br>
+    <input type="submit" value="Submit">
+</form>
+</body>
+</html>
