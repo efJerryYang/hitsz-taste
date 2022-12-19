@@ -2,7 +2,9 @@ package me.efjerryyang.webserver.service;
 
 import me.efjerryyang.webserver.dao.UserDAO;
 import me.efjerryyang.webserver.model.User;
+import org.springframework.stereotype.Service;
 
+@Service
 public class UserService {
 
     // This layer is used to handle business logic over the data access layer
