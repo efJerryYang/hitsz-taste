@@ -175,7 +175,7 @@ public class UserDAO implements DAO<User> {
         }
     }
 
-    public User getByNameAndPassword(String name, String password){
+    public User getByNameAndPassword(String name, String password) {
         logger.info("Getting user with name {} and password {}", name, password);
         String sql = "SELECT * FROM users WHERE name = ? AND password = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
