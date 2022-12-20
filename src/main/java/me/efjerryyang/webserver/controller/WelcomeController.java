@@ -21,7 +21,7 @@ public class WelcomeController {
         this.userDAO = userDAO;
     }
 
-    @GetMapping("/")
+    @GetMapping({"/", "/login"})
     public String welcome(@ModelAttribute("model") ModelMap model) {
         logger.info("WelcomeController.welcome() called");
         return "welcome";
