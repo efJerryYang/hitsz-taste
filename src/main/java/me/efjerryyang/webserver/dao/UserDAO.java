@@ -103,8 +103,9 @@ public class UserDAO implements DAO<User> {
             String phone = resultSet.getString("phone");
             String address = resultSet.getString("address");
             Boolean isActive = resultSet.getBoolean("active");
+            String salt = resultSet.getString("salt");
             logger.info("Successfully retrieved user from ResultSet");
-            return new User(userID, name, email, password, phone, address, isActive);
+            return new User(userID, name, email, password, phone, address, isActive, salt);
         } catch (SQLException e) {
             // Log the exception and return a default user
             logger.error("Error retrieving user from ResultSet: ", e);
@@ -152,6 +153,24 @@ public class UserDAO implements DAO<User> {
             logger.info("Successfully deleted user with id {}", user.getUserId());
         } catch (SQLException e) {
             logger.error("Error deleting user in database", e);
+        }
+    }
+
+    public Long getNextId() {
+        logger.info("Getting next user id");
+        String sql = "SELECT MAX(user_id) FROM hitsz_taste.users";
+        try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                Long nextId = resultSet.getLong(1) + 1;
+                logger.info("Successfully retrieved next user id: {}", nextId);
+                return nextId;
+            } else {
+                logger.info("Successfully retrieved next user id: 1");
+                return 1L;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting next user id", e);
+            return null;
         }
     }
 
@@ -213,6 +232,69 @@ public class UserDAO implements DAO<User> {
             }
         } catch (SQLException e) {
             logger.error("Error getting user with email {} and password {}", email, password, e);
+            return null;
+        }
+    }
+
+    public String getSaltByEmail(String email) {
+        // get salt from database
+        logger.info("Getting salt for user with email {}", email);
+        String sql = "SELECT salt FROM users WHERE email = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, email);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String salt = resultSet.getString("salt");
+                logger.info("Successfully retrieved salt for user with email {}", email);
+                return salt;
+            } else {
+                logger.info("No user with email {} found", email);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting salt for user with email {}", email, e);
+            return null;
+        }
+    }
+
+    public String getSaltByPhone(String phone) {
+        // get salt from database
+        logger.info("Getting salt for user with phone {}", phone);
+        String sql = "SELECT salt FROM users WHERE phone = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, phone);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String salt = resultSet.getString("salt");
+                logger.info("Successfully retrieved salt for user with phone {}", phone);
+                return salt;
+            } else {
+                logger.info("No user with phone {} found", phone);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting salt for user with phone {}", phone, e);
+            return null;
+        }
+    }
+
+    public String getSaltByUsername(String username) {
+        // get salt from database
+        logger.info("Getting salt for user with username {}", username);
+        String sql = "SELECT salt FROM users WHERE name = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, username);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                String salt = resultSet.getString("salt");
+                logger.info("Successfully retrieved salt for user with username {}", username);
+                return salt;
+            } else {
+                logger.info("No user with username {} found", username);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting salt for user with username {}", username, e);
             return null;
         }
     }

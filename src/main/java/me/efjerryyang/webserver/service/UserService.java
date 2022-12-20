@@ -16,6 +16,14 @@ public class UserService {
         this.userDAO = userDAO;
     }
 
+    public void create(User user) {
+        if (this.get(user) == null) {
+            userDAO.create(user);
+        } else {
+            throw new RuntimeException("User already exists");
+        }
+    }
+
     public User get(User user) {
         if (user.getUserId() != null) {
             return userDAO.getById(user.getUserId());
@@ -28,8 +36,8 @@ public class UserService {
         }
     }
 
-    public void create(User user) {
-        userDAO.create(user);
+    public Long getNextId() {
+        return userDAO.getNextId();
     }
 
     public User getByUsernameAndPassword(String username, String password) {
@@ -42,6 +50,18 @@ public class UserService {
 
     public User getByPhoneAndPassword(String phone, String password) {
         return userDAO.getByPhoneAndPassword(phone, password);
+    }
+
+    public String getSaltByPhone(String phone) {
+        return userDAO.getSaltByPhone(phone);
+    }
+
+    public String getSaltByUsername(String username) {
+        return userDAO.getSaltByUsername(username);
+    }
+
+    public String getSaltByEmail(String email) {
+        return userDAO.getSaltByEmail(email);
     }
 
 }

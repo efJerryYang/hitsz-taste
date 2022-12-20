@@ -17,4 +17,5 @@ public class User implements IModel {
     private String phone;
     private String address;
     private Boolean isActive;
+    private String salt;
 }
