@@ -39,6 +39,11 @@
             margin-right: 100px;
             height: auto;
         }
+
+        noscript {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -50,6 +55,7 @@
     With HITSZ Taste, you can order food from your favorite cafeteria and have it delivered right to your doorstep.
     Simply login or sign up to start ordering.
 </p>
+
 <form action="login" method="post">
     <div>
         <label for="username">Username:</label>
@@ -62,9 +68,15 @@
     <div>
         <input type="submit" value="Login"/>
     </div>
+
 </form>
 <p>
     Don't have an account? <a href="signup">Sign up here</a>.
 </p>
+<noscript>
+    <p> Warning: JavaScript is disabled in your browser, your password will not be encrypted before being sent to the
+        server.</p>
+    <p> To protect your password, make sure that you have an https connection enabled.</p>
+</noscript>
 </body>
 </html>
