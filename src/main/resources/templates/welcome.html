@@ -55,8 +55,42 @@
     With HITSZ Taste, you can order food from your favorite cafeteria and have it delivered right to your doorstep.
     Simply login or sign up to start ordering.
 </p>
+<!-- Import the crypto-js library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<!-- Use javascript to handle the action -->
+<script>
+    function validateLoginForm() {
+        console.log("hello world");
+        var username = document.forms["loginForm"]["username"].value;
+        var password = document.forms["loginForm"]["password"].value;
 
-<form action="login" method="post">
+        if (username == "") {
+            alert("Username must be filled out. (username/phone/email)");
+            return false;
+        }
+
+        if (password == "") {
+            alert("Password must be filled out");
+            return false;
+        }
+
+        if (password.length < 6) {
+            alert("Password must be at least 6 characters");
+            return false;
+        }
+
+        if (password.length > 20) {
+            alert("Password must be at most 20 characters");
+            return false;
+        }
+
+        // TODO: Add additional validation checks for the form fields as needed
+        // Encrypt the password
+        // Set the encrypted password to the password field
+        document.getElementById("password").value = CryptoJS.SHA256(password).toString();
+    }
+</script>
+<form name="loginForm" th:action="@{/login}" onsubmit="return validateLoginForm()" method="post">
     <div>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username"/>
