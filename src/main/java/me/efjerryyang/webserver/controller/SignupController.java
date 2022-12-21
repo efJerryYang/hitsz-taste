@@ -28,6 +28,8 @@ public class SignupController {
 
     @GetMapping("/signup")
     public String signup(Model model) {
+        String msg = "Welcome to the signup page";
+        model.addAttribute("message", msg);
         return "signup";
     }
 
