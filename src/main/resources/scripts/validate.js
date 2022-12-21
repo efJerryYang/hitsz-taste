@@ -4,6 +4,10 @@ function isEmail(email) {
     return /^\w+@\w+\.\w+$/.test(email);
 }
 
+function isAddress(address) {
+    return /^[\u4e00-\u9fa5a-zA-Z0-9\\s]+$/.test(address);
+}
+
 function isPhone(phone) {
     return /^\d{3}-\d{3}-\d{4}$/.test(phone) || /^\d{10,11}$/.test(phone) || /^\+?86\d{11}$/.test(phone);
 }
@@ -13,8 +17,18 @@ function isUsername(username) {
 }
 
 function isName(name) {
-    // return /^[\p{L}\s-']+$/.test(name);
-    return isUsername(name);
+    // return name.matches("^[\u4e00-\u9fa5a-zA-Z\\s]+$");
+    return /^[\u4e00-\u9fa5a-zA-Z\\s]+$/.test(name);
+}
+
+function isJobTitle(jobTitle) {
+    // manager, merchant, contractor
+    return /^(manager|merchant|contractor)$/.test(jobTitle.toLowerCase());
+}
+
+function isCompany(company) {
+    // company1, company2, company3, company4, company5
+    return /^(company1|company2|company3|company4|company5)$/.test(company.toLowerCase());
 }
 
 function isIdNumber(idNumber) {
@@ -135,15 +149,4 @@ function isIdNumber(idNumber) {
     }
 
     return checkID(idNumber);
-}
-
-
-function isJobTitle(jobTitle) {
-    // manager, merchant, contractor
-    return /^(manager|merchant|contractor)$/.test(jobTitle.toLowerCase());
-}
-
-function isCompany(company) {
-    // company1, company2, company3, company4, company5
-    return /^(company1|company2|company3|company4|company5)$/.test(company.toLowerCase());
 }

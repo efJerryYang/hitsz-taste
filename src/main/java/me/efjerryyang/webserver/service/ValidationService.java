@@ -14,8 +14,44 @@ import java.util.Map;
 @Service
 public class ValidationService {
     private static final Logger logger = LoggerFactory.getLogger(ValidationService.class);
+    public boolean isEmail(String email) {
+        return email.matches("^\\w+@\\w+\\.\\w+$");
+    }
 
-    public static boolean isIdNumber(String idNumber) {
+    // match \^[\u4e00-\u9fa5_a-zA-Z0-9]+$
+    // https://blog.csdn.net/weixin_39625258/article/details/114302396
+    public boolean isAddress(String address) {
+        return address.matches("^[\u4e00-\u9fa5a-zA-Z0-9\\s]+$");
+    }
+
+    public boolean isPhone(String phone) {
+
+        return phone.matches("^\\d{3}-\\d{3}-\\d{4}$") || phone.matches("^\\d{10,11}$") || phone.matches("^\\+?86\\d{11}$");
+    }
+
+    public boolean isUsername(String username) {
+        // "^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$"
+        return username.matches("^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$");
+    }
+
+    public boolean isName(String name) {
+        return name.matches("^[\u4e00-\u9fa5a-zA-Z\\s]+$");
+    }
+
+    public boolean isRole(String role) {
+        return role.matches("^(admin|customer|staff)$");
+    }
+
+    public boolean isJobTitle(String jobTitle) {
+        return jobTitle.matches("^(manager|contractor|merchant)$");
+    }
+
+    public boolean isCompany(String company) {
+        // company1, company2, company3
+        return company.matches("^(company1|company2|company3)$");
+    }
+
+    public boolean isIdNumber(String idNumber) {
         // 1. 18位身份证号码的正则表达式
         final String reg = "^[1-9]\\d{5}(18|19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])\\d{3}[0-9Xx]$";
         if (!idNumber.matches(reg)) {
@@ -25,7 +61,7 @@ public class ValidationService {
     }
 
     // 检查身份证号码
-    private static boolean checkID(String val) {
+    private boolean checkID(String val) {
         if (checkCode(val)) {
             String date = val.substring(6, 14);
             if (checkDate(date)) {
@@ -38,7 +74,7 @@ public class ValidationService {
     }
 
     // 检查校验码
-    private static boolean checkCode(String val) {
+    private boolean checkCode(String val) {
         String p = "^[1-9]\\d{5}(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\\d{3}[0-9Xx]$";
         int[] factor = {7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2};
         char[] parity = {'1', '0', 'X', '9', '8', '7', '6', '5', '4', '3', '2'};
@@ -56,7 +92,7 @@ public class ValidationService {
     }
 
     // 检查出生日期
-    private static boolean checkDate(String val) {
+    private boolean checkDate(String val) {
         String pattern = "^(18|19|20)\\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)$";
         if (val.matches(pattern)) {
             String year = val.substring(0, 4);
@@ -80,7 +116,7 @@ public class ValidationService {
     }
 
     // 检查省份编码
-    private static boolean checkProv(String val) {
+    private boolean checkProv(String val) {
         final String pattern = "^[1-9][0-9]";
         Map<String, String> provs = new HashMap<>();
         provs.put("11", "北京");
@@ -122,29 +158,6 @@ public class ValidationService {
             return provs.containsKey(val);
         }
         return false;
-    }
-
-    public boolean isEmail(String email) {
-        return email.matches("^\\w+@\\w+\\.\\w+$");
-    }
-
-    public boolean isPhone(String phone) {
-
-        return phone.matches("^\\d{3}-\\d{3}-\\d{4}$") || phone.matches("^\\d{10,11}$") || phone.matches("^\\+?86\\d{11}$");
-    }
-
-    public boolean isUsername(String username) {
-        // "^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$"
-        return username.matches("^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$");
-    }
-
-    public boolean isName(String name) {
-        // ^[\p{L}\s-']+$
-        return name.matches("^\\p{L}+$");
-    }
-
-    public boolean isRole(String role) {
-        return role.matches("^(admin|customer|staff)$");
     }
 
     public boolean isJavascriptEnabled(String acceptHeader, String jsEnabled) {
