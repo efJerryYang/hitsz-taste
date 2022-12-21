@@ -13,7 +13,8 @@ function isUsername(username) {
 }
 
 function isName(name) {
-    return /^[\p{L}\s-']+$/.test(name);
+    // return /^[\p{L}\s-']+$/.test(name);
+    return isUsername(name);
 }
 
 function isIdNumber(idNumber) {

@@ -33,6 +33,18 @@ public class SignupController {
         return "signup";
     }
 
+    @PostMapping("/signup_staff")
+    public String signupStaff(Model model) {
+        logger.info("SignupController.signup_staff() called");
+        return "welcome";
+    }
+
+    @PostMapping("/signup_admin")
+    public String signupAdmin(Model model) {
+        logger.info("SignupController.signup_admin() called");
+        return "welcome";
+    }
+
     @PostMapping("/signup")
     public String handleSignupForm(@RequestParam(value = "username", defaultValue = "") String username, @RequestParam(value = "password", defaultValue = "") String password, @RequestParam(value = "phone", defaultValue = "") String phone, @RequestParam(value = "email", defaultValue = "") String email, @RequestParam(value = "options", defaultValue = "") String options, Model model) {
         logger.info("username: {} password: {} phone: {} email: {} options: {}", username, password, phone, email, options);
