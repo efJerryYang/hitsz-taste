@@ -25,6 +25,7 @@ function isIdNumber(idNumber) {
     // 1. 18位身份证号码的正则表达式
     const reg = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])\d{3}[0-9Xx]$/;
     if (!reg.test(idNumber)) {
+        console.log("reg.test(idNumber) is false");
         return false;
     }
 
@@ -79,6 +80,7 @@ function isIdNumber(idNumber) {
                 return true;
             }
         }
+        console.log("checkProv is false");
         return false;
     }
 
@@ -94,10 +96,12 @@ function isIdNumber(idNumber) {
                 return true;
             }
         }
+        console.log("checkDate is false");
         return false;
     }
 
     // 检查校验码
+    // https://blog.csdn.net/weixin_39699061/article/details/103315330
     let checkCode = function (val) {
         let p = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
         let factor = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2];
@@ -108,10 +112,11 @@ function isIdNumber(idNumber) {
             for (let i = 0; i < 17; i++) {
                 sum += val[i] * factor[i];
             }
-            if (parity[sum % 11] === code.toUpperCase()) {
+            if (parity[sum % 11] == code) {
                 return true;
             }
         }
+        console.log("checkCode is false");
         return false;
     }
 
@@ -125,6 +130,7 @@ function isIdNumber(idNumber) {
                 }
             }
         }
+        console.log("checkID is false");
         return false;
     }
 
