@@ -43,3 +43,4 @@
 ## References
 
 1. https://projectlombok.org/features/SneakyThrows
+2. https://juejin.cn/post/6844903575877861390
