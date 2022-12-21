@@ -93,9 +93,9 @@
         let lastName = document.forms["adminSignupForm"]["lastName"].value;
         let address = document.forms["adminSignupForm"]["address"].value;
         // let identification = document.forms["adminSignupForm"]["identification"].value;
-        let reference_name = document.forms["adminSignupForm"]["reference_name"].value;
-        let reference_contact = document.forms["adminSignupForm"]["reference_contact"].value;
-        // let face_image = document.forms["adminSignupForm"]["face_image"].value;
+        let referenceName = document.forms["adminSignupForm"]["referenceName"].value;
+        let referenceContact = document.forms["adminSignupForm"]["referenceContact"].value;
+        // let faceImage = document.forms["adminSignupForm"]["faceImage"].value;
         const messageElement = document.createElement('div');
         messageElement.classList.add('warning');
 
@@ -169,29 +169,29 @@
         //     formIsValid = false;
         // }
 
-        if (reference_name === "") {
+        if (referenceName === "") {
             messageElement.innerText = "Reference name is required";
-            document.getElementById("reference_name").appendChild(messageElement);
+            document.getElementById("referenceName").appendChild(messageElement);
             formIsValid = false;
-        } else if (!isName(reference_name)) {
+        } else if (!isName(referenceName)) {
             messageElement.innerText = "Reference name is invalid";
-            document.getElementById("reference_name").appendChild(messageElement);
+            document.getElementById("referenceName").appendChild(messageElement);
             formIsValid = false;
         }
 
-        if (reference_contact === "") {
+        if (referenceContact === "") {
             messageElement.innerText = "Reference contact is required";
-            document.getElementById("reference_contact").appendChild(messageElement);
+            document.getElementById("referenceContact").appendChild(messageElement);
             formIsValid = false;
-        } else if (!isPhone(reference_contact) && !isEmail(reference_contact)) {
+        } else if (!isPhone(referenceContact) && !isEmail(referenceContact)) {
             messageElement.innerText = "Reference contact is invalid";
-            document.getElementById("reference_contact").appendChild(messageElement);
+            document.getElementById("referenceContact").appendChild(messageElement);
             formIsValid = false;
         }
 
-        // if (face_image === "") {
+        // if (faceImage === "") {
         //     messageElement.innerText = "Face image is required";
-        //     document.getElementById("face_image").appendChild(messageElement);
+        //     document.getElementById("faceImage").appendChild(messageElement);
         //     formIsValid = false;
         // }
 
@@ -222,12 +222,12 @@
         <input type="email" id="email" name="email" th:value="${email}" th:required="required"/>
     </div>
     <div>
-        <label for="firstName">First Name:</label>
-        <input type="text" id="firstName" name="firstName" th:value="${firstName}" th:required="required"/>
+        <label for="firstname">First Name:</label>
+        <input type="text" id="firstname" name="firstname" th:value="${firstname}" th:required="required"/>
     </div>
     <div>
-        <label for="lastName">Last Name:</label>
-        <input type="text" id="lastName" name="lastName" th:value="${lastName}" th:required="required"/>
+        <label for="lastname">Last Name:</label>
+        <input type="text" id="lastname" name="lastname" th:value="${lastname}" th:required="required"/>
     </div>
     <div>
         <label for="address">Address:</label>
@@ -239,18 +239,18 @@
     <!--               accept="application/pdf"/>-->
     <!--    </div>-->
     <div>
-        <label for="reference_name">Reference Name:</label>
-        <input type="text" id="reference_name" name="reference_name" th:value="${reference_name}"
+        <label for="referenceName">Reference Name:</label>
+        <input type="text" id="referenceName" name="referenceName" th:value="${referenceName}" th:required="required"/>
                th:required="required"/>
     </div>
     <div>
-        <label for="reference_contact">Reference Contact (email/phone):</label>
-        <input type="email" id="reference_contact" name="reference_contact" th:value="${reference_contact}"
+        <label for="referenceContact">Reference Contact (email/phone):</label>
+        <input type="email" id="referenceContact" name="referenceContact" th:value="${referenceContact}" th:required="required"/>
                th:required="required"/>
     </div>
     <!--    <div>-->
-    <!--        <label for="face_image">Face Image:</label>-->
-    <!--        <input type="file" id="face_image" name="face_image" th:value="${face_image}" th:required="required"-->
+    <!--        <label for="faceImage">Face Image:</label>-->
+    <!--        <input type="file" id="faceImage" name="faceImage" th:value="${faceImage}" th:required="required"-->
     <!--               accept="image/*"/>-->
     <!--    </div>-->
     <div>
