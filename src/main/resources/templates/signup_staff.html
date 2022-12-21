@@ -84,6 +84,7 @@
         // 1. 18位身份证号码的正则表达式
         const reg = /^[1-9]\d{5}(18|19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])\d{3}[0-9Xx]$/;
         if (!reg.test(idNumber)) {
+            console.log("reg.test(idNumber) is false");
             return false;
         }
 
@@ -130,7 +131,8 @@
                 65: "新疆",
                 71: "台湾",
                 81: "香港",
-                82: "澳门"
+                82: "澳门",
+                91: "国外"
             };
             if (pattern.test(val)) {
                 if (provs[val]) {
@@ -166,7 +168,8 @@
                 for (let i = 0; i < 17; i++) {
                     sum += val[i] * factor[i];
                 }
-                if (parity[sum % 11] === code.toUpperCase()) {
+                // here we should use `==` instead of `===`
+                if (parity[sum % 11] == code.toUpperCase()) {
                     return true;
                 }
             }
@@ -183,6 +186,7 @@
                     }
                 }
             }
+            console.log("checkID is false");
             return false;
         }
 
