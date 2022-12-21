@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sign Up</title>
+    <style>
+        form {
+            width: 350px;
+            margin: auto;
+        }
+
+        form div {
+            margin: 10px 0;
+        }
+
+        form, h1 {
+            text-align: center;
+        }
+
+        h1, p {
+            text-align: center;
+        }
+
+        label, input {
+            display: inline-block;
+            width: 140px;
+            text-align: left;
+            margin-right: 10px;
+        }
+
+        input[type="submit"] {
+            width: auto;
+            margin-right: 100px;
+            height: auto;
+        }
+
+        noscript {
+            color: red;
+            font-weight: bold;
+        }
+
+        div.nojs {
+            display: none;
+        }
+
+        #message-container {
+            text-align: center;
+        }
+
+        .warning {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>Staff Signup</h1>
+
+<script src="/scripts/validate.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script>
+    function isEmail(email) {
+        return /^\w+@\w+\.\w+$/.test(email);
+    }
+
+    function isPhone(phone) {
+        return /^\d{3}-\d{3}-\d{4}$/.test(phone) || /^\d{10,11}$/.test(phone) || /^\+?86\d{11}$/.test(phone);
+    }
+
+    function isUsername(username) {
+        return /^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$/.test(username);
+    }
+
+    function isName(name) {
+        return /^[\p{L}\s-']+$/.test(name);
+    }
+
+    function validateStaffForm() {
+        let username = document.getElementById("username").value;
+        let password = document.getElementById("password").value;
+        let phone = document.getElementById("phone").value;
+        let email = document.getElementById("email").value;
+        let firstname = document.forms["staffForm"]["firstname"].value;
+        let lastname = document.forms["staffForm"]["lastname"].value;
+        let idNumber = document.forms["staffForm"]["idNumber"].value;
+        let jobTitle = document.forms["staffForm"]["jobTitle"].value;
+        let company = document.forms["staffForm"]["company"].value;
+        // create an element to hold the warning message
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('warning');
+
+        let formIsValid = true;
+
+        if (username === "") {
+            messageElement.innerText = "Username is required";
+            document.getElementById("username").after(messageElement);
+            formIsValid = false;
+        } else if (!isUsername(username)) {
+            messageElement.innerText = "Username is invalid";
+            document.getElementById("username").after(messageElement);
+            formIsValid = false;
+        }
+
+        if (password === "") {
+            messageElement.innerText = "Password is required";
+            document.getElementById("password").after(messageElement);
+            formIsValid = false;
+        }
+
+        if (phone === "") {
+            messageElement.innerText = "Phone is required";
+            document.getElementById("phone").after(messageElement);
+            formIsValid = false;
+        } else if (!isPhone(phone)) {
+            messageElement.innerText = "Phone is invalid";
+            document.getElementById("phone").after(messageElement);
+            formIsValid = false;
+        }
+
+        if (email === "") {
+            messageElement.innerText = "Email is required";
+            document.getElementById("email").after(messageElement);
+            formIsValid = false;
+        } else if (!isEmail(email)) {
+            messageElement.innerText = "Email is invalid";
+            document.getElementById("email").after(messageElement);
+            formIsValid = false;
+        }
+
+        if (firstname === "") {
+            messageElement.innerHTML = "First name is required.";
+            formIsValid = false;
+        } else if (!isName(firstname)) {
+            messageElement.innerHTML = "First name is invalid.";
+            formIsValid = false;
+        }
+        if (lastname === "") {
+            messageElement.innerHTML = "Last name is required.";
+            formIsValid = false;
+        } else if (!isName(lastname)) {
+            messageElement.innerHTML = "Last name is invalid.";
+            formIsValid = false;
+        }
+        if (idNumber === "") {
+            messageElement.innerHTML = "ID number is required.";
+            formIsValid = false;
+        } else if (!isIdNumber(idNumber)) {
+            messageElement.innerHTML = "ID number is invalid.";
+            formIsValid = false;
+        }
+        if (jobTitle === "") {
+            messageElement.innerHTML = "Job title is required.";
+            formIsValid = false;
+        } else if (!isJobTitle(jobTitle)) {
+            messageElement.innerHTML = "Job title is invalid.";
+            formIsValid = false;
+        }
+        if (company === "") {
+            messageElement.innerHTML = "Company is required.";
+            formIsValid = false;
+        } else if (!isCompany(company)) {
+            messageElement.innerHTML = "Company is invalid.";
+            formIsValid = false;
+        }
+        // remove any existing warning messages from the DOM
+        const existingWarnings = document.querySelectorAll('.warning');
+        existingWarnings.forEach(warning => warning.remove());
+        if (!formIsValid) {
+            // insert the message element into the DOM
+            document.querySelector('#message-container').appendChild(messageElement);
+            return false;
+        }
+    }
+</script>
+<form name="staffForm" th:action="@{/signup_staff}" onsubmit="return validateStaffForm()" method="post">
+    <label for="username">Username:</label>
+    <input type="text" name="username" id="username" th:value="${username}" required/><br><br>
+    <label for="password">Password:</label>
+    <input type="password" name="password" id="password" th:value="${password}" required/><br><br>
+    <label for="phone">Phone:</label>
+    <input type="text" name="phone" id="phone" th:value="${phone}" required/><br><br>
+    <label for="email">Email:</label>
+    <input type="text" name="email" id="email" th:value="${email}" required/><br><br>
+    <label for="firstname">First Name:</label>
+    <input type="text" name="firstname" id="firstname" th:value="${fisrtname}"/><br><br>
+    <label for="lastname">Last Name:</label>
+    <input type="text" name="lastname" id="lastname" th:value="${lastname}"/><br><br>
+    <label for="idNumber">ID Number:</label>
+    <input type="text" name="idNumber" id="idNumber" th:value="${idNumber}"/><br><br>
+    <label for="jobTitle">Job Title:</label>
+    <input type="text" name="jobTitle" id="jobTitle" th:value="${jobTitle}"/><br><br>
+    <label for="company">Company:</label>
+    <input type="text" name="company" id="company" th:value="${company}"/><br><br>
+    <input type="submit" value="Submit"/>
+    <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
+    <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
+    <div id="message-container">
+        <!-- The error message will be inserted here -->
+    </div>
+</form>
+<noscript>
+    <p> Warning: JavaScript is disabled in your browser, your password will not be encrypted before being sent to the
+        server.</p>
+    <p> To protect your password, make sure that you have an https connection enabled.</p>
+</noscript>
+</body>
+</html>
