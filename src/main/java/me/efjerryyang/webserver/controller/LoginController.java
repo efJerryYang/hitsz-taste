@@ -37,7 +37,9 @@ public class LoginController {
     public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String acceptHeader = request.getHeader("Accept");
-        if (!validationService.isJavascriptEnabled(acceptHeader, null)) {
+        String jsEnabled = request.getParameter("jsEnabled");
+
+        if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
             password = CryptoUtilHash.hash(password);
             logger.info("hashed password: {}", password);
         }
