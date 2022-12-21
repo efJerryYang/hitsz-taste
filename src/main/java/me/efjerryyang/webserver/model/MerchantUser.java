@@ -15,4 +15,6 @@ public class MerchantUser implements IModel {
     private Long merchantId;
     private Long userId;
     private Date updateTime;
+    private String jobTitle;
+    private String Company;
 }

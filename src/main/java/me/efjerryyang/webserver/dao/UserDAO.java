@@ -25,11 +25,11 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public User create(User user) {
-        logger.info("Creating user with id {} and name {}", user.getUserId(), user.getName());
+        logger.info("Creating user with id {} and name {}", user.getUserId(), user.getUsername());
         String sql = "INSERT INTO users (user_id, name, email, password, phone, address, active) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, user.getUserId());
-            statement.setObject(2, user.getName());
+            statement.setObject(2, user.getUsername());
             statement.setObject(3, user.getEmail());
             statement.setObject(4, user.getPassword());
             statement.setObject(5, user.getPhone());
@@ -50,12 +50,12 @@ public class UserDAO implements DAO<User> {
 
     @Override
     public User update(User user) {
-        logger.info("Updating user with id {} and name {}", user.getUserId(), user.getName());
+        logger.info("Updating user with id {} and name {}", user.getUserId(), user.getUsername());
         String sql = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, address = ? WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the user in the SQL statement
-            logger.debug("Setting user values in SQL statement: name = {}, email = {}, password = {}, phone = {}, address = {}, user_id = {}, active = {}", user.getName(), user.getEmail(), user.getPassword(), user.getPhone(), user.getAddress(), user.getUserId(), user.getIsActive());
-            statement.setObject(1, user.getName());
+            logger.debug("Setting user values in SQL statement: name = {}, email = {}, password = {}, phone = {}, address = {}, user_id = {}, active = {}", user.getUsername(), user.getEmail(), user.getPassword(), user.getPhone(), user.getAddress(), user.getUserId(), user.getIsActive());
+            statement.setObject(1, user.getUsername());
             statement.setObject(2, user.getEmail());
             statement.setObject(3, user.getPassword());
             statement.setObject(4, user.getPhone());
@@ -76,7 +76,7 @@ public class UserDAO implements DAO<User> {
         logger.info("Updating user with id {}", objectOld.getUserId());
         String sql = "UPDATE users SET name = ?, email = ?, password = ?, phone = ?, address = ?, active = ? WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, objectNew.getName());
+            statement.setObject(1, objectNew.getUsername());
             statement.setObject(2, objectNew.getEmail());
             statement.setObject(3, objectNew.getPassword());
             statement.setObject(4, objectNew.getPhone());
