@@ -34,30 +34,31 @@ public class LoginController {
     // salt: 419e1c50a5ad83497bb92865742f9da0
     // salt-hashed password: 107a2f74dd8b9c856eead9a4c960929e268e9a0e8b52faa6629fcc2401477021
     @PostMapping("/login")
-    public String login(@RequestParam("username") String username, @RequestParam("password") String password, Model model) {
+    public String login(@RequestParam(value = "username", defaultValue = "") String username,
+                        @RequestParam(value = "password", defaultValue = "") String password, Model model
+    ) {
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String acceptHeader = request.getHeader("Accept");
         String jsEnabled = request.getParameter("jsEnabled");
 
         if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
+            logger.info("Validating login form data from server side");
+            if (username.isEmpty() || password.isEmpty()) {
+                model.addAttribute("error", "Please fill in all fields");
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
+                return "login";
+            }
+            if (!validationService.isUsername(username)) {
+                model.addAttribute("error", "Invalid username");
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
+                return "login";
+            }
             password = CryptoUtilHash.hash(password);
             logger.info("hashed password: {}", password);
         }
         logger.info("username: {} password: {}", username, password);
-
-//        // a test for salted password login
-//        String salt1 = "f38140ea4774036cc005934d3733ea73";
-//        String salt2 = "419e1c50a5ad83497bb92865742f9da0";
-//        String expectedPassword1 = Base64.getEncoder().encodeToString(Hex.decode("877179f6b1531a8d5a18f37a8c4aeee811e426f489f299ad3fc9e3c9ff73409a"));
-//        logger.info("Expected password1: " + expectedPassword1);
-//        String expectedPassword2 = "107a2f74dd8b9c856eead9a4c960929e268e9a0e8b52faa6629fcc2401477021";
-//        logger.info("Expected password2: " + expectedPassword2);
-//
-//        if (expectedPassword1.equals(CryptoUtilHash.hashWithSalt(password, salt1)))
-//            logger.info("Password 1 is correct");
-//        if (expectedPassword2.equals(CryptoUtilHash.hashWithSalt(password, salt2)))
-//            logger.info("Password 2 is correct");
-//        return "login";
         // the username passed in can be either phone or email or username
         if (validationService.isPhone(username)) {
             // username is a phone number
@@ -66,6 +67,8 @@ public class LoginController {
             User user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
             if (user == null) {
                 // Login failed
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
                 model.addAttribute("error", "Invalid username or password");
                 return "welcome";
             } else {

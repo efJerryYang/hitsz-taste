@@ -94,16 +94,17 @@
 <form name="loginForm" th:action="@{/login}" onsubmit="return validateLoginForm()" method="post">
     <div>
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username"/>
+        <input type="text" id="username" name="username" th:value="${username}">
     </div>
     <div>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password"/>
+        <input type="password" id="password" name="password" th:value="${password}">
     </div>
     <div>
         <input type="submit" value="Login"/>
     </div>
     <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
+    <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
 </form>
 <p>
     Don't have an account? <a href="signup">Sign up here</a>.

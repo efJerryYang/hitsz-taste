@@ -34,7 +34,7 @@ public class SignupController {
     }
 
     @PostMapping("/signup")
-    public String handleSignupForm(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("phone") String phone, @RequestParam("email") String email, @RequestParam("options") String options, /* @RequestParam("nojs") String nojs, */ Model model) {
+    public String handleSignupForm(@RequestParam(value = "username", defaultValue = "") String username, @RequestParam(value = "password", defaultValue = "") String password, @RequestParam(value = "phone", defaultValue = "") String phone, @RequestParam(value = "email", defaultValue = "") String email, @RequestParam(value = "options", defaultValue = "") String options, Model model) {
         // validate if javascript is disabled
         logger.info("username: {} password: {} phone: {} email: {} options: {}", username, password, phone, email, options);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
@@ -42,25 +42,42 @@ public class SignupController {
         String jsEnabled = request.getParameter("jsEnabled");
         if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
             // javascript is disabled
-            logger.info("Validating form data from server side");
+            logger.info("Validating signup form data from server side");
             // validate the form input
-            if (username == null || username.isEmpty() || password == null || password.isEmpty() || phone == null || phone.isEmpty() || email == null || email.isEmpty() || options == null || options.isEmpty()) {
+            if (username.isEmpty() || password.isEmpty() || phone.isEmpty() || email.isEmpty() || options.isEmpty()) {
                 logger.info("SignupController.handleSignupForm() called with empty fields");
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
+                model.addAttribute("phone", phone);
+                model.addAttribute("email", email);
+                model.addAttribute("options", options);
                 model.addAttribute("error", "Please fill out all the fields");
                 return "signup";
             }
             if (!validationService.isPhone(phone)) {
                 logger.info("SignupController.handleSignupForm() called with invalid phone number");
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
+                model.addAttribute("email", email);
+                model.addAttribute("options", options);
                 model.addAttribute("error", "Please enter a valid phone number");
                 return "signup";
             }
             if (!validationService.isEmail(email)) {
                 logger.info("SignupController.handleSignupForm() called with invalid email");
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
+                model.addAttribute("phone", phone);
+                model.addAttribute("options", options);
                 model.addAttribute("error", "Please enter a valid email");
                 return "signup";
             }
             if (!validationService.isRole(options)) {
                 logger.info("SignupController.handleSignupForm() called with invalid options");
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
+                model.addAttribute("phone", phone);
+                model.addAttribute("email", email);
                 model.addAttribute("error", "Please select an role");
                 return "signup";
             }
