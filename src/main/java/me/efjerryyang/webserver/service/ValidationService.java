@@ -33,7 +33,8 @@ public class ValidationService {
 
     public boolean isJavascriptEnabled(String acceptHeader, String jsEnabled) {
         logger.info("checking if javascript is enabled");
-        logger.info(acceptHeader);
+        logger.info("acceptHeader: " + acceptHeader);
+        logger.info("jsEnabled: " + jsEnabled);
         // chrome:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
         // firefox: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
         if (acceptHeader != null && (acceptHeader.contains("application/javascript") || jsEnabled.equals("true"))) {

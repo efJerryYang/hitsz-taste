@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>HITSZ Taste</title>
     <style>
@@ -44,6 +45,14 @@
             color: red;
             font-weight: bold;
         }
+
+        #message-container {
+            text-align: center;
+        }
+
+        .warning {
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -55,42 +64,66 @@
     With HITSZ Taste, you can order food from your favorite cafeteria and have it delivered right to your doorstep.
     Simply login or sign up to start ordering.
 </p>
-<!-- Import the crypto-js library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-<!-- Use javascript to handle the action -->
+<script src="/scripts/validate.js"></script>
 <script>
+    function isEmail(email) {
+        return /^\w+@\w+\.\w+$/.test(email);
+    }
+
+    function isPhone(phone) {
+        return /^\d{3}-\d{3}-\d{4}$/.test(phone) || /^\d{10,11}$/.test(phone) || /^\+?86\d{11}$/.test(phone);
+    }
+
+    function isUsername(username) {
+        return /^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$/.test(username);
+    }
+
+    function isName(name) {
+        return /^[\p{L}\s-']+$/.test(name);
+    }
+
     function validateLoginForm() {
-        var username = document.forms["loginForm"]["username"].value;
-        var password = document.forms["loginForm"]["password"].value;
+        let username = document.forms["loginForm"]["username"].value;
+        let password = document.forms["loginForm"]["password"].value;
+        // create an element to hold the warning message
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('warning');
 
-        if (username == "") {
-            alert("Username must be filled out. (username/phone/email)");
-            return false;
+        let formIsValid = true;
+
+        // check if the username is empty
+        if (username === "") {
+            messageElement.innerHTML = 'Username must be filled out';
+            formIsValid = false;
         }
 
-        if (password == "") {
-            alert("Password must be filled out");
-            return false;
+        // check if the password is empty
+        if (password === "") {
+            messageElement.innerHTML = 'Password must be filled out';
+            formIsValid = false;
         }
 
-        if (password.length < 6) {
-            alert("Password must be at least 6 characters");
-            return false;
+        // if the username is not phone number, or email, or username, then it is invalid
+        if (!isPhone(username) && !isEmail(username) && !isName(username)) {
+            messageElement.innerHTML = 'Username is invalid';
+            formIsValid = false;
         }
 
-        if (password.length > 20) {
-            alert("Password must be at most 20 characters");
+        // remove any existing warning messages from the DOM
+        const existingWarnings = document.querySelectorAll('.warning');
+        existingWarnings.forEach(warning => warning.remove());
+        if (!formIsValid) {
+            // insert the message element into the DOM
+            document.querySelector('#message-container').appendChild(messageElement);
             return false;
         }
-
-        // TODO: Add additional validation checks for the form fields as needed
         // Encrypt the password
         // Set the encrypted password to the password field
         document.getElementById("password").value = CryptoJS.SHA256(password).toString();
         document.getElementById("jsEnabled").value = "true";
     }
 </script>
-
 <form name="loginForm" th:action="@{/login}" onsubmit="return validateLoginForm()" method="post">
     <div>
         <label for="username">Username:</label>
@@ -105,6 +138,9 @@
     </div>
     <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
     <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
+    <div id="message-container">
+        <!-- The error message will be inserted here -->
+    </div>
 </form>
 <p>
     Don't have an account? <a href="signup">Sign up here</a>.

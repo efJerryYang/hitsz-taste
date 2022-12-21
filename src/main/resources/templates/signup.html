@@ -58,56 +58,107 @@
         div.nojs {
             display: none;
         }
+
+        #message-container {
+            text-align: center;
+        }
+
+        .warning {
+            color: red;
+        }
+
     </style>
 </head>
 <body>
 <h1>Sign Up</h1>
-<!-- Import the crypto-js library -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-<!-- Use javascript to handle the action -->
+<script src="/scripts/validate.js"></script>
 <script>
-    function validateForm() {
-        var username = document.forms["signupForm"]["username"].value;
-        var password = document.forms["signupForm"]["password"].value;
-        var phone = document.forms["signupForm"]["phone"].value;
-        var email = document.forms["signupForm"]["email"].value;
-        var options = document.forms["signupForm"]["options"].value;
+    function isEmail(email) {
+        return /^\w+@\w+\.\w+$/.test(email);
+    }
 
-        if (username == "") {
-            alert("Username must be filled out");
-            return false;
+    function isPhone(phone) {
+        return /^\d{3}-\d{3}-\d{4}$/.test(phone) || /^\d{10,11}$/.test(phone) || /^\+?86\d{11}$/.test(phone);
+    }
+
+    function isUsername(username) {
+        return /^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$/.test(username);
+    }
+
+    function isName(name) {
+        return /^[\p{L}\s-']+$/.test(name);
+    }
+
+    function validateSignupForm() {
+        let username = document.forms["signupForm"]["username"].value;
+        let password = document.forms["signupForm"]["password"].value;
+        let phone = document.forms["signupForm"]["phone"].value;
+        let email = document.forms["signupForm"]["email"].value;
+        let options = document.forms["signupForm"]["options"].value;
+        // create an element to hold the warning message
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('warning');
+
+        let formIsValid = true;
+
+        // check if the username is empty
+        if (username === "") {
+            messageElement.innerHTML = 'Username must be filled out';
+            formIsValid = false;
         }
 
-        if (password == "") {
-            alert("Password must be filled out");
-            return false;
+        // check if the password is empty
+        if (password === "") {
+            messageElement.innerHTML = 'Password must be filled out';
+            formIsValid = false;
         }
 
-        if (phone == "") {
-            alert("Phone must be filled out");
-            return false;
+        // check if the phone is empty
+        if (phone === "") {
+            messageElement.innerHTML = 'Phone must be filled out';
+            formIsValid = false;
         }
 
-        if (email == "") {
-            alert("Email must be filled out");
-            return false;
+        // check if the email is empty
+        if (email === "") {
+            messageElement.innerHTML = 'Email must be filled out';
+            formIsValid = false;
         }
 
-        if (password.length < 6) {
-            alert("Password must be at least 6 characters");
-            return false;
+        // check if the options is empty
+        if (options === "") {
+            messageElement.innerHTML = 'Options must be selected';
+            formIsValid = false;
         }
 
-        if (password.length > 20) {
-            alert("Password must be at most 20 characters");
-            return false;
+        // if (!isUsername(username)) {
+        //     messageElement.innerHTML = 'Username must be 6-20 characters long and start with a letter';
+        //     formIsValid = false;
+        // }
+
+        if (!isPhone(phone)) {
+            messageElement.innerHTML = 'Phone must be in the format of 123-456-7890 or 1234567890 or +861234567890';
+            formIsValid = false;
         }
 
-        if (options == "") {
-            alert("Please select an option");
+        if (!isEmail(email)) {
+            messageElement.innerHTML = 'Email must be in the format of  prefix@domain.suffix';
+            formIsValid = false;
+        }
+
+        if (!isName(username)) {
+            messageElement.innerHTML = 'Please enter a valid name';
+            formIsValid = false;
+        }
+        // remove any existing warning messages from the DOM
+        const existingWarnings = document.querySelectorAll('.warning');
+        existingWarnings.forEach(warning => warning.remove());
+        if (!formIsValid) {
+            // insert the message element into the DOM
+            document.querySelector('#message-container').appendChild(messageElement);
             return false;
         }
-        // TODO: Add additional validation checks for the form fields as needed
         // Encrypt the password
         // Set the encrypted password to the password field
         document.getElementById("password").value = CryptoJS.SHA256(password).toString();
@@ -115,7 +166,7 @@
     }
 </script>
 <!-- Use the form to get the user's input -->
-<form name="signupForm" th:action="@{/signup}" onsubmit="return validateForm()" method="post">
+<form name="signupForm" th:action="@{/signup}" onsubmit="return validateSignupForm()" method="post">
     <label for="username">Username:</label>
     <input type="text" id="username" name="username" th:value="${username}"><br><br>
     <label for="password">Password:</label>
@@ -137,15 +188,15 @@
     <input type="submit" value="Submit">
     <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
     <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
+    <div id="message-container">
+        <!-- The error message will be inserted here -->
+    </div>
 </form>
 
 <noscript>
     <p> Warning: JavaScript is disabled in your browser, your password will not be encrypted before being sent to the
         server.</p>
     <p> To protect your password, make sure that you have an https connection enabled.</p>
-    <div class="nojs">
-        <label for="nojs"></label><input type="text" id="nojs" name="nojs" value="true">
-    </div>
 </noscript>
 </body>
 </html>
