@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode
 public class User implements IModel {
     private Long userId;
-    private String name;
+    private String username;
     private String email;
     private String password;
     private String phone;
