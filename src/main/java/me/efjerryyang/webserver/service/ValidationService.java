@@ -28,7 +28,7 @@ public class ValidationService {
     }
 
     public boolean isRole(String role) {
-        return role.matches("^(admin|customer|employee)$");
+        return role.matches("^(admin|customer|staff)$");
     }
 
     public boolean isJavascriptEnabled(String acceptHeader, String jsEnabled) {

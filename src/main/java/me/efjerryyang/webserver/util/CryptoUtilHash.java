@@ -22,6 +22,9 @@ public class CryptoUtilHash {
     }
 
     public static String hash(String password) {
+        if (password == null) {
+            throw new IllegalArgumentException("Password cannot be null");
+        }
         logger.info("Hashing password string");
         // use sha256 to hash the password
         // it can be either a plain text or a sha256 hash
@@ -31,6 +34,9 @@ public class CryptoUtilHash {
     }
 
     public static String hashWithSalt(String password, String salt) {
+        if (password == null || salt == null) {
+            throw new IllegalArgumentException("Password or salt cannot be null");
+        }
         logger.info("Hashing password with salt");
         // hash the text with salt
         // first examine the password is a valid sha256 hash or not
