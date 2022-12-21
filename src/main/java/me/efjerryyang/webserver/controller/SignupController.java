@@ -37,7 +37,8 @@ public class SignupController {
         logger.info("username: {} password: {} phone: {} email: {} options: {}", username, password, phone, email, options);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String acceptHeader = request.getHeader("Accept");
-        if (!validationService.isJavascriptEnabled(acceptHeader, null)) {
+        String jsEnabled = request.getParameter("jsEnabled");
+        if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
             // javascript is disabled
             logger.info("Validating form data from server side");
             // validate the form input

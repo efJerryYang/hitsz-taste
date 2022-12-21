@@ -60,7 +60,6 @@
 <!-- Use javascript to handle the action -->
 <script>
     function validateLoginForm() {
-        console.log("hello world");
         var username = document.forms["loginForm"]["username"].value;
         var password = document.forms["loginForm"]["password"].value;
 
@@ -88,8 +87,10 @@
         // Encrypt the password
         // Set the encrypted password to the password field
         document.getElementById("password").value = CryptoJS.SHA256(password).toString();
+        document.getElementById("jsEnabled").value = "true";
     }
 </script>
+
 <form name="loginForm" th:action="@{/login}" onsubmit="return validateLoginForm()" method="post">
     <div>
         <label for="username">Username:</label>
@@ -102,7 +103,7 @@
     <div>
         <input type="submit" value="Login"/>
     </div>
-
+    <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
 </form>
 <p>
     Don't have an account? <a href="signup">Sign up here</a>.
