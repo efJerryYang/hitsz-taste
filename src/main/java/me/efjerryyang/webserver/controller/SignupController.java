@@ -21,6 +21,7 @@ public class SignupController {
     private final UserService userService;
     private final ValidationService validationService;
 
+
     public SignupController(UserService userService, ValidationService validationService) {
         this.userService = userService;
         this.validationService = validationService;
@@ -28,18 +29,17 @@ public class SignupController {
 
     @GetMapping("/signup")
     public String signup(Model model) {
-        String msg = "Welcome to the signup page";
-        model.addAttribute("message", msg);
+        logger.info("SignupController.signup() called");
         return "signup";
     }
 
     @PostMapping("/signup")
     public String handleSignupForm(@RequestParam(value = "username", defaultValue = "") String username, @RequestParam(value = "password", defaultValue = "") String password, @RequestParam(value = "phone", defaultValue = "") String phone, @RequestParam(value = "email", defaultValue = "") String email, @RequestParam(value = "options", defaultValue = "") String options, Model model) {
-        // validate if javascript is disabled
         logger.info("username: {} password: {} phone: {} email: {} options: {}", username, password, phone, email, options);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String acceptHeader = request.getHeader("Accept");
         String jsEnabled = request.getParameter("jsEnabled");
+        // validate if javascript is enabled
         if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
             // javascript is disabled
             logger.info("Validating signup form data from server side");
