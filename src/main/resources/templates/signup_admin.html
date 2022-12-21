@@ -65,6 +65,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 <script src="/scripts/validate.js"></script>
 <script>
+    // Notice that if lacks these function declarations, the script will not work.
+    // It will not work even if the functions are declared in the validate.js file.
     function isEmail(email) {
         return /^\w+@\w+\.\w+$/.test(email);
     }
