@@ -62,50 +62,56 @@ public class LoginController {
         }
         logger.info("username: {} password: {}", username, password);
         // the username passed in can be either phone or email or username
+        String salt;
+        User user;
         if (validationService.isPhone(username)) {
             // username is a phone number
             // check if the password is correct
-            String salt = userService.getSaltByPhone(username);
-            User user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-            if (user == null) {
-                // Login failed
+            try {
+                salt = userService.getSaltByPhone(username);
+                user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+            } catch (Exception e) {
+                logger.error("Error: {}", e.getMessage());
+                model.addAttribute("error", "Invalid username or password");
                 model.addAttribute("username", username);
                 model.addAttribute("password", password);
-                model.addAttribute("error", "Invalid username or password");
                 return "welcome";
-            } else {
-                // Login succeeded
-                model.addAttribute("user", user);
-                return "home";
             }
+            // Login succeeded
+            model.addAttribute("user", user);
+            return "home";
         } else if (validationService.isEmail(username)) {
             // username is an email
             // check if the password is correct
-            String salt = userService.getSaltByEmail(username);
-            User user = userService.getByEmailAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-            if (user == null) {
-                // Login failed
+            try {
+                salt = userService.getSaltByEmail(username);
+                user = userService.getByEmailAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+            } catch (Exception e) {
+                logger.error("Error: {}", e.getMessage());
                 model.addAttribute("error", "Invalid username or password");
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
                 return "welcome";
-            } else {
-                // Login succeeded
-                model.addAttribute("user", user);
-                return "home";
             }
+            // Login succeeded
+            model.addAttribute("user", user);
+            return "home";
         } else if (validationService.isUsername(username)) {
             // username is a username
             // check if the password is correct
-            String salt = userService.getSaltByUsername(username);
-            User user = userService.getByUsernameAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-            if (user == null) {
-                // Login failed
+            try {
+                salt = userService.getSaltByUsername(username);
+                user = userService.getByUsernameAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+            } catch (Exception e) {
+                logger.error("Error: {}", e.getMessage());
                 model.addAttribute("error", "Invalid username or password");
+                model.addAttribute("username", username);
+                model.addAttribute("password", password);
                 return "welcome";
-            } else {
-                // Login succeeded
-                model.addAttribute("user", user);
-                return "home";
             }
+            // Login succeeded
+            model.addAttribute("user", user);
+            return "home";
         } else {
             // username is not a phone number, email or username
             model.addAttribute("error", "Invalid username or password");

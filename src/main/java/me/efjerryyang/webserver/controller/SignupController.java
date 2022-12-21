@@ -86,28 +86,37 @@ public class SignupController {
             logger.info("hashed password: {}", password);
         }
         User user = new User();
-        if (options != null) {
-            if ("customer".equals(options)) {
-                logger.info("SignupController.handleSignupForm() called with customer option");
-            } else if ("employee".equals(options)) {
-                logger.info("SignupController.handleSignupForm() called with employee option");
-            }
-            String salt = CryptoUtilHash.getSalt();
-            user.setSalt(salt);
-            user.setName(username);
-            user.setPassword(CryptoUtilHash.hashWithSalt(password, salt));
-            user.setPhone(phone);
-            user.setEmail(email);
-        } else {
-            logger.info("SignupController.handleSignupForm() called with invalid option");
-            model.addAttribute("error", "Please select a role");
-            return "signup";
-        }
+
+        String salt = CryptoUtilHash.getSalt();
+        user.setSalt(salt);
+        user.setUsername(username);
+        user.setPassword(CryptoUtilHash.hashWithSalt(password, salt));
+        user.setPhone(phone);
+        user.setEmail(email);
+
         try {
             user.setUserId(userService.getNextId());
             user.setIsActive(true);
 //            userService.create(user);
-            System.out.println(user);
+            logger.info(String.valueOf(user));
+            switch (options) {
+                case "customer":
+                    return "redirect:/login";
+                case "admin":
+                    model.addAttribute("username", username);
+                    model.addAttribute("password", password);
+                    model.addAttribute("phone", phone);
+                    model.addAttribute("email", email);
+                    return "signup_admin";
+                case "staff":
+                    model.addAttribute("username", username);
+                    model.addAttribute("password", password);
+                    model.addAttribute("phone", phone);
+                    model.addAttribute("email", email);
+                    return "signup_staff";
+                default:
+                    return "redirect:/welcome";
+            }
         } catch (RuntimeException e) {
             logger.info("SignupController.handleSignupForm() called with duplicate user");
             model.addAttribute("error", "User already exists");
@@ -117,7 +126,5 @@ public class SignupController {
             model.addAttribute("error", "Error creating user");
             return "signup";
         }
-        // TODO: Redirect to a confirmation page or display a success message on the same page
-        return "redirect:/login";
     }
 }
