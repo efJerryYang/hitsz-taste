@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+        xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Sign Up</title>
+    <style>
+        /* Add some styling to position the form on the right side of the page */
+        form {
+            /*float: right;*/
+            width: 500px;
+            margin: auto;
+        }
+
+        /* Add some spacing between form fields */
+        form div {
+            margin: 10px 0;
+        }
+
+        /* Center the form on the page */
+        form, h1 {
+            text-align: center;
+        }
+
+        /* Center the title and description */
+        h1, p {
+            text-align: center;
+        }
+
+        /* Align and set the same size for the input boxes */
+        label, input {
+            display: inline-block;
+            width: 120px;
+            text-align: left;
+            margin-right: 10px;
+        }
+
+        /* Set the size of the login button */
+        input[type="submit"] {
+            width: auto;
+            margin-right: 100px;
+            height: auto;
+        }
+
+
+        noscript {
+            color: red;
+            font-weight: bold;
+        }
+
+        div.nojs {
+            display: none;
+        }
+
+        #message-container {
+            text-align: center;
+        }
+
+        .warning {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<h1>Admin Signup</h1>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
+<script src="/scripts/validate.js"></script>
+<script>
+    function validateAdminForm() {
+        let username = document.forms["adminSignupForm"]["username"].value;
+        let password = document.forms["adminSignupForm"]["password"].value;
+        let phone = document.forms["adminSignupForm"]["phone"].value;
+        let email = document.forms["adminSignupForm"]["email"].value;
+        let firstName = document.forms["adminSignupForm"]["firstName"].value;
+        let lastName = document.forms["adminSignupForm"]["lastName"].value;
+        let address = document.forms["adminSignupForm"]["address"].value;
+        // let identification = document.forms["adminSignupForm"]["identification"].value;
+        let reference_name = document.forms["adminSignupForm"]["reference_name"].value;
+        let reference_contact = document.forms["adminSignupForm"]["reference_contact"].value;
+        // let face_image = document.forms["adminSignupForm"]["face_image"].value;
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('warning');
+
+        let formIsValid = true;
+
+        if (username === "") {
+            messageElement.innerText = "Username is required";
+            document.getElementById("username").appendChild(messageElement);
+            formIsValid = false;
+        } else if (!isUsername(username)) {
+            messageElement.innerText = "Username is invalid";
+            document.getElementById("username").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        if (password === "") {
+            messageElement.innerText = "Password is required";
+            document.getElementById("password").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        if (phone === "") {
+            messageElement.innerText = "Phone is required";
+            document.getElementById("phone").appendChild(messageElement);
+            formIsValid = false;
+        } else if (!isPhone(phone)) {
+            messageElement.innerText = "Phone is invalid";
+            document.getElementById("phone").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        if (email === "") {
+            messageElement.innerText = "Email is required";
+            document.getElementById("email").appendChild(messageElement);
+            formIsValid = false;
+        } else if (!isEmail(email)) {
+            messageElement.innerText = "Email is invalid";
+            document.getElementById("email").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        if (firstName === "") {
+            messageElement.innerText = "First name is required";
+            document.getElementById("firstName").appendChild(messageElement);
+            formIsValid = false;
+        } else if (!isName(firstName)) {
+            messageElement.innerText = "First name is invalid";
+            document.getElementById("firstName").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        if (lastName === "") {
+            messageElement.innerText = "Last name is required";
+            document.getElementById("lastName").appendChild(messageElement);
+            formIsValid = false;
+        } else if (!isName(lastName)) {
+            messageElement.innerText = "Last name is invalid";
+            document.getElementById("lastName").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        if (address === "") {
+            messageElement.innerText = "Address is required";
+            document.getElementById("address").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        // if (identification === "") {
+        //     messageElement.innerText = "Identification is required";
+        //     document.getElementById("identification").appendChild(messageElement);
+        //     formIsValid = false;
+        // }
+
+        if (reference_name === "") {
+            messageElement.innerText = "Reference name is required";
+            document.getElementById("reference_name").appendChild(messageElement);
+            formIsValid = false;
+        } else if (!isName(reference_name)) {
+            messageElement.innerText = "Reference name is invalid";
+            document.getElementById("reference_name").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        if (reference_contact === "") {
+            messageElement.innerText = "Reference contact is required";
+            document.getElementById("reference_contact").appendChild(messageElement);
+            formIsValid = false;
+        } else if (!isPhone(reference_contact) && !isEmail(reference_contact)) {
+            messageElement.innerText = "Reference contact is invalid";
+            document.getElementById("reference_contact").appendChild(messageElement);
+            formIsValid = false;
+        }
+
+        // if (face_image === "") {
+        //     messageElement.innerText = "Face image is required";
+        //     document.getElementById("face_image").appendChild(messageElement);
+        //     formIsValid = false;
+        // }
+
+        const existingWarnings = document.querySelectorAll('.warning');
+        existingWarnings.forEach(warning => warning.remove());
+        if (!formIsValid) {
+            document.querySelector('#message-container').appendChild(messageElement);
+            return false;
+        }
+    }
+</script>
+<form name="adminSignupForm" method="POST" th:action="@{/signup_admin}" onsubmit="return validateAdminForm()"
+      enctype="multipart/form-data">
+    <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" th:value="${username}" th:required="required"/>
+    </div>
+    <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" th:value="${password}" th:required="required"/>
+    </div>
+    <div>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" th:value="${phone}" th:required="required"/>
+    </div>
+    <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" th:value="${email}" th:required="required"/>
+    </div>
+    <div>
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" name="firstName" th:value="${firstName}" th:required="required"/>
+    </div>
+    <div>
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" th:value="${lastName}" th:required="required"/>
+    </div>
+    <div>
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" th:value="${address}" th:required="required"/>
+    </div>
+    <!--    <div>-->
+    <!--        <label for="identification">Identification:</label>-->
+    <!--        <input type="file" id="identification" name="identification" th:value="${identification}" th:required="required"-->
+    <!--               accept="application/pdf"/>-->
+    <!--    </div>-->
+    <div>
+        <label for="reference_name">Reference Name:</label>
+        <input type="text" id="reference_name" name="reference_name" th:value="${reference_name}"
+               th:required="required"/>
+    </div>
+    <div>
+        <label for="reference_contact">Reference Contact (email/phone):</label>
+        <input type="email" id="reference_contact" name="reference_contact" th:value="${reference_contact}"
+               th:required="required"/>
+    </div>
+    <!--    <div>-->
+    <!--        <label for="face_image">Face Image:</label>-->
+    <!--        <input type="file" id="face_image" name="face_image" th:value="${face_image}" th:required="required"-->
+    <!--               accept="image/*"/>-->
+    <!--    </div>-->
+    <div>
+        <button type="submit">Submit</button>
+    </div>
+    <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
+    <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
+    <div id="message-container">
+        <!-- The error message will be inserted here -->
+    </div>
+</form>
+<noscript>
+    <p> Warning: JavaScript is disabled in your browser, your password will not be encrypted before being sent to the
+        server.</p>
+    <p> To protect your password, make sure that you have an https connection enabled.</p>
+</noscript>
+</body>
+</html>
