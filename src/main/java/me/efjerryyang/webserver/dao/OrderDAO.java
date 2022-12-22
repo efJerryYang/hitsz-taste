@@ -34,7 +34,7 @@ public class OrderDAO implements DAO<Order> {
             statement.setObject(4, order.getAddress());
             statement.setObject(5, order.getContact());
             statement.setObject(6, order.getStatus());
-            statement.setObject(7, order.getTimestamp());
+            statement.setObject(7, order.getCreateAt());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -50,8 +50,8 @@ public class OrderDAO implements DAO<Order> {
 
     @Override
     public Order update(Order order) {
-        logger.info("Updating order with order_id {}, user_id {}, total_price {}, address {}, contact {}, status {}, timestamp {}", order.getOrderId(), order.getUserId(), order.getTotalPrice(), order.getAddress(), order.getContact(), order.getStatus(), order.getTimestamp());
-        String sql = "UPDATE hitsz_taste.orders SET user_id = ?, total_price = ?, address = ?, contact = ?, status = ?, timestamp = ? WHERE order_id = ?";
+        logger.info("Updating order with order_id {}, user_id {}, total_price {}, address {}, contact {}, status {}, create_at {}", order.getOrderId(), order.getUserId(), order.getTotalPrice(), order.getAddress(), order.getContact(), order.getStatus(), order.getCreateAt());
+        String sql = "UPDATE hitsz_taste.orders SET user_id = ?, total_price = ?, address = ?, contact = ?, status = ?, create_at = ? WHERE order_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the order in the SQL statement
             statement.setObject(1, order.getUserId());
@@ -59,7 +59,7 @@ public class OrderDAO implements DAO<Order> {
             statement.setObject(3, order.getAddress());
             statement.setObject(4, order.getContact());
             statement.setObject(5, order.getStatus());
-            statement.setObject(6, order.getTimestamp());
+            statement.setObject(6, order.getCreateAt());
             statement.setObject(7, order.getOrderId());
             statement.executeUpdate();
             logger.info("Successfully updated order with id {}", order.getOrderId());
@@ -72,7 +72,7 @@ public class OrderDAO implements DAO<Order> {
 
     @Override
     public Order update(Order objectOld, Order objectNew) {
-        logger.info("Updating order with order_id {}, user_id {}, total_price {}, address {}, contact {}, status {}, timestamp {}", objectOld.getOrderId(), objectOld.getUserId(), objectOld.getTotalPrice(), objectOld.getAddress(), objectOld.getContact(), objectOld.getStatus(), objectOld.getTimestamp());
+        logger.info("Updating order with order_id {}, user_id {}, total_price {}, address {}, contact {}, status {}, timestamp {}", objectOld.getOrderId(), objectOld.getUserId(), objectOld.getTotalPrice(), objectOld.getAddress(), objectOld.getContact(), objectOld.getStatus(), objectOld.getCreateAt());
         String sql = "UPDATE hitsz_taste.orders SET user_id = ?, total_price = ?, address = ?, contact = ?, status = ?, timestamp = ? WHERE order_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the order in the SQL statement
@@ -81,7 +81,7 @@ public class OrderDAO implements DAO<Order> {
             statement.setObject(3, objectNew.getAddress());
             statement.setObject(4, objectNew.getContact());
             statement.setObject(5, objectNew.getStatus());
-            statement.setObject(6, objectNew.getTimestamp());
+            statement.setObject(6, objectNew.getCreateAt());
             statement.setObject(7, objectOld.getOrderId());
             statement.executeUpdate();
             logger.info("Successfully updated order with id {}", objectOld.getOrderId());
@@ -101,7 +101,7 @@ public class OrderDAO implements DAO<Order> {
         order.setAddress(resultSet.getString("address"));
         order.setContact(resultSet.getString("contact"));
         order.setStatus(resultSet.getString("status"));
-        order.setTimestamp(resultSet.getDate("timestamp"));
+        order.setCreateAt(resultSet.getTimestamp("create_at"));
         return order;
     }
 
@@ -151,25 +151,25 @@ public class OrderDAO implements DAO<Order> {
     /**
      * Get orders in a given date range
      *
-     * @param startDate Start date of the range
-     * @param endDate   End date of the range
+     * @param startTimestamp Start date of the range
+     * @param endTimestamp   End date of the range
      * @return List of orders in the given date range
      */
-    public List<Order> getOrderByDateRange(Date startDate, Date endDate) {
-        logger.info("Getting orders between {} and {}", startDate, endDate);
+    public List<Order> getOrderByDateRange(Timestamp startTimestamp, Timestamp endTimestamp) {
+        logger.info("Getting orders between {} and {}", startTimestamp, endTimestamp);
         String sql = "SELECT * FROM hitsz_taste.orders WHERE timestamp BETWEEN ? AND ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, startDate);
-            statement.setObject(2, endDate);
+            statement.setObject(1, startTimestamp);
+            statement.setObject(2, endTimestamp);
             ResultSet resultSet = statement.executeQuery();
             List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
                 orders.add(getFromResultSet(resultSet));
             }
-            logger.info("Successfully retrieved orders between {} and {}", startDate, endDate);
+            logger.info("Successfully retrieved orders between {} and {}", startTimestamp, endTimestamp);
             return orders;
         } catch (SQLException e) {
-            logger.error("Error retrieving orders between {} and {} from database", startDate, endDate, e);
+            logger.error("Error retrieving orders between {} and {} from database", startTimestamp, endTimestamp, e);
             return null;
         }
     }
@@ -202,26 +202,26 @@ public class OrderDAO implements DAO<Order> {
      * Get orders for a given user by date range
      *
      * @param userId    User ID
-     * @param startDate Start date of the range
-     * @param endDate   End date of the range
+     * @param startTimestamp Start date of the range
+     * @param endTimestamp   End date of the range
      * @return List of orders for the given user in the given date range
      */
-    public List<Order> getOrderByUserIdAndDateRange(Long userId, Date startDate, Date endDate) {
-        logger.info("Getting orders for user with id {} between {} and {}", userId, startDate, endDate);
+    public List<Order> getOrderByUserIdAndDateRange(Long userId, Timestamp startTimestamp, Date endTimestamp) {
+        logger.info("Getting orders for user with id {} between {} and {}", userId, startTimestamp, endTimestamp);
         String sql = "SELECT * FROM hitsz_taste.orders WHERE user_id = ? AND timestamp BETWEEN ? AND ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, userId);
-            statement.setObject(2, startDate);
-            statement.setObject(3, endDate);
+            statement.setObject(2, startTimestamp);
+            statement.setObject(3, endTimestamp);
             ResultSet resultSet = statement.executeQuery();
             List<Order> orders = new ArrayList<>();
             while (resultSet.next()) {
                 orders.add(getFromResultSet(resultSet));
             }
-            logger.info("Successfully retrieved orders for user with id {} between {} and {}", userId, startDate, endDate);
+            logger.info("Successfully retrieved orders for user with id {} between {} and {}", userId, startTimestamp, endTimestamp);
             return orders;
         } catch (SQLException e) {
-            logger.error("Error retrieving orders for user with id {} between {} and {} from database", userId, startDate, endDate, e);
+            logger.error("Error retrieving orders for user with id {} between {} and {} from database", userId, startTimestamp, endTimestamp, e);
             return null;
         }
     }

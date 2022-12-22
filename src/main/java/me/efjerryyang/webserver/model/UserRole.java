@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 
 @Data
@@ -15,5 +16,5 @@ import java.sql.Date;
 public class UserRole implements IModel {
     private Long userId;
     private Long roleId;
-    private Date grantDate;
+    private Timestamp grantTimestamp;
 }

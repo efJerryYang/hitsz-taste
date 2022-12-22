@@ -4,8 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.bouncycastle.util.Times;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @EqualsAndHashCode
@@ -19,5 +21,5 @@ public class Order implements IModel {
     private String address;
     private String contact;
     private String status;
-    private Date timestamp;
+    private Timestamp createAt;
 }

@@ -25,16 +25,16 @@ public class ContractDAO implements DAO<Contract> {
 
     @Override
     public Contract create(Contract contract) {
-        logger.info("Creating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contract.getCafeteriaId(), contract.getMerchantId(), contract.getStartDate(), contract.getEndDate());
+        logger.info("Creating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contract.getCafeteriaId(), contract.getMerchantId(), contract.getStartTimestamp(), contract.getEndTimestamp());
         String sql = "INSERT INTO hitsz_taste.contracts (cafeteria_id, merchant_id, start_date, end_date) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, contract.getCafeteriaId());
             statement.setObject(2, contract.getMerchantId());
-            statement.setObject(3, contract.getStartDate());
-            statement.setObject(4, contract.getEndDate());
+            statement.setObject(3, contract.getStartTimestamp());
+            statement.setObject(4, contract.getEndTimestamp());
 
             statement.executeUpdate();
-            logger.info("Successfully created contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contract.getCafeteriaId(), contract.getMerchantId(), contract.getStartDate(), contract.getEndDate());
+            logger.info("Successfully created contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contract.getCafeteriaId(), contract.getMerchantId(), contract.getStartTimestamp(), contract.getEndTimestamp());
             return contract;
         } catch (SQLException e) {
             logger.error("Error creating contract in database", e);
@@ -44,21 +44,21 @@ public class ContractDAO implements DAO<Contract> {
 
     @Override
     public Contract update(Contract object) {
-        logger.info("Updating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartDate(), object.getEndDate());
+        logger.info("Updating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
         String sql = "UPDATE hitsz_taste.contracts SET cafeteria_id = ?, merchant_id = ?, start_date = ?, end_date = ? WHERE cafeteria_id = ? AND merchant_id = ? AND start_date = ? AND end_date = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the contract in the SQL statement
-            logger.debug("Setting contract values in SQL statement: cafeteria_id = {}, merchant_id = {}, start_date = {}, end_date = {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartDate(), object.getEndDate());
+            logger.debug("Setting contract values in SQL statement: cafeteria_id = {}, merchant_id = {}, start_date = {}, end_date = {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
             statement.setObject(1, object.getCafeteriaId());
             statement.setObject(2, object.getMerchantId());
-            statement.setObject(3, object.getStartDate());
-            statement.setObject(4, object.getEndDate());
+            statement.setObject(3, object.getStartTimestamp());
+            statement.setObject(4, object.getEndTimestamp());
             statement.setObject(5, object.getCafeteriaId());
             statement.setObject(6, object.getMerchantId());
-            statement.setObject(7, object.getStartDate());
-            statement.setObject(8, object.getEndDate());
+            statement.setObject(7, object.getStartTimestamp());
+            statement.setObject(8, object.getEndTimestamp());
             statement.executeUpdate();
-            logger.info("Successfully updated contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartDate(), object.getEndDate());
+            logger.info("Successfully updated contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
             return object;
         } catch (SQLException e) {
             logger.error("Error updating contract in database", e);
@@ -68,21 +68,21 @@ public class ContractDAO implements DAO<Contract> {
 
     @Override
     public Contract update(Contract contractOld, Contract contractNew) {
-        logger.info("Updating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contractOld.getCafeteriaId(), contractOld.getMerchantId(), contractOld.getStartDate(), contractOld.getEndDate());
+        logger.info("Updating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contractOld.getCafeteriaId(), contractOld.getMerchantId(), contractOld.getStartTimestamp(), contractOld.getEndTimestamp());
         String sql = "UPDATE hitsz_taste.contracts SET cafeteria_id = ?, merchant_id = ?, start_date = ?, end_date = ? WHERE cafeteria_id = ? AND merchant_id = ? AND start_date = ? AND end_date = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the contract in the SQL statement
-            logger.debug("Setting contract values in SQL statement: cafeteria_id = {}, merchant_id = {}, start_date = {}, end_date = {}", contractNew.getCafeteriaId(), contractNew.getMerchantId(), contractNew.getStartDate(), contractNew.getEndDate());
+            logger.debug("Setting contract values in SQL statement: cafeteria_id = {}, merchant_id = {}, start_date = {}, end_date = {}", contractNew.getCafeteriaId(), contractNew.getMerchantId(), contractNew.getStartTimestamp(), contractNew.getEndTimestamp());
             statement.setObject(1, contractNew.getCafeteriaId());
             statement.setObject(2, contractNew.getMerchantId());
-            statement.setObject(3, contractNew.getStartDate());
-            statement.setObject(4, contractNew.getEndDate());
+            statement.setObject(3, contractNew.getStartTimestamp());
+            statement.setObject(4, contractNew.getEndTimestamp());
             statement.setObject(5, contractOld.getCafeteriaId());
             statement.setObject(6, contractOld.getMerchantId());
-            statement.setObject(7, contractOld.getStartDate());
-            statement.setObject(8, contractOld.getEndDate());
+            statement.setObject(7, contractOld.getStartTimestamp());
+            statement.setObject(8, contractOld.getEndTimestamp());
             statement.executeUpdate();
-            logger.info("Successfully updated contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contractNew.getCafeteriaId(), contractNew.getMerchantId(), contractNew.getStartDate(), contractNew.getEndDate());
+            logger.info("Successfully updated contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contractNew.getCafeteriaId(), contractNew.getMerchantId(), contractNew.getStartTimestamp(), contractNew.getEndTimestamp());
             return contractNew;
         } catch (SQLException e) {
             logger.error("Error updating contract in database", e);
@@ -96,8 +96,8 @@ public class ContractDAO implements DAO<Contract> {
         return new Contract(
                 resultSet.getObject("cafeteria_id", Long.class),
                 resultSet.getObject("merchant_id", Long.class),
-                resultSet.getObject("start_date", Date.class),
-                resultSet.getObject("end_date", Date.class)
+                resultSet.getObject("start_timestamp", Timestamp.class),
+                resultSet.getObject("end_timestamp", Timestamp.class)
         );
     }
 
@@ -133,15 +133,15 @@ public class ContractDAO implements DAO<Contract> {
 
     @Override
     public void delete(Contract object) {
-        logger.info("Deleting contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartDate(), object.getEndDate());
+        logger.info("Deleting contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
         String sql = "DELETE FROM hitsz_taste.contracts WHERE cafeteria_id = ? AND merchant_id = ? AND start_date = ? AND end_date = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, object.getCafeteriaId());
             statement.setObject(2, object.getMerchantId());
-            statement.setObject(3, object.getStartDate());
-            statement.setObject(4, object.getEndDate());
+            statement.setObject(3, object.getStartTimestamp());
+            statement.setObject(4, object.getEndTimestamp());
             statement.executeUpdate();
-            logger.info("Successfully deleted contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartDate(), object.getEndDate());
+            logger.info("Successfully deleted contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
         } catch (SQLException e) {
             logger.error("Error deleting contract from database", e);
         }

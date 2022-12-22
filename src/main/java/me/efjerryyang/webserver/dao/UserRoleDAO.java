@@ -30,7 +30,7 @@ public class UserRoleDAO implements DAO<UserRole> {
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, userRole.getUserId());
             statement.setObject(2, userRole.getRoleId());
-            statement.setObject(3, userRole.getGrantDate());
+            statement.setObject(3, userRole.getGrantTimestamp());
             statement.executeUpdate();
             logger.info("Successfully created user role with user_id = {} and role_id = {}", userRole.getUserId(), userRole.getRoleId());
             return userRole;
@@ -46,7 +46,7 @@ public class UserRoleDAO implements DAO<UserRole> {
         logger.debug("Updating user role with user_id = {} and role_id = {}", userRole.getUserId(), userRole.getRoleId());
         String sql = "UPDATE hitsz_taste.user_roles SET grant_date = ? WHERE user_id = ? AND role_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, userRole.getGrantDate());
+            statement.setObject(1, userRole.getGrantTimestamp());
             statement.setObject(2, userRole.getUserId());
             statement.setObject(3, userRole.getRoleId());
             statement.executeUpdate();
@@ -63,7 +63,7 @@ public class UserRoleDAO implements DAO<UserRole> {
         logger.debug("Updating user role with user_id = {} and role_id = {}", userRoleOld.getUserId(), userRoleOld.getRoleId());
         String sql = "UPDATE hitsz_taste.user_roles SET grant_date = ? WHERE user_id = ? AND role_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, userRoleNew.getGrantDate());
+            statement.setObject(1, userRoleNew.getGrantTimestamp());
             statement.setObject(2, userRoleOld.getUserId());
             statement.setObject(3, userRoleOld.getRoleId());
             statement.executeUpdate();
@@ -80,7 +80,7 @@ public class UserRoleDAO implements DAO<UserRole> {
         return new UserRole(
                 resultSet.getObject("user_id", Long.class),
                 resultSet.getObject("role_id", Long.class),
-                resultSet.getObject("grant_date", Date.class)
+                resultSet.getObject("grant_date", Timestamp.class)
         );
     }
 

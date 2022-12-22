@@ -5,8 +5,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.bouncycastle.util.Times;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @NoArgsConstructor
@@ -15,6 +17,6 @@ import java.sql.Date;
 public class Contract implements IModel {
     private Long cafeteriaId;
     private Long merchantId;
-    private Date startDate;
-    private Date endDate;
+    private Timestamp startTimestamp;
+    private Timestamp endTimestamp;
 }
