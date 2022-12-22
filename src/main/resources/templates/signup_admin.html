@@ -71,6 +71,10 @@
         return /^\w+@\w+\.\w+$/.test(email);
     }
 
+    function isAddress(address) {
+        return /^[\u4e00-\u9fa5a-zA-Z0-9\\s]+$/.test(address);
+    }
+
     function isPhone(phone) {
         return /^\d{3}-\d{3}-\d{4}$/.test(phone) || /^\d{10,11}$/.test(phone) || /^\+?86\d{11}$/.test(phone);
     }
@@ -80,8 +84,8 @@
     }
 
     function isName(name) {
-        // return /^[\p{L}\s-']+$/.test(name);
-        return isUsername(name);
+        // return name.matches("^[\u4e00-\u9fa5a-zA-Z\\s]+$");
+        return /^[\u4e00-\u9fa5a-zA-Z\s]+$/.test(name);
     }
 
     function validateAdminForm() {
@@ -89,8 +93,8 @@
         let password = document.forms["adminSignupForm"]["password"].value;
         let phone = document.forms["adminSignupForm"]["phone"].value;
         let email = document.forms["adminSignupForm"]["email"].value;
-        let firstName = document.forms["adminSignupForm"]["firstName"].value;
-        let lastName = document.forms["adminSignupForm"]["lastName"].value;
+        let firstname = document.forms["adminSignupForm"]["firstname"].value;
+        let lastname = document.forms["adminSignupForm"]["lastname"].value;
         let address = document.forms["adminSignupForm"]["address"].value;
         // let identification = document.forms["adminSignupForm"]["identification"].value;
         let referenceName = document.forms["adminSignupForm"]["referenceName"].value;
@@ -137,28 +141,32 @@
             formIsValid = false;
         }
 
-        if (firstName === "") {
+        if (firstname === "") {
             messageElement.innerText = "First name is required";
-            document.getElementById("firstName").appendChild(messageElement);
+            document.getElementById("firstname").appendChild(messageElement);
             formIsValid = false;
-        } else if (!isName(firstName)) {
+        } else if (!isName(firstname)) {
             messageElement.innerText = "First name is invalid";
-            document.getElementById("firstName").appendChild(messageElement);
+            document.getElementById("firstname").appendChild(messageElement);
             formIsValid = false;
         }
 
-        if (lastName === "") {
+        if (lastname === "") {
             messageElement.innerText = "Last name is required";
-            document.getElementById("lastName").appendChild(messageElement);
+            document.getElementById("lastname").appendChild(messageElement);
             formIsValid = false;
-        } else if (!isName(lastName)) {
+        } else if (!isName(lastname)) {
             messageElement.innerText = "Last name is invalid";
-            document.getElementById("lastName").appendChild(messageElement);
+            document.getElementById("lastname").appendChild(messageElement);
             formIsValid = false;
         }
 
         if (address === "") {
             messageElement.innerText = "Address is required";
+            document.getElementById("address").appendChild(messageElement);
+            formIsValid = false;
+        } else if (!isAddress(address)) {
+            messageElement.innerText = "Address is invalid";
             document.getElementById("address").appendChild(messageElement);
             formIsValid = false;
         }
@@ -201,6 +209,7 @@
             document.querySelector('#message-container').appendChild(messageElement);
             return false;
         }
+        document.getElementById("jsEnabled").value = "true";
     }
 </script>
 <form name="adminSignupForm" method="POST" th:action="@{/signup_admin}" onsubmit="return validateAdminForm()"
@@ -241,11 +250,10 @@
     <div>
         <label for="referenceName">Reference Name:</label>
         <input type="text" id="referenceName" name="referenceName" th:value="${referenceName}" th:required="required"/>
-               th:required="required"/>
     </div>
     <div>
         <label for="referenceContact">Reference Contact (email/phone):</label>
-        <input type="email" id="referenceContact" name="referenceContact" th:value="${referenceContact}" th:required="required"/>
+        <input type="text" id="referenceContact" name="referenceContact" th:value="${referenceContact}"
                th:required="required"/>
     </div>
     <!--    <div>-->
