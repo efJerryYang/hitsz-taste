@@ -1,7 +1,10 @@
 package me.efjerryyang.webserver.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import me.efjerryyang.webserver.model.Role;
 import me.efjerryyang.webserver.model.User;
+import me.efjerryyang.webserver.model.UserRole;
+import me.efjerryyang.webserver.service.UserRoleService;
 import me.efjerryyang.webserver.service.UserService;
 import me.efjerryyang.webserver.service.ValidationService;
 import me.efjerryyang.webserver.util.CryptoUtilHash;
@@ -19,11 +22,15 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class SignupController {
     private static final Logger logger = LoggerFactory.getLogger(SignupController.class);
     private final UserService userService;
+    private final UserRoleService userRoleService;
     private final ValidationService validationService;
     private User user = null;
+    private Role role = null;
+    private UserRole userRole = null;
 
-    public SignupController(UserService userService, ValidationService validationService) {
+    public SignupController(UserService userService, UserRoleService userRoleService, ValidationService validationService) {
         this.userService = userService;
+        this.userRoleService = userRoleService;
         this.validationService = validationService;
     }
 
@@ -216,6 +223,7 @@ public class SignupController {
             user.setAddress(address);
             user.setFirstname(firstname);
             user.setLastname(lastname);
+            user.setCreatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
 //            user.setReferenceName(referenceName); // should be set in another table
 //            user.setReferenceContact(referenceContact); // should be set in another table
 //            user.setRole("admin"); // should be set in another table
@@ -285,6 +293,9 @@ public class SignupController {
         if (user != null) {
             user = null;
         }
+        if (role != null) {
+            role = null;
+        }
         user = new User();
         String salt = CryptoUtilHash.getSalt();
         user.setSalt(salt);
@@ -294,11 +305,15 @@ public class SignupController {
         user.setEmail(email);
         user.setUserId(userService.getNextId());
         user.setIsActive(true);
+        user.setCreatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
         logger.info(String.valueOf(user));
         switch (options) {
             case "customer":
                 try {
                     userService.create(user);
+                    role = Role.createRole("customer");  // temporary solution, maybe use a map instead
+                    userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
+                    userRoleService.create(userRole);
                 } catch (Exception e) {
                     logger.error("Error creating user: {}", e.getMessage());
                     model.addAttribute("username", username);
@@ -311,12 +326,18 @@ public class SignupController {
                 }
                 return "notice_customer";
             case "admin":
+                role = Role.createRole("default");  // temporary solution, maybe use a map instead
+                userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
+                userRoleService.create(userRole);
                 model.addAttribute("username", username);
                 model.addAttribute("password", password); // hashed password
                 model.addAttribute("phone", phone);
                 model.addAttribute("email", email);
                 return "signup_admin";
             case "staff":
+                role = Role.createRole("default");  // temporary solution, maybe use a map instead
+                userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
+                userRoleService.create(userRole);
                 model.addAttribute("username", username);
                 model.addAttribute("password", password); // hashed password
                 model.addAttribute("phone", phone);

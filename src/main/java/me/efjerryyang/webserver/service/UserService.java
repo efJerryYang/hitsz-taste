@@ -2,6 +2,7 @@ package me.efjerryyang.webserver.service;
 
 import me.efjerryyang.webserver.dao.UserDAO;
 import me.efjerryyang.webserver.model.User;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,6 +13,7 @@ public class UserService {
     private UserDAO userDAO;
 
 
+    @Autowired
     public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }

@@ -15,6 +15,6 @@ import java.sql.Timestamp;
 @EqualsAndHashCode
 public class UserRole implements IModel {
     private Long userId;
-    private Long roleId;
+    private Integer roleId;
     private Timestamp grantTimestamp;
 }
