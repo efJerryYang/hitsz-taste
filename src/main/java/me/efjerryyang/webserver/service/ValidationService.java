@@ -40,7 +40,7 @@ public class ValidationService {
     }
 
     public boolean isRole(String role) {
-        return role.matches("^(admin|customer|staff)$");
+        return role.matches("^(admin|staff|customer|default)$");
     }
 
     public boolean isJobTitle(String jobTitle) {

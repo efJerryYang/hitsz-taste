@@ -79,7 +79,7 @@ public class UserRoleDAO implements DAO<UserRole> {
     public UserRole getFromResultSet(ResultSet resultSet) throws SQLException {
         return new UserRole(
                 resultSet.getObject("user_id", Long.class),
-                resultSet.getObject("role_id", Long.class),
+                resultSet.getObject("role_id", Integer.class),
                 resultSet.getObject("grant_date", Timestamp.class)
         );
     }
@@ -125,6 +125,27 @@ public class UserRoleDAO implements DAO<UserRole> {
             logger.info("Successfully deleted user role with user_id = {} and role_id = {}", userRole.getUserId(), userRole.getRoleId());
         } catch (SQLException e) {
             logger.error("Error deleting user role from database", e);
+        }
+    }
+
+    public UserRole getByUserIdAndRoleId(Long userId, Integer roleId) {
+        logger.debug("Getting user role with user_id = {} and role_id = {}", userId, roleId);
+        String sql = "SELECT * FROM hitsz_taste.user_roles WHERE user_id = ? AND role_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, userId);
+            statement.setObject(2, roleId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                UserRole userRole = getFromResultSet(resultSet);
+                logger.info("Successfully got user role with user_id = {} and role_id = {}", userId, roleId);
+                return userRole;
+            } else {
+                logger.info("User role with user_id = {} and role_id = {} not found", userId, roleId);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting user role from database", e);
+            return null;
         }
     }
 }
