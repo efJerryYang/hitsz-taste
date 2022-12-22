@@ -50,6 +50,10 @@
         .warning {
             color: red;
         }
+
+        .readonly-field {
+            background-color: #eee;
+        }
     </style>
 </head>
 <body>
@@ -305,13 +309,15 @@
 </script>
 <form name="staffForm" th:action="@{/signup_staff}" onsubmit="return validateStaffForm()" method="post">
     <label for="username">Username:</label>
-    <input type="text" name="username" id="username" th:value="${username}" required/><br><br>
+    <input type="text" name="username" id="username" th:value="${username}" required readonly
+           class="readonly-field"/><br><br>
     <label for="password">Password:</label>
-    <input type="password" name="password" id="password" th:value="${password}" required/><br><br>
+    <input type="password" name="password" id="password" th:value="${password}" required readonly
+           class="readonly-field"/><br><br>
     <label for="phone">Phone:</label>
-    <input type="text" name="phone" id="phone" th:value="${phone}" required/><br><br>
+    <input type="text" name="phone" id="phone" th:value="${phone}" required readonly class="readonly-field"/><br><br>
     <label for="email">Email:</label>
-    <input type="text" name="email" id="email" th:value="${email}" required/><br><br>
+    <input type="text" name="email" id="email" th:value="${email}" required readonly class="readonly-field"/><br><br>
     <label for="firstname">First Name:</label>
     <input type="text" name="firstname" id="firstname" th:value="${firstname}" th:required="required"/><br><br>
     <label for="lastname">Last Name:</label>
