@@ -93,14 +93,23 @@ public class SignupController {
                     logger.info("Company is not valid");
                 }
                 model.addAttribute("username", username);
+                logger.info("username: {}", username);
                 model.addAttribute("password", password);
+                logger.info("password: {}", password);
                 model.addAttribute("phone", phone);
+                logger.info("phone: {}", phone);
                 model.addAttribute("email", email);
+                logger.info("email: {}", email);
                 model.addAttribute("firstname", firstname);
+                logger.info("firstname: {}", firstname);
                 model.addAttribute("lastname", lastname);
+                logger.info("lastname: {}", lastname);
                 model.addAttribute("idNumber", idNumber);
+                logger.info("idNumber: {}", idNumber);
                 model.addAttribute("jobTitle", jobTitle);
+                logger.info("jobTitle: {}", jobTitle);
                 model.addAttribute("company", company);
+                logger.info("company: {}", company);
                 return "signup_staff";
             }
         }
@@ -123,7 +132,7 @@ public class SignupController {
         String acceptHeader = request.getHeader("Accept");
         String jsEnabled = request.getParameter("jsEnabled");
         // validate if javascript is enabled
-        if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)){
+        if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
             logger.info("Javascript is not enabled");
             logger.info("Validating admin signup form on server side");
             if (username.isEmpty() || password.isEmpty() || phone.isEmpty() || email.isEmpty() || firstname.isEmpty() || lastname.isEmpty() || address.isEmpty() || referenceName.isEmpty() || referenceContact.isEmpty()) {
@@ -140,42 +149,51 @@ public class SignupController {
                 model.addAttribute("referenceContact", referenceContact);
                 return "signup_admin";
             }
-            if(!validationService.isUsername(username) || !validationService.isPhone(phone) || !validationService.isEmail(email) || !validationService.isName(firstname) || !validationService.isName(lastname) || !validationService.isAddress(address) || !validationService.isName(referenceName) || !validationService.isPhone(referenceContact)){
+            if (!validationService.isUsername(username) || !validationService.isPhone(phone) || !validationService.isEmail(email) || !validationService.isName(firstname) || !validationService.isName(lastname) || !validationService.isAddress(address) || !validationService.isName(referenceName) || !validationService.isPhone(referenceContact)) {
                 logger.info("Admin signup form is not valid");
-                if (!validationService.isUsername(username)){
+                if (!validationService.isUsername(username)) {
                     model.addAttribute("error", "Username is not valid");
                     logger.info("Username is not valid");
-                } else if (!validationService.isPhone(phone)){
+                } else if (!validationService.isPhone(phone)) {
                     model.addAttribute("error", "Phone is not valid");
                     logger.info("Phone is not valid");
-                } else if (!validationService.isEmail(email)){
+                } else if (!validationService.isEmail(email)) {
                     model.addAttribute("error", "Email is not valid");
                     logger.info("Email is not valid");
-                } else if (!validationService.isName(firstname)){
+                } else if (!validationService.isName(firstname)) {
                     model.addAttribute("error", "Firstname is not valid");
                     logger.info("Firstname is not valid");
-                } else if (!validationService.isName(lastname)){
+                } else if (!validationService.isName(lastname)) {
                     model.addAttribute("error", "Lastname is not valid");
                     logger.info("Lastname is not valid");
-                } else if (!validationService.isAddress(address)){
+                } else if (!validationService.isAddress(address)) {
                     model.addAttribute("error", "Address is not valid");
                     logger.info("Address is not valid");
-                } else if (!validationService.isName(referenceName)){
+                } else if (!validationService.isName(referenceName)) {
                     model.addAttribute("error", "Reference name is not valid");
                     logger.info("Reference name is not valid");
-                } else if (!validationService.isPhone(referenceContact)){
+                } else if (!validationService.isPhone(referenceContact) && !validationService.isEmail(referenceContact)) {
                     model.addAttribute("error", "Reference contact is not valid");
                     logger.info("Reference contact is not valid");
                 }
                 model.addAttribute("username", username);
+                logger.info("username: {}", username);
                 model.addAttribute("password", password);
+                logger.info("password: {}", password);
                 model.addAttribute("phone", phone);
+                logger.info("phone: {}", phone);
                 model.addAttribute("email", email);
+                logger.info("email: {}", email);
                 model.addAttribute("firstname", firstname);
+                logger.info("firstname: {}", firstname);
                 model.addAttribute("lastname", lastname);
+                logger.info("lastname: {}", lastname);
                 model.addAttribute("address", address);
+                logger.info("address: {}", address);
                 model.addAttribute("referenceName", referenceName);
+                logger.info("referenceName: {}", referenceName);
                 model.addAttribute("referenceContact", referenceContact);
+                logger.info("referenceContact: {}", referenceContact);
                 return "signup_admin";
             }
         }
@@ -184,7 +202,11 @@ public class SignupController {
     }
 
     @PostMapping("/signup")
-    public String handleSignupForm(@RequestParam(value = "username", defaultValue = "") String username, @RequestParam(value = "password", defaultValue = "") String password, @RequestParam(value = "phone", defaultValue = "") String phone, @RequestParam(value = "email", defaultValue = "") String email, @RequestParam(value = "options", defaultValue = "") String options, Model model) {
+    public String handleSignupForm(@RequestParam(value = "username", defaultValue = "") String username,
+                                   @RequestParam(value = "password", defaultValue = "") String password,
+                                   @RequestParam(value = "phone", defaultValue = "") String phone,
+                                   @RequestParam(value = "email", defaultValue = "") String email,
+                                   @RequestParam(value = "options", defaultValue = "") String options, Model model) {
         logger.info("username: {} password: {} phone: {} email: {} options: {}", username, password, phone, email, options);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String acceptHeader = request.getHeader("Accept");
@@ -224,7 +246,6 @@ public class SignupController {
                 model.addAttribute("phone", phone);
                 model.addAttribute("email", email);
                 model.addAttribute("options", options);
-                model.addAttribute("error", "Username must be between 6 and 20 characters");
                 return "signup";
             }
             // compute the sha256 hash of the password
@@ -247,7 +268,7 @@ public class SignupController {
             logger.info(String.valueOf(user));
             switch (options) {
                 case "customer":
-                    return "redirect:/login";
+                    return "welcome";
                 case "admin":
                     model.addAttribute("username", username);
                     model.addAttribute("password", password);

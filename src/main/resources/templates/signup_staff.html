@@ -72,8 +72,7 @@
     }
 
     function isName(name) {
-        // return /^[\p{L}\s-']+$/.test(name);
-        return isUsername(name);
+        return /^[\u4e00-\u9fa5a-zA-Z\s]+$/.test(name);
     }
 
     function isIdNumber(idNumber) {
@@ -154,6 +153,7 @@
                     return true;
                 }
             }
+            console.log("checkDate is false");
             return false;
         }
 
@@ -173,6 +173,7 @@
                     return true;
                 }
             }
+            console.log("checkCode is false");
             return false;
         }
 
@@ -299,6 +300,7 @@
             document.querySelector('#message-container').appendChild(messageElement);
             return false;
         }
+        document.getElementById("jsEnabled").value = "true";
     }
 </script>
 <form name="staffForm" th:action="@{/signup_staff}" onsubmit="return validateStaffForm()" method="post">
@@ -311,7 +313,7 @@
     <label for="email">Email:</label>
     <input type="text" name="email" id="email" th:value="${email}" required/><br><br>
     <label for="firstname">First Name:</label>
-    <input type="text" name="firstname" id="firstname" th:value="${fisrtname}" th:required="required"/><br><br>
+    <input type="text" name="firstname" id="firstname" th:value="${firstname}" th:required="required"/><br><br>
     <label for="lastname">Last Name:</label>
     <input type="text" name="lastname" id="lastname" th:value="${lastname}" th:required="required"/><br><br>
     <label for="idNumber">ID Number:</label>

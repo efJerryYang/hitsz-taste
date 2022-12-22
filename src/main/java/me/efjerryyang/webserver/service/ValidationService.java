@@ -14,6 +14,7 @@ import java.util.Map;
 @Service
 public class ValidationService {
     private static final Logger logger = LoggerFactory.getLogger(ValidationService.class);
+
     public boolean isEmail(String email) {
         return email.matches("^\\w+@\\w+\\.\\w+$");
     }
@@ -55,6 +56,7 @@ public class ValidationService {
         // 1. 18位身份证号码的正则表达式
         final String reg = "^[1-9]\\d{5}(18|19|20)\\d{2}(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])\\d{3}[0-9Xx]$";
         if (!idNumber.matches(reg)) {
+            logger.info("idNumber.matches(reg) is false");
             return false;
         }
         return checkID(idNumber);
@@ -70,6 +72,7 @@ public class ValidationService {
                 }
             }
         }
+        logger.info("checkID is false");
         return false;
     }
 
@@ -82,12 +85,14 @@ public class ValidationService {
         if (val.matches(p)) {
             int sum = 0;
             for (int i = 0; i < 17; i++) {
-                sum += val.charAt(i) * factor[i];
+                sum += Integer.parseInt(String.valueOf(val.charAt(i))) * factor[i];
             }
+            logger.info(code + " " + parity[sum % 11]);
             if (parity[sum % 11] == code.toUpperCase().charAt(0)) {
                 return true;
             }
         }
+        logger.info("checkCode is false");
         return false;
     }
 

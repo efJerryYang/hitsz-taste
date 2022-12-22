@@ -18,7 +18,7 @@ function isUsername(username) {
 
 function isName(name) {
     // return name.matches("^[\u4e00-\u9fa5a-zA-Z\\s]+$");
-    return /^[\u4e00-\u9fa5a-zA-Z\\s]+$/.test(name);
+    return /^[\u4e00-\u9fa5a-zA-Z\s]+$/.test(name);
 }
 
 function isJobTitle(jobTitle) {
@@ -124,6 +124,7 @@ function isIdNumber(idNumber) {
         if (p.test(val)) {
             let sum = 0;
             for (let i = 0; i < 17; i++) {
+                console.log("i: " + i, "val[i]: " + val[i], "factor[i]: " + factor[i]);
                 sum += val[i] * factor[i];
             }
             if (parity[sum % 11] == code) {
