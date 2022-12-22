@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -12,10 +14,14 @@ import lombok.NoArgsConstructor;
 public class User implements IModel {
     private Long userId;
     private String username;
+    private String firstname;
+    private String lastname;
+    private String idNumber;
     private String email;
     private String password;
     private String phone;
     private String address;
     private Boolean isActive;
     private String salt;
+    private Timestamp createdAt;
 }

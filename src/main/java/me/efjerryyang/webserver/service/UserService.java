@@ -17,6 +17,18 @@ public class UserService {
     }
 
     public void create(User user) {
+        User getByUsername = userDAO.getByUsername(user.getUsername());
+        User getByEmail = userDAO.getByEmail(user.getEmail());
+        User getByPhone = userDAO.getByPhone(user.getPhone());
+        if (getByUsername != null) {
+            throw new RuntimeException("Username already exists");
+        }
+        if (getByEmail != null) {
+            throw new RuntimeException("Email already exists");
+        }
+        if (getByPhone != null) {
+            throw new RuntimeException("Phone already exists");
+        }
         if (this.get(user) == null) {
             userDAO.create(user);
         } else {
@@ -41,7 +53,7 @@ public class UserService {
     }
 
     public User getByUsernameAndPassword(String username, String password) {
-        return userDAO.getByNameAndPassword(username, password);
+        return userDAO.getByUsernameAndPassword(username, password);
     }
 
     public User getByEmailAndPassword(String email, String password) {
