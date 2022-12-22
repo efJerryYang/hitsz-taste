@@ -113,7 +113,7 @@ public class SignupController {
                 return "signup_staff";
             }
         }
-        return "welcome";
+        return "notice_staff";
     }
 
     @PostMapping("/signup_admin")
@@ -198,7 +198,7 @@ public class SignupController {
             }
         }
 
-        return "welcome";
+        return "notice_admin";
     }
 
     @PostMapping("/signup")
@@ -268,7 +268,7 @@ public class SignupController {
             logger.info(String.valueOf(user));
             switch (options) {
                 case "customer":
-                    return "welcome";
+                    return "notice_customer";
                 case "admin":
                     model.addAttribute("username", username);
                     model.addAttribute("password", password);
