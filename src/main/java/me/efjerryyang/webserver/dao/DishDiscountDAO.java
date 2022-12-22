@@ -1,6 +1,7 @@
 package me.efjerryyang.webserver.dao;
 
 import me.efjerryyang.webserver.model.DishDiscount;
+import org.bouncycastle.util.Times;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,16 +28,16 @@ public class DishDiscountDAO implements DAO<DishDiscount> {
     @Override
     public DishDiscount create(DishDiscount object) {
         logger.debug("Creating new dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
-                object.getDishId(), object.getDiscountId(), object.getStartDate(), object.getEndDate());
-        String sql = "INSERT INTO hitsz_taste.dish_discounts (dish_id, discount_id, start_date, end_date) VALUES (?, ?, ?, ?)";
+                object.getDishId(), object.getDiscountId(), object.getStartTimestamp(), object.getEndTimestamp());
+        String sql = "INSERT INTO hitsz_taste.dish_discounts (dish_id, discount_id, start_timestamp, end_timestamp) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, object.getDishId());
             statement.setObject(2, object.getDiscountId());
-            statement.setObject(3, object.getStartDate());
-            statement.setObject(4, object.getEndDate());
+            statement.setObject(3, object.getStartTimestamp());
+            statement.setObject(4, object.getEndTimestamp());
             statement.executeUpdate();
             logger.debug("Successfully created new dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
-                    object.getDishId(), object.getDiscountId(), object.getStartDate(), object.getEndDate());
+                    object.getDishId(), object.getDiscountId(), object.getStartTimestamp(), object.getEndTimestamp());
             return object;
         } catch (SQLException e) {
             logger.error("Error creating new dish discount", e);
@@ -48,16 +49,16 @@ public class DishDiscountDAO implements DAO<DishDiscount> {
     @Override
     public DishDiscount update(DishDiscount object) {
         logger.info("Updating dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
-                object.getDishId(), object.getDiscountId(), object.getStartDate(), object.getEndDate());
+                object.getDishId(), object.getDiscountId(), object.getStartTimestamp(), object.getEndTimestamp());
         String sql = "UPDATE hitsz_taste.dish_discounts SET start_date = ?, end_date = ? WHERE dish_id = ? AND discount_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, object.getStartDate());
-            statement.setObject(2, object.getEndDate());
+            statement.setObject(1, object.getStartTimestamp());
+            statement.setObject(2, object.getEndTimestamp());
             statement.setObject(3, object.getDishId());
             statement.setObject(4, object.getDiscountId());
             statement.executeUpdate();
             logger.info("Successfully updated dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
-                    object.getDishId(), object.getDiscountId(), object.getStartDate(), object.getEndDate());
+                    object.getDishId(), object.getDiscountId(), object.getStartTimestamp(), object.getEndTimestamp());
             return object;
         } catch (SQLException e) {
             logger.error("Error updating dish discount", e);
@@ -68,18 +69,18 @@ public class DishDiscountDAO implements DAO<DishDiscount> {
     @Override
     public DishDiscount update(DishDiscount objectOld, DishDiscount objectNew) {
         logger.info("Updating dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
-                objectOld.getDishId(), objectOld.getDiscountId(), objectOld.getStartDate(), objectOld.getEndDate());
+                objectOld.getDishId(), objectOld.getDiscountId(), objectOld.getStartTimestamp(), objectOld.getEndTimestamp());
         String sql = "UPDATE hitsz_taste.dish_discounts SET dish_id = ?, discount_id = ?, start_date = ?, end_date = ? WHERE dish_id = ? AND discount_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, objectNew.getDishId());
             statement.setObject(2, objectNew.getDiscountId());
-            statement.setObject(3, objectNew.getStartDate());
-            statement.setObject(4, objectNew.getEndDate());
+            statement.setObject(3, objectNew.getStartTimestamp());
+            statement.setObject(4, objectNew.getEndTimestamp());
             statement.setObject(5, objectOld.getDishId());
             statement.setObject(6, objectOld.getDiscountId());
             statement.executeUpdate();
             logger.info("Successfully updated dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
-                    objectNew.getDishId(), objectNew.getDiscountId(), objectNew.getStartDate(), objectNew.getEndDate());
+                    objectNew.getDishId(), objectNew.getDiscountId(), objectNew.getStartTimestamp(), objectNew.getEndTimestamp());
             return objectNew;
         } catch (SQLException e) {
             logger.error("Error updating dish discount", e);
@@ -91,8 +92,8 @@ public class DishDiscountDAO implements DAO<DishDiscount> {
     public DishDiscount getFromResultSet(ResultSet resultSet) throws SQLException {
         return new DishDiscount(resultSet.getObject("dish_id", Long.class),
                 resultSet.getObject("discount_id", Long.class),
-                resultSet.getObject("start_date", Date.class),
-                resultSet.getObject("end_date", Date.class));
+                resultSet.getObject("start_timestamp", Timestamp.class),
+                resultSet.getObject("end_timestamp", Timestamp.class));
     }
 
     @Override
@@ -128,14 +129,14 @@ public class DishDiscountDAO implements DAO<DishDiscount> {
     @Override
     public void delete(DishDiscount object) {
         logger.debug("Deleting dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
-                object.getDishId(), object.getDiscountId(), object.getStartDate(), object.getEndDate());
+                object.getDishId(), object.getDiscountId(), object.getStartTimestamp(), object.getEndTimestamp());
         String sql = "DELETE FROM hitsz_taste.dish_discounts WHERE dish_id = ? AND discount_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, object.getDishId());
             statement.setObject(2, object.getDiscountId());
             statement.executeUpdate();
             logger.debug("Successfully deleted dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
-                    object.getDishId(), object.getDiscountId(), object.getStartDate(), object.getEndDate());
+                    object.getDishId(), object.getDiscountId(), object.getStartTimestamp(), object.getEndTimestamp());
         } catch (SQLException e) {
             logger.error("Error deleting dish discount", e);
         }

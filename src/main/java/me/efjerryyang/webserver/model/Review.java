@@ -17,5 +17,5 @@ public class Review implements IModel {
     private Long userId;
     private Integer rating;
     private String comment;
-    private Timestamp create_at;
+    private Timestamp createAt;
 }

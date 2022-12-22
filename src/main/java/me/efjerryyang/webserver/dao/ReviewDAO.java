@@ -26,13 +26,13 @@ public class ReviewDAO implements DAO<Review> {
     @Override
     public Review create(Review review) {
         logger.debug("Creating review with id: {}", review.getReviewId());
-        String sql = "INSERT INTO hitsz_taste.reviews (review_id, user_id, rating, comment, timestamp) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO hitsz_taste.reviews (review_id, user_id, rating, comment, create_at) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, review.getReviewId());
             statement.setObject(2, review.getUserId());
             statement.setObject(3, review.getRating());
             statement.setObject(4, review.getComment());
-            statement.setObject(5, review.getTimestamp());
+            statement.setObject(5, review.getCreateAt());
             statement.executeUpdate();
             ResultSet resultSet = statement.getGeneratedKeys();
             if (resultSet.next()) {
@@ -49,14 +49,14 @@ public class ReviewDAO implements DAO<Review> {
     @Override
     public Review update(Review object) {
         logger.debug("Updating review with id: {}", object.getReviewId());
-        String sql = "UPDATE hitsz_taste.reviews SET user_id = ?, rating = ?, comment = ?, timestamp = ? WHERE review_id = ?";
+        String sql = "UPDATE hitsz_taste.reviews SET user_id = ?, rating = ?, comment = ?, create_at = ? WHERE review_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the review in the SQL statement
-            logger.debug("Setting review values in SQL statement: user_id = {}, rating = {}, comment = {}, timestamp = {}, review_id = {}", object.getUserId(), object.getRating(), object.getComment(), object.getTimestamp(), object.getReviewId());
+            logger.debug("Setting review values in SQL statement: user_id = {}, rating = {}, comment = {}, timestamp = {}, review_id = {}", object.getUserId(), object.getRating(), object.getComment(), object.getCreateAt(), object.getReviewId());
             statement.setObject(1, object.getUserId());
             statement.setObject(2, object.getRating());
             statement.setObject(3, object.getComment());
-            statement.setObject(4, object.getTimestamp());
+            statement.setObject(4, object.getCreateAt());
             statement.setObject(5, object.getReviewId());
             statement.executeUpdate();
             logger.info("Successfully updated review with id {}", object.getReviewId());
@@ -74,11 +74,11 @@ public class ReviewDAO implements DAO<Review> {
         String sql = "UPDATE hitsz_taste.reviews SET user_id = ?, rating = ?, comment = ?, timestamp = ? WHERE review_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the review in the SQL statement
-            logger.debug("Setting review values in SQL statement: user_id = {}, rating = {}, comment = {}, timestamp = {}, review_id = {}", objectNew.getUserId(), objectNew.getRating(), objectNew.getComment(), objectNew.getTimestamp(), objectOld.getReviewId());
+            logger.debug("Setting review values in SQL statement: user_id = {}, rating = {}, comment = {}, timestamp = {}, review_id = {}", objectNew.getUserId(), objectNew.getRating(), objectNew.getComment(), objectNew.getCreateAt(), objectOld.getReviewId());
             statement.setObject(1, objectNew.getUserId());
             statement.setObject(2, objectNew.getRating());
             statement.setObject(3, objectNew.getComment());
-            statement.setObject(4, objectNew.getTimestamp());
+            statement.setObject(4, objectNew.getCreateAt());
             statement.setObject(5, objectOld.getReviewId());
             statement.executeUpdate();
             logger.info("Successfully updated review with id {}", objectOld.getReviewId());
@@ -96,7 +96,7 @@ public class ReviewDAO implements DAO<Review> {
         review.setUserId(resultSet.getLong("user_id"));
         review.setRating(resultSet.getInt("rating"));
         review.setComment(resultSet.getString("comment"));
-        review.setTimestamp(resultSet.getDate("timestamp"));
+        review.setCreateAt(resultSet.getTimestamp("create_at"));
         return review;
     }
 
