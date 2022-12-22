@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Signup Notice</title>
+    <style>
+        h1, p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+<h1>Signup Notice</h1>
+<p>Congratulations, you have successfully signed up for a staff account!</p>
+<p>Your account is currently being verified by the administrator. You will receive an email when your account has been approved, and you can login as a staff.</p>
+<p>You can now <a th:href="@{/login}">login</a> with your new account, but you will not have access to all features until your account has been approved.</p>
+</body>
+</html>
