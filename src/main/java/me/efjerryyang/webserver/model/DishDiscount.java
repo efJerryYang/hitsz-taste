@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 
 @Data
@@ -15,6 +16,6 @@ import java.sql.Date;
 public class DishDiscount implements IModel {
     private Long dishId;
     private Long discountId;
-    private Date startDate;
-    private Date endDate;
+    private Timestamp startTimestamp;
+    private Timestamp endTimestamp;
 }

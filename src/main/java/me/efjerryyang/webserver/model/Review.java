@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @EqualsAndHashCode
@@ -16,5 +17,5 @@ public class Review implements IModel {
     private Long userId;
     private Integer rating;
     private String comment;
-    private Date timestamp;
+    private Timestamp create_at;
 }
