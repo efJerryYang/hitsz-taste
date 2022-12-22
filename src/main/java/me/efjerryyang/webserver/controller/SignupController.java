@@ -20,7 +20,7 @@ public class SignupController {
     private static final Logger logger = LoggerFactory.getLogger(SignupController.class);
     private final UserService userService;
     private final ValidationService validationService;
-
+    private User user = null;
 
     public SignupController(UserService userService, ValidationService validationService) {
         this.userService = userService;
@@ -113,6 +113,21 @@ public class SignupController {
                 return "signup_staff";
             }
         }
+        try {
+            user.setFirstname(firstname);
+            user.setLastname(lastname);
+            user.setIdNumber(idNumber);
+//            user.setJobTitle(jobTitle); // should be set in another table
+//            user.setCompany(company); // should be set in another table
+        } catch (Exception e) {
+            logger.error("Error: {}", e.getMessage());
+        }
+        try {
+            userService.create(user);
+        } catch (Exception e) {
+            logger.error("Error creating user: {}", e.getMessage());
+        }
+
         return "notice_staff";
     }
 
@@ -197,7 +212,22 @@ public class SignupController {
                 return "signup_admin";
             }
         }
+        try {
+            user.setAddress(address);
+            user.setFirstname(firstname);
+            user.setLastname(lastname);
+//            user.setReferenceName(referenceName); // should be set in another table
+//            user.setReferenceContact(referenceContact); // should be set in another table
+//            user.setRole("admin"); // should be set in another table
+        } catch (Exception e) {
+            logger.error("Error: {}", e.getMessage());
+        }
 
+        try {
+            userService.create(user);
+        } catch (Exception e) {
+            logger.error("Error creating user: {}", e.getMessage());
+        }
         return "notice_admin";
     }
 
@@ -252,46 +282,48 @@ public class SignupController {
             password = CryptoUtilHash.hash(password);
             logger.info("hashed password: {}", password);
         }
-        User user = new User();
-
+        if (user != null) {
+            user = null;
+        }
+        user = new User();
         String salt = CryptoUtilHash.getSalt();
         user.setSalt(salt);
         user.setUsername(username);
         user.setPassword(CryptoUtilHash.hashWithSalt(password, salt));
         user.setPhone(phone);
         user.setEmail(email);
-
-        try {
-            user.setUserId(userService.getNextId());
-            user.setIsActive(true);
-//            userService.create(user);
-            logger.info(String.valueOf(user));
-            switch (options) {
-                case "customer":
-                    return "notice_customer";
-                case "admin":
+        user.setUserId(userService.getNextId());
+        user.setIsActive(true);
+        logger.info(String.valueOf(user));
+        switch (options) {
+            case "customer":
+                try {
+                    userService.create(user);
+                } catch (Exception e) {
+                    logger.error("Error creating user: {}", e.getMessage());
                     model.addAttribute("username", username);
-                    model.addAttribute("password", password);
+                    model.addAttribute("password", password); // hashed password
                     model.addAttribute("phone", phone);
                     model.addAttribute("email", email);
-                    return "signup_admin";
-                case "staff":
-                    model.addAttribute("username", username);
-                    model.addAttribute("password", password);
-                    model.addAttribute("phone", phone);
-                    model.addAttribute("email", email);
-                    return "signup_staff";
-                default:
-                    return "redirect:/welcome";
-            }
-        } catch (RuntimeException e) {
-            logger.info("SignupController.handleSignupForm() called with duplicate user");
-            model.addAttribute("error", "User already exists");
-            return "signup";
-        } catch (Exception e) {
-            logger.info("SignupController.handleSignupForm() called with error");
-            model.addAttribute("error", "Error creating user");
-            return "signup";
+                    model.addAttribute("options", options);
+                    model.addAttribute("error", "Error creating user: " + e.getMessage());
+                    return "signup";
+                }
+                return "notice_customer";
+            case "admin":
+                model.addAttribute("username", username);
+                model.addAttribute("password", password); // hashed password
+                model.addAttribute("phone", phone);
+                model.addAttribute("email", email);
+                return "signup_admin";
+            case "staff":
+                model.addAttribute("username", username);
+                model.addAttribute("password", password); // hashed password
+                model.addAttribute("phone", phone);
+                model.addAttribute("email", email);
+                return "signup_staff";
+            default:
+                return "redirect:/welcome";
         }
     }
 }
