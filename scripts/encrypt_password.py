@@ -53,7 +53,7 @@ def generate_template(username, encrypted_password, key, iv):
     # Create a template for the application.properties file
     template = """# Web server settings
 server.port=8080
-server.servlet.context-path=/hitsz-taste
+server.servlet.context-path=/
 
 # Database connection settings
 spring.datasource.url=jdbc:mysql://localhost:3306/hitsz_taste

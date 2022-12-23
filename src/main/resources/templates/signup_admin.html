@@ -41,7 +41,6 @@
             height: auto;
         }
 
-
         noscript {
             color: red;
             font-weight: bold;
@@ -58,6 +57,7 @@
         .warning {
             color: red;
         }
+
         .readonly-field {
             background-color: #eee;
         }
@@ -66,31 +66,8 @@
 <body>
 <h1>Admin Signup</h1>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
-<script src="/scripts/validate.js"></script>
+<script src="/validate.js"></script>
 <script>
-    // Notice that if lacks these function declarations, the script will not work.
-    // It will not work even if the functions are declared in the validate.js file.
-    function isEmail(email) {
-        return /^\w+@\w+\.\w+$/.test(email);
-    }
-
-    function isAddress(address) {
-        return /^[\u4e00-\u9fa5a-zA-Z0-9\\s]+$/.test(address);
-    }
-
-    function isPhone(phone) {
-        return /^\d{3}-\d{3}-\d{4}$/.test(phone) || /^\d{10,11}$/.test(phone) || /^\+?86\d{11}$/.test(phone);
-    }
-
-    function isUsername(username) {
-        return /^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$/.test(username);
-    }
-
-    function isName(name) {
-        // return name.matches("^[\u4e00-\u9fa5a-zA-Z\\s]+$");
-        return /^[\u4e00-\u9fa5a-zA-Z\s]+$/.test(name);
-    }
-
     function validateAdminForm() {
         let username = document.forms["adminSignupForm"]["username"].value;
         let password = document.forms["adminSignupForm"]["password"].value;
@@ -219,19 +196,23 @@
       enctype="multipart/form-data">
     <div>
         <label for="username">Username:</label>
-        <input type="text" id="username" name="username" th:value="${username}" th:required="required" readonly class="readonly-field"/>
+        <input type="text" id="username" name="username" th:value="${username}" th:required="required" readonly
+               class="readonly-field"/>
     </div>
     <div>
         <label for="password">Password:</label>
-        <input type="password" id="password" name="password" th:value="${password}" th:required="required" readonly class="readonly-field"/>
+        <input type="password" id="password" name="password" th:value="${password}" th:required="required" readonly
+               class="readonly-field"/>
     </div>
     <div>
         <label for="phone">Phone Number:</label>
-        <input type="tel" id="phone" name="phone" th:value="${phone}" th:required="required" readonly class="readonly-field"/>
+        <input type="tel" id="phone" name="phone" th:value="${phone}" th:required="required" readonly
+               class="readonly-field"/>
     </div>
     <div>
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" th:value="${email}" th:required="required" readonly class="readonly-field"/>
+        <input type="email" id="email" name="email" th:value="${email}" th:required="required" readonly
+               class="readonly-field"/>
     </div>
     <div>
         <label for="firstname">First Name:</label>
