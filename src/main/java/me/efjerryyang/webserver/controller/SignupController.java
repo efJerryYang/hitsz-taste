@@ -56,7 +56,6 @@ public class SignupController {
         String jsEnabled = request.getParameter("jsEnabled");
         // validate if javascript is enabled
         if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
-            logger.info("Javascript is not enabled");
             logger.info("Validating staff signup form on server side");
             if (username.isEmpty() || password.isEmpty() || phone.isEmpty() || email.isEmpty() || firstname.isEmpty() || lastname.isEmpty() || idNumber.isEmpty() || jobTitle.isEmpty() || company.isEmpty()) {
                 logger.info("Staff signup form is not valid");
@@ -135,7 +134,7 @@ public class SignupController {
             logger.error("Error creating user: {}", e.getMessage());
         }
 
-        return "notice_staff";
+        return "redirect:/notice_staff";
     }
 
     @PostMapping("/signup_admin")
@@ -155,7 +154,6 @@ public class SignupController {
         String jsEnabled = request.getParameter("jsEnabled");
         // validate if javascript is enabled
         if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
-            logger.info("Javascript is not enabled");
             logger.info("Validating admin signup form on server side");
             if (username.isEmpty() || password.isEmpty() || phone.isEmpty() || email.isEmpty() || firstname.isEmpty() || lastname.isEmpty() || address.isEmpty() || referenceName.isEmpty() || referenceContact.isEmpty()) {
                 logger.info("Admin signup form is not valid");
@@ -236,7 +234,7 @@ public class SignupController {
         } catch (Exception e) {
             logger.error("Error creating user: {}", e.getMessage());
         }
-        return "notice_admin";
+        return "redirect:/notice_admin";
     }
 
     @PostMapping("/signup")
@@ -251,7 +249,6 @@ public class SignupController {
         String jsEnabled = request.getParameter("jsEnabled");
         // validate if javascript is enabled
         if (!validationService.isJavascriptEnabled(acceptHeader, jsEnabled)) {
-            // javascript is disabled
             logger.info("Validating signup form data from server side");
             // validate the form input
             if (username.isEmpty() || password.isEmpty() || phone.isEmpty() || email.isEmpty() || options.isEmpty()) {
@@ -324,7 +321,7 @@ public class SignupController {
                     model.addAttribute("error", "Error creating user: " + e.getMessage());
                     return "signup";
                 }
-                return "notice_customer";
+                return "redirect:/notice_customer";
             case "admin":
                 role = Role.createRole("default");  // temporary solution, maybe use a map instead
                 userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
