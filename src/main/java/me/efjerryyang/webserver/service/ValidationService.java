@@ -15,6 +15,23 @@ import java.util.Map;
 public class ValidationService {
     private static final Logger logger = LoggerFactory.getLogger(ValidationService.class);
 
+    public boolean isJavascriptEnabled(String acceptHeader, String jsEnabled) {
+        logger.info("checking if javascript is enabled");
+        logger.info("acceptHeader: " + acceptHeader);
+        logger.info("jsEnabled: " + jsEnabled);
+        // chrome:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+        // firefox: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+        if (acceptHeader != null && (acceptHeader.contains("application/javascript") || jsEnabled.equals("true"))) {
+            // JavaScript is likely enabled on the client
+            logger.info("javascript is enabled");
+            return true;
+        } else {
+            // return false if we cannot determine if JavaScript is enabled
+            logger.info("javascript is disabled");
+            return false;
+        }
+    }
+
     public boolean isEmail(String email) {
         return email.matches("^\\w+@\\w+\\.\\w+$");
     }
@@ -32,7 +49,7 @@ public class ValidationService {
 
     public boolean isUsername(String username) {
         // "^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$"
-        return username.matches("^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$");
+        return username.matches("^[a-zA-Z][a-zA-Z0-9_.-]{4,20}$");
     }
 
     public boolean isName(String name) {
@@ -163,23 +180,5 @@ public class ValidationService {
             return provs.containsKey(val);
         }
         return false;
-    }
-
-    public boolean isJavascriptEnabled(String acceptHeader, String jsEnabled) {
-        logger.info("checking if javascript is enabled");
-        logger.info("acceptHeader: " + acceptHeader);
-        logger.info("jsEnabled: " + jsEnabled);
-        // chrome:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
-        // firefox: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-        if (acceptHeader != null && (acceptHeader.contains("application/javascript") || jsEnabled.equals("true"))) {
-            logger.info("accept Header: {}, jsEnabled: {}", acceptHeader, jsEnabled);
-            // JavaScript is likely enabled on the client
-            logger.info("javascript is enabled");
-            return true;
-        } else {
-            // return false if we cannot determine if JavaScript is enabled
-            logger.info("javascript is disabled");
-            return false;
-        }
     }
 }
