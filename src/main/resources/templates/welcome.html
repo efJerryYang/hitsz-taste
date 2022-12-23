@@ -80,17 +80,14 @@
         if (username === "") {
             messageElement.innerHTML = 'Username must be filled out';
             formIsValid = false;
+        } else if (!isPhone(username) && !isEmail(username) && !isUsername(username)) {
+            messageElement.innerHTML = 'Username must be a valid phone number, email, or username';
+            formIsValid = false;
         }
 
         // check if the password is empty
         if (password === "") {
             messageElement.innerHTML = 'Password must be filled out';
-            formIsValid = false;
-        }
-
-        // if the username is not phone number, or email, or username, then it is invalid
-        if (!isPhone(username) && !isEmail(username) && !isUsername(username)) {
-            messageElement.innerHTML = 'Username is invalid';
             formIsValid = false;
         }
 

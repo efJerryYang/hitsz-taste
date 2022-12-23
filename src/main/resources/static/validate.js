@@ -13,7 +13,7 @@ function isPhone(phone) {
 }
 
 function isUsername(username) {
-    return /^[a-zA-Z][a-zA-Z0-9_.-]{4,20}$/.test(username);
+    return /^[a-zA-Z][a-zA-Z0-9_.-]{3,19}$/.test(username);
 }
 
 function isName(name) {

@@ -48,8 +48,7 @@ public class ValidationService {
     }
 
     public boolean isUsername(String username) {
-        // "^[a-zA-Z][a-zA-Z0-9_.-]{5,19}$"
-        return username.matches("^[a-zA-Z][a-zA-Z0-9_.-]{4,20}$");
+        return username.matches("^[a-zA-Z][a-zA-Z0-9_.-]{3,19}$");
     }
 
     public boolean isName(String name) {
