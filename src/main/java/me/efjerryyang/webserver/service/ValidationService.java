@@ -1,21 +1,43 @@
 package me.efjerryyang.webserver.service;
 
+import jakarta.servlet.http.HttpServletRequest;
+import me.efjerryyang.webserver.model.Dish;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class ValidationService {
     private static final Logger logger = LoggerFactory.getLogger(ValidationService.class);
 
     public boolean isJavascriptEnabled(String acceptHeader, String jsEnabled) {
+        logger.info("checking if javascript is enabled");
+        logger.info("acceptHeader: " + acceptHeader);
+        logger.info("jsEnabled: " + jsEnabled);
+        // chrome:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
+        // firefox: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+        if (acceptHeader != null && (acceptHeader.contains("application/javascript") || jsEnabled.equals("true"))) {
+            // JavaScript is likely enabled on the client
+            logger.info("javascript is enabled");
+            return true;
+        } else {
+            // return false if we cannot determine if JavaScript is enabled
+            logger.info("javascript is disabled");
+            return false;
+        }
+    }
+
+    public boolean isJavascriptEnabled() {
+        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+        String acceptHeader = request.getHeader("Accept");
+        String jsEnabled = request.getParameter("jsEnabled");
         logger.info("checking if javascript is enabled");
         logger.info("acceptHeader: " + acceptHeader);
         logger.info("jsEnabled: " + jsEnabled);
@@ -179,5 +201,30 @@ public class ValidationService {
             return provs.containsKey(val);
         }
         return false;
+    }
+
+    // sanitize the input
+    public String sanitizeSearchQuery(String query) {
+        // Remove any HTML tags from the query
+        query = query.replaceAll("<[^>]*>", "");
+        // Remove any JavaScript event handlers from the query
+        query = query.replaceAll("on\\w+\\s*=\\s*(\"|')[^\"']*(\"|')", "");
+        // Remove any potentially malicious characters from the query
+        query = query.replaceAll("[^\\w\\s-]", "");
+        // Trim leading and trailing whitespace
+        query = query.trim();
+        // Check if the query contains any SQL injection keywords
+        String[] injectionKeywords = {"SELECT", "INSERT", "UPDATE", "DELETE", "CREATE", "DROP", "ALTER", "TRUNCATE", "UNION"};
+        for (String keyword : injectionKeywords) {
+            if (query.toUpperCase().contains(keyword)) {
+                throw new IllegalArgumentException("Invalid search query with SQL injection keyword: " + keyword);
+            }
+        }
+
+        // Escape special characters
+        query = query.replaceAll("'", "\'");
+        query = query.replaceAll("\"", "\\\"");
+        query = query.replaceAll("\\\\", "\\\\\\\\");
+        return query;
     }
 }

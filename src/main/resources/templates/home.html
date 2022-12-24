@@ -1,17 +1,105 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Home</title>
+    <title>Campus Food Delivery</title>
+    <meta charset="UTF-8"/>
+    <link th:href="@{/home-style.css}" rel="stylesheet" type="text/css">
 </head>
 <body>
-<h1>Welcome, [[${user.name}]]!</h1>
-<p>Here is some information about your account:</p>
-<ul>
-    <li>Username: [[${user.name}]]</li>
-    <li>Email: [[${user.email}]]</li>
-    <li>Phone: [[${user.phone}]]</li>
-    <!--  <li>Joined on: [[${user.joinDate}]]</li>  -->
-</ul>
-<p><a th:href="@{/logout}">Log out</a></p>
+<h1>Welcome to Campus Food Delivery</h1>
+<p>Here, you can browse and order food from your favorite cafeterias and merchants on campus.</p>
+<script src="/validate.js"></script>
+<script src="/sanitize.js"></script>
+<script>
+    document.getElementById("search-form").addEventListener("submit", function (event) {
+        // Get the search query from the form
+        const query = document.getElementById("query").value;
+        // Sanitize the search query
+        const sanitizedQuery = sanitizeSearchQuery(query);
+        // Update the form with the sanitized query
+        document.getElementById("query").value = sanitizedQuery;
+        document.getElementById("jsEnabled").value = "true";
+    });
+</script>
+<!-- Search form -->
+<form name="search-form" th:action="@{/search}" method="get">
+    <label for="query">Search for dishes:</label>
+    <input type="text" id="query" name="query" th:value="${query}" placeholder="Enter a dish name or ingredient">
+    <button type="submit">Search</button>
+    <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
+    <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
+</form>
+
+<!--&lt;!&ndash; Filter form &ndash;&gt;-->
+<!--<form th:action="@{/filter}" method="get">-->
+<!--    <label for="cafeteria">Filter by cafeteria:</label>-->
+<!--    <select id="cafeteria" name="cafeteria">-->
+<!--        <option value="">All cafeterias</option>-->
+<!--        <option th:each="result : ${searchResults}" th:value="${result.cafeteria.id}" th:text="${result.cafeteria.name}"></option>-->
+<!--    </select>-->
+<!--    <label for="merchant">Filter by merchant:</label>-->
+<!--    <select id="merchant" name="merchant">-->
+<!--        <option value="">All merchants</option>-->
+<!--        <option th:each="result : ${searchResults}" th:value="${result.merchant.id}" th:text="${result.merchant.name}"></option>-->
+<!--    </select>-->
+<!--    <button type="submit">Filter</button>-->
+<!--</form>-->
+
+
+<!--&lt;!&ndash; Merchant list &ndash;&gt;-->
+<!--<h2>Cafeterias and merchants</h2>-->
+<!--<ul>-->
+<!--    <li th:each="merchant : ${merchants}">-->
+<!--        <h3 th:text="${merchant.name}"></h3>-->
+<!--        <p th:text="${merchant.description}"></p>-->
+<!--        <ul>-->
+<!--            <li th:each="dish : ${merchant.dishes}">-->
+<!--                <h4 th:text="${dish.name}"></h4>-->
+<!--                <p th:text="${dish.description}"></p>-->
+<!--                <p>Price: <span th:text="${dish.price}"></span></p>-->
+<!--                <form th:action="@{/addToOrder}" method="post">-->
+<!--                    <input type="hidden" name="dishId" th:value="${dish.id}">-->
+<!--                    <button type="submit">Add to order</button>-->
+<!--                </form>-->
+<!--            </li>-->
+<!--        </ul>-->
+<!--    </li>-->
+<!--</ul>-->
+
+<!--&lt;!&ndash; Order &ndash;&gt;-->
+<!--<h2>Your Order</h2>-->
+<!--<table>-->
+<!--    <tr>-->
+<!--        <th>Dish</th>-->
+<!--        <th>Price</th>-->
+<!--        <th>Quantity</th>-->
+<!--        <th>Total</th>-->
+<!--        <th></th>-->
+<!--    </tr>-->
+<!--    <tr th:each="item : ${order.items}">-->
+<!--        <td th:text="${item.dish.name}"></td>-->
+<!--        <td th:text="${item.dish.price}"></td>-->
+<!--        <td th:text="${item.quantity}"></td>-->
+<!--        <td th:text="${item.total}"></td>-->
+<!--        <td>-->
+<!--            <form th:action="@{/updateOrder}" method="post">-->
+<!--                <input type="hidden" name="dishId" th:value="${item.dish.id}">-->
+<!--                <button type="submit" name="action" value="increment">+</button>-->
+<!--                <button type="submit" name="action" value="decrement">-</button>-->
+<!--                <button type="submit" name="action" value="remove">Remove</button>-->
+<!--            </form>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--</table>-->
+<!--<p>Total: <span th:text="${order.total}"></span></p>-->
+<!--<form th:action="@{/placeOrder}" method="post">-->
+<!--    <button type="submit">Place order</button>-->
+<!--</form>-->
+<noscript>
+    <p> Warning: JavaScript is disabled in your browser, your password will not be encrypted before being sent to the
+        server.</p>
+    <p> To protect your password, make sure that you have an https connection enabled.</p>
+</noscript>
 </body>
 </html>
+
