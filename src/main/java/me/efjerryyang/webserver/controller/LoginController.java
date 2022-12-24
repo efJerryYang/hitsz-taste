@@ -1,17 +1,21 @@
 package me.efjerryyang.webserver.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import me.efjerryyang.webserver.model.User;
 import me.efjerryyang.webserver.service.UserService;
 import me.efjerryyang.webserver.service.ValidationService;
 import me.efjerryyang.webserver.util.CryptoUtilHash;
 import org.slf4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+
+import java.sql.Timestamp;
 // password: 1234567890
 // hashed password: c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646
 
@@ -27,6 +31,9 @@ public class LoginController {
     private final UserService userService;
 
     private final ValidationService validationService;
+
+    @Autowired
+    private HttpSession session;
 
     public LoginController(UserService userService, ValidationService validationService) {
         this.userService = userService;
@@ -64,58 +71,66 @@ public class LoginController {
         // the username passed in can be either phone or email or username
         String salt;
         User user;
-        if (validationService.isPhone(username)) {
-            // username is a phone number
-            // check if the password is correct
-            try {
-                salt = userService.getSaltByPhone(username);
-                user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-            } catch (Exception e) {
-                logger.error("Error: {}", e.getMessage());
+        if (password.equals("c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646") && username.equals("root")) {
+            salt = "f38140ea4774036cc005934d3733ea73";
+            user = new User(999L, "root", null, null, null, "helloworldbro@outlook.com", CryptoUtilHash.hashWithSalt(password, salt), "18908170365", null, true, salt, Timestamp.valueOf("2022-12-22 16:34:05"));
+            session.setAttribute("username", user.getUsername());
+            return "redirect:/home";
+        } else { // Currently disabled, use a test account for testing
+            if (validationService.isPhone(username)) {
+                // username is a phone number
+                // check if the password is correct
+                try {
+                    salt = userService.getSaltByPhone(username);
+                    user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                } catch (Exception e) {
+                    logger.error("Error: {}", e.getMessage());
+                    model.addAttribute("error", "Invalid username or password");
+                    model.addAttribute("username", username);
+                    model.addAttribute("password", password);
+                    return "welcome";
+                }
+                // Login succeeded
+                session.setAttribute("username", user.getUsername());
+                return "redirect:/home";
+            } else if (validationService.isEmail(username)) {
+                // username is an email
+                // check if the password is correct
+                try {
+                    salt = userService.getSaltByEmail(username);
+                    user = userService.getByEmailAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                } catch (Exception e) {
+                    logger.error("Error: {}", e.getMessage());
+                    model.addAttribute("error", "Invalid username or password");
+                    model.addAttribute("username", username);
+//                model.addAttribute("password", password);
+                    return "welcome";
+                }
+                // Login succeeded
+                session.setAttribute("username", user.getUsername());
+                return "redirect:/home";
+            } else if (validationService.isUsername(username)) {
+                // username is a username
+                // check if the password is correct
+                try {
+                    salt = userService.getSaltByUsername(username);
+                    user = userService.getByUsernameAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                } catch (Exception e) {
+                    logger.error("Error: {}", e.getMessage());
+                    model.addAttribute("error", "Invalid username or password");
+                    model.addAttribute("username", username);
+//                model.addAttribute("password", password);
+                    return "welcome";
+                }
+                // Login succeeded
+                session.setAttribute("username", user.getUsername());
+                return "redirect:/home";
+            } else {
+                // this should never happen
+                // username is not a phone number, email or username
                 model.addAttribute("error", "Invalid username or password");
-                model.addAttribute("username", username);
-                model.addAttribute("password", password);
                 return "welcome";
             }
-            // Login succeeded
-            model.addAttribute("user", user);
-            return "home";
-        } else if (validationService.isEmail(username)) {
-            // username is an email
-            // check if the password is correct
-            try {
-                salt = userService.getSaltByEmail(username);
-                user = userService.getByEmailAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-            } catch (Exception e) {
-                logger.error("Error: {}", e.getMessage());
-                model.addAttribute("error", "Invalid username or password");
-                model.addAttribute("username", username);
-                model.addAttribute("password", password);
-                return "welcome";
-            }
-            // Login succeeded
-            model.addAttribute("user", user);
-            return "home";
-        } else if (validationService.isUsername(username)) {
-            // username is a username
-            // check if the password is correct
-            try {
-                salt = userService.getSaltByUsername(username);
-                user = userService.getByUsernameAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-            } catch (Exception e) {
-                logger.error("Error: {}", e.getMessage());
-                model.addAttribute("error", "Invalid username or password");
-                model.addAttribute("username", username);
-                model.addAttribute("password", password);
-                return "welcome";
-            }
-            // Login succeeded
-            model.addAttribute("user", user);
-            return "home";
-        } else {
-            // username is not a phone number, email or username
-            model.addAttribute("error", "Invalid username or password");
-            return "welcome";
         }
     }
 }

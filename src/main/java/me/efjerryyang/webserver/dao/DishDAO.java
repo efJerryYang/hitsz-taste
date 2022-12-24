@@ -223,6 +223,24 @@ public class DishDAO implements DAO<Dish> {
         }
     }
 
+    public List<Dish> getAllMatching(String query) {
+        logger.info("Getting all dishes by matching query {}", query);
+        String sql = "SELECT * FROM hitsz_taste.dishes WHERE name LIKE ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, "%" + query + "%");
+            ResultSet resultSet = statement.executeQuery();
+            List<Dish> dishes = new ArrayList<>();
+            while (resultSet.next()) {
+                dishes.add(getFromResultSet(resultSet));
+            }
+            logger.info("Successfully retrieved all dishes by matching query {}", query);
+            return dishes;
+        } catch (SQLException e) {
+            logger.error("Error retrieving all dishes by matching query {} from database", query, e);
+            return null;
+        }
+    }
+
     public List<Dish> getAllByNameAndMerchantId(String name, Long merchantId) {
         logger.info("Getting all dishes by name {} and merchant id {}", name, merchantId);
         String sql = "SELECT * FROM dishes WHERE merchant_id = ? AND name = ?";
