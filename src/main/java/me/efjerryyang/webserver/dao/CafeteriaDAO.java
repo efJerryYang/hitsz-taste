@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Repository
 public class CafeteriaDAO implements DAO<Cafeteria> {
@@ -198,5 +199,25 @@ public class CafeteriaDAO implements DAO<Cafeteria> {
             logger.error("Error getting cafeteria from database", e);
             return null;
         }
+    }
+
+    public List<Cafeteria> getAllByIds(List<Long> cafeteriaIds) {
+        logger.info("Getting all cafeterias with ids {}", cafeteriaIds);
+        String sql = "SELECT * FROM hitsz_taste.cafeterias WHERE cafeteria_id IN (" + cafeteriaIds.stream().map(Object::toString).collect(Collectors.joining(", ")) + ")";
+        List<Cafeteria> cafeterias = new ArrayList<>();
+        try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                Cafeteria cafeteria = getFromResultSet(resultSet);
+                cafeterias.add(cafeteria);
+            }
+            logger.info("Successfully got all cafeterias with ids {}", cafeteriaIds);
+            return cafeterias;
+        } catch (SQLException e) {
+            logger.error("Error getting all cafeterias from database", e);
+            return null;
+        }
+    }
+    public List<Cafeteria> getAllMatching(String query) {
+        return null;
     }
 }

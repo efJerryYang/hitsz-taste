@@ -1,6 +1,7 @@
 package me.efjerryyang.webserver.dao;
 
 import me.efjerryyang.webserver.model.Contract;
+import me.efjerryyang.webserver.model.Merchant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -144,6 +145,42 @@ public class ContractDAO implements DAO<Contract> {
             logger.info("Successfully deleted contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
         } catch (SQLException e) {
             logger.error("Error deleting contract from database", e);
+        }
+    }
+
+    public List<Long> getMerchantIdsByCafeteriaId(Long cafeteriaId) {
+        logger.info("Getting merchants by cafeteria id {}", cafeteriaId);
+        String sql = "SELECT merchant_id FROM hitsz_taste.contracts WHERE cafeteria_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, cafeteriaId);
+            ResultSet resultSet = statement.executeQuery();
+            List<Long> merchantIds = new ArrayList<>();
+            while (resultSet.next()) {
+                merchantIds.add(resultSet.getObject("merchant_id", Long.class));
+            }
+            logger.info("Successfully got merchants by cafeteria id {}, total number of merchants: {}", cafeteriaId, merchantIds.size());
+            return merchantIds;
+        } catch (SQLException e) {
+            logger.error("Error getting merchants by cafeteria id from database", e);
+            return null;
+        }
+    }
+
+    public List<Long> getCafeteriaIdsByMerchantId(Long merchantId) {
+        logger.info("Getting cafeterias by merchant id {}", merchantId);
+        String sql = "SELECT cafeteria_id FROM hitsz_taste.contracts WHERE merchant_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, merchantId);
+            ResultSet resultSet = statement.executeQuery();
+            List<Long> cafeteriaIds = new ArrayList<>();
+            while (resultSet.next()) {
+                cafeteriaIds.add(resultSet.getObject("cafeteria_id", Long.class));
+            }
+            logger.info("Successfully got cafeterias by merchant id {}, total number of cafeterias: {}", merchantId, cafeteriaIds.size());
+            return cafeteriaIds;
+        } catch (SQLException e) {
+            logger.error("Error getting cafeterias by merchant id from database", e);
+            return null;
         }
     }
 }
