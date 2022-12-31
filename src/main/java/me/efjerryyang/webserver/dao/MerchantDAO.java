@@ -233,4 +233,52 @@ public class MerchantDAO implements DAO<Merchant> {
         }
     }
 
+    public List<Merchant> getAllMatching(String query) {
+        logger.info("Getting all merchants matching query {}", query);
+        String sql = "SELECT * FROM hitsz_taste.merchants WHERE name LIKE ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, "%" + query + "%");
+            ResultSet resultSet = statement.executeQuery();
+            List<Merchant> merchants = new ArrayList<>();
+            while (resultSet.next()) {
+                Merchant merchant = getFromResultSet(resultSet);
+                merchants.add(merchant);
+                logger.debug("Added merchant with id {} to list of merchants", merchant.getMerchantId());
+            }
+            logger.info("Successfully retrieved all merchants matching query {}", query);
+            return merchants;
+        } catch (SQLException e) {
+            logger.error("Error retrieving merchants from database", e);
+            return null;
+        }
+    }
+
+    public List<Merchant> getAllByNames(List<String> names) {
+        logger.info("Getting all merchants with names {}", names);
+        String sql = "SELECT * FROM hitsz_taste.merchants WHERE name IN (";
+        for (int i = 0; i < names.size(); i++) {
+            sql += "?";
+            if (i != names.size() - 1) {
+                sql += ", ";
+            }
+        }
+        sql += ")";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            for (int i = 0; i < names.size(); i++) {
+                statement.setObject(i + 1, names.get(i));
+            }
+            ResultSet resultSet = statement.executeQuery();
+            List<Merchant> merchants = new ArrayList<>();
+            while (resultSet.next()) {
+                Merchant merchant = getFromResultSet(resultSet);
+                merchants.add(merchant);
+                logger.debug("Added merchant with id {} to list of merchants", merchant.getMerchantId());
+            }
+            logger.info("Successfully retrieved all merchants with names {}", names);
+            return merchants;
+        } catch (SQLException e) {
+            logger.error("Error retrieving merchants from database", e);
+            return null;
+        }
+    }
 }
