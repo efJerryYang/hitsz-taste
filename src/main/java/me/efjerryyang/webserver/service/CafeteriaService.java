@@ -13,7 +13,7 @@ import java.util.List;
 public class CafeteriaService {
     private static final Logger logger = LoggerFactory.getLogger(CafeteriaService.class);
 
-    private CafeteriaDAO cafeteriaDAO;
+    private final CafeteriaDAO cafeteriaDAO;
 
 
     @Autowired
@@ -28,5 +28,13 @@ public class CafeteriaService {
 
     public List<Cafeteria> getAllMatching(String query) {
         return cafeteriaDAO.getAllMatching(query);
+    }
+
+    public List<Cafeteria> getAllByIds(List<Long> ids) {
+        return cafeteriaDAO.getAllByIds(ids);
+    }
+
+    public Cafeteria getById(Long id) {
+        return cafeteriaDAO.getById(id);
     }
 }
