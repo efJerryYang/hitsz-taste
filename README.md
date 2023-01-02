@@ -12,7 +12,7 @@
 
 ### Encrypt password
 
-- Run the `encrypted_password.py` script to encrypt your database password and generate a `application.properties` template:
+- Run the `encrypted_password.py` script to encrypt your database password and generate a `application.properties` template. The template will be stored in the classpath `src/main/resources/` by running the script:
 
     ```shell
     python encrypted_password.py
@@ -38,7 +38,7 @@
 
 ### Add properties file to classpath
 
-- Copy the generated `application.properties` file to the `src/main/resources/` directory in your project. This will ensure that the project has access to the encrypted database password.
+- Place the generated `application.properties` file to the `src/main/resources/` directory in your project, this step has already been done by the script and you don't need to update anything manually. Place the file in the classpath will ensure that the project has access to the encrypted database password.
 
 ## References
 
