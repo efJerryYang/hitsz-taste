@@ -74,11 +74,44 @@ def write_template(template):
     Write the given template to the application.properties file.
     """
     # Write the template to the application.properties file
-    with open("application.properties", "w") as f:
+    with open(locate_dest_file(), "w") as f:
         f.write(template)
 
 
+def locate_classpath_resouces():
+    """
+    Locate the classpath directory.
+
+    +---scripts
+    |   +---py
+    |   |       encrypt_password.py
+    |   |       requirements.txt
+    |   |
+    |   \---sql
+    |           create_database.sql
+    |
+    +---src
+    |   +---main
+    |   |   +---java
+    |   |   ...
+    |   |   \---resources
+    |   |       |   application.properties
+    ...
+    """
+    # Locate the classpath directory
+    classpath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "src", "main", "resources")
+    return classpath
+
+def locate_dest_file():
+    """
+    Locate the destination file.
+    """
+    # Locate the destination file
+    dest_file = os.path.join(locate_classpath_resouces(), "application.properties")
+    return dest_file
+
 def main():
+    print(locate_classpath_resouces())
     # Get the username and password from the user
     username, password = get_password()
 
@@ -88,11 +121,22 @@ def main():
 
     # Print the encrypted password and write the template to the application.properties file
     print(f"\nEncrypted password: {encrypted_password.decode('utf-8')}")
-    write_template(template)
-
-    print(
-        "\nNow, you can move the file 'application.properties' to the classpath 'src/main/resources/'.\n\nAnd you should guarantee the encrypted password to be set to the environment variable 'ENCRYPTED_PASSWORD' on your operating system.\n")
-
+    # prompt the user with a warning
+    # that next step will overwrite the application.properties file
+    print("\n+--------+")
+    print("| Warning |")
+    print("+--------+")
+    print("    The next step will overwrite the 'application.properties' file in the classpath 'src/main/resources/'.\n")
+    # ask the user to confirm
+    confirm = input("Do you want to continue? (y/n): ")
+    if confirm == "y":
+        write_template(template)
+        print("\nDone.")
+    else:
+        print("\nAborted.")
+    # print(
+    #     "\nNow, you can move the file 'application.properties' to the classpath 'src/main/resources/'.\n\nAnd you should guarantee the encrypted password to be set to the environment variable 'ENCRYPTED_PASSWORD' on your operating system.\n")
+    print("\nNow, the file 'application.properties' has been generated in the classpath 'src/main/resources/'.\n\nAnd you should guarantee the encrypted password to be set to the environment variable 'ENCRYPTED_PASSWORD' on your operating system.\n")
 
 if __name__ == "__main__":
     main()
