@@ -209,7 +209,8 @@ public class ValidationService {
         // Remove any JavaScript event handlers from the query
         query = query.replaceAll("on\\w+\\s*=\\s*(\"|')[^\"']*(\"|')", "");
         // Remove any potentially malicious characters from the query
-        query = query.replaceAll("[^\\w\\s-]", "");
+        query = query.replaceAll("[^\\w\\s-\u4e00-\u9fa5]", "");
+
         // Trim leading and trailing whitespace
         query = query.trim();
         // Check if the query contains any SQL injection keywords
