@@ -49,10 +49,10 @@ public class CafeteriaDAO implements DAO<Cafeteria> {
     @Override
     public Cafeteria update(Cafeteria cafeteria) {
         logger.info("Updating cafeteria with id {} and name {}", cafeteria.getCafeteriaId(), cafeteria.getName());
-        String sql = "UPDATE hitsz_taste.cafeterias SET name = ?, location = ?, active = ? WHERE cafeteria_id = ?";
+        String sql = "UPDATE hitsz_taste.cafeterias SET name = ?, location = ?, is_active = ? WHERE cafeteria_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the cafeteria in the SQL statement
-            logger.debug("Setting cafeteria values in SQL statement: name = {}, location = {}, active = {}, cafeteria_id = {}", cafeteria.getName(), cafeteria.getLocation(), cafeteria.getIsActive(), cafeteria.getCafeteriaId());
+            logger.debug("Setting cafeteria values in SQL statement: name = {}, location = {}, is_active = {}, cafeteria_id = {}", cafeteria.getName(), cafeteria.getLocation(), cafeteria.getIsActive(), cafeteria.getCafeteriaId());
             statement.setObject(1, cafeteria.getName());
             statement.setObject(2, cafeteria.getLocation());
             statement.setObject(3, cafeteria.getIsActive());
@@ -69,7 +69,7 @@ public class CafeteriaDAO implements DAO<Cafeteria> {
     @Override
     public Cafeteria update(Cafeteria cafeteriaOld, Cafeteria cafeteriaNew) {
         logger.info("Updating cafeteria with id {}", cafeteriaOld.getCafeteriaId());
-        String sql = "UPDATE hitsz_taste.cafeterias SET cafeteria_id = ?, name = ?, location = ?, active = ? WHERE cafeteria_id = ?";
+        String sql = "UPDATE hitsz_taste.cafeterias SET cafeteria_id = ?, name = ?, location = ?, is_active = ? WHERE cafeteria_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, cafeteriaNew.getCafeteriaId());
             statement.setObject(2, cafeteriaNew.getName());
@@ -92,7 +92,7 @@ public class CafeteriaDAO implements DAO<Cafeteria> {
         cafeteria.setCafeteriaId(resultSet.getLong("cafeteria_id"));
         cafeteria.setName(resultSet.getString("name"));
         cafeteria.setLocation(resultSet.getString("location"));
-        cafeteria.setIsActive(resultSet.getBoolean("active"));
+        cafeteria.setIsActive(resultSet.getBoolean("is_active"));
         logger.debug("Successfully got cafeteria from result set");
         return cafeteria;
     }
@@ -154,9 +154,9 @@ public class CafeteriaDAO implements DAO<Cafeteria> {
         }
     }
 
-    public Cafeteria activeById(Long cafeteriaId) {
+    public Cafeteria activateById(Long cafeteriaId) {
         logger.info("Activating cafeteria with id {}", cafeteriaId);
-        String sql = "UPDATE hitsz_taste.cafeterias SET active = true WHERE cafeteria_id = ?";
+        String sql = "UPDATE hitsz_taste.cafeterias SET is_active = true WHERE cafeteria_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, cafeteriaId);
             statement.executeUpdate();
@@ -170,7 +170,7 @@ public class CafeteriaDAO implements DAO<Cafeteria> {
 
     public Cafeteria disableById(Long cafeteriaId) {
         logger.info("Disabling cafeteria with id {}", cafeteriaId);
-        String sql = "UPDATE hitsz_taste.cafeterias SET active = false WHERE cafeteria_id = ?";
+        String sql = "UPDATE hitsz_taste.cafeterias SET is_active = false WHERE cafeteria_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, cafeteriaId);
             statement.executeUpdate();
