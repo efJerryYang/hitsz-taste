@@ -1,10 +1,8 @@
 package me.efjerryyang.webserver.service;
 
 import jakarta.servlet.http.HttpServletRequest;
-import me.efjerryyang.webserver.model.Dish;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -23,7 +21,7 @@ public class ValidationService {
         logger.info("jsEnabled: " + jsEnabled);
         // chrome:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
         // firefox: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-        if (acceptHeader != null && (acceptHeader.contains("application/javascript") || jsEnabled.equals("true"))) {
+        if (acceptHeader != null && (acceptHeader.contains("application/javascript") || Objects.equals(jsEnabled, "true"))) {
             // JavaScript is likely enabled on the client
             logger.info("javascript is enabled");
             return true;
@@ -43,7 +41,7 @@ public class ValidationService {
         logger.info("jsEnabled: " + jsEnabled);
         // chrome:text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9
         // firefox: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
-        if (acceptHeader != null && (acceptHeader.contains("application/javascript") || jsEnabled.equals("true"))) {
+        if (acceptHeader != null && (acceptHeader.contains("application/javascript") || Objects.equals(jsEnabled, "true"))) {
             // JavaScript is likely enabled on the client
             logger.info("javascript is enabled");
             return true;

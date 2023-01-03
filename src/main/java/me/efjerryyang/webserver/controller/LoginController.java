@@ -82,7 +82,7 @@ public class LoginController {
                 try {
                     salt = userService.getSaltByPhone(username);
                     if (salt.equals("00000000000000000000000000000000")) {
-                        user = userService.getByUsernameAndPassword(username, password);
+                        user = userService.getByPhoneAndPassword(username, password);
                     } else {
                         user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
                     }
@@ -104,9 +104,9 @@ public class LoginController {
                 try {
                     salt = userService.getSaltByEmail(username);
                     if (salt.equals("00000000000000000000000000000000")) {
-                        user = userService.getByUsernameAndPassword(username, password);
+                        user = userService.getByEmailAndPassword(username, password);
                     } else {
-                        user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                        user = userService.getByEmailAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
                     }
                     if (user == null) {
                         throw new Exception("User not found");
@@ -128,7 +128,7 @@ public class LoginController {
                     if (salt.equals("00000000000000000000000000000000")) {
                         user = userService.getByUsernameAndPassword(username, password);
                     } else {
-                        user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                        user = userService.getByUsernameAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
                     }
                     if (user == null) {
                         throw new Exception("User not found");
