@@ -5,9 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.bouncycastle.util.Times;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 @Data

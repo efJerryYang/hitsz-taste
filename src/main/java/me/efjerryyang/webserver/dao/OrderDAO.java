@@ -26,7 +26,7 @@ public class OrderDAO implements DAO<Order> {
     @Override
     public Order create(Order order) {
         logger.info("Creating order with order_id {} and user_id {}", order.getOrderId(), order.getUserId());
-        String sql = "INSERT INTO hitsz_taste.orders (order_id, user_id, total_price, address, contact, status, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO hitsz_taste.orders (order_id, user_id, total_price, address, contact, status, create_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, order.getOrderId());
             statement.setObject(2, order.getUserId());
@@ -72,8 +72,8 @@ public class OrderDAO implements DAO<Order> {
 
     @Override
     public Order update(Order objectOld, Order objectNew) {
-        logger.info("Updating order with order_id {}, user_id {}, total_price {}, address {}, contact {}, status {}, timestamp {}", objectOld.getOrderId(), objectOld.getUserId(), objectOld.getTotalPrice(), objectOld.getAddress(), objectOld.getContact(), objectOld.getStatus(), objectOld.getCreateAt());
-        String sql = "UPDATE hitsz_taste.orders SET user_id = ?, total_price = ?, address = ?, contact = ?, status = ?, timestamp = ? WHERE order_id = ?";
+        logger.info("Updating order with order_id {}, user_id {}, total_price {}, address {}, contact {}, status {}, create_at {}", objectOld.getOrderId(), objectOld.getUserId(), objectOld.getTotalPrice(), objectOld.getAddress(), objectOld.getContact(), objectOld.getStatus(), objectOld.getCreateAt());
+        String sql = "UPDATE hitsz_taste.orders SET user_id = ?, total_price = ?, address = ?, contact = ?, status = ?, create_at = ? WHERE order_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the order in the SQL statement
             statement.setObject(1, objectNew.getUserId());
@@ -157,7 +157,7 @@ public class OrderDAO implements DAO<Order> {
      */
     public List<Order> getOrderByDateRange(Timestamp startTimestamp, Timestamp endTimestamp) {
         logger.info("Getting orders between {} and {}", startTimestamp, endTimestamp);
-        String sql = "SELECT * FROM hitsz_taste.orders WHERE timestamp BETWEEN ? AND ?";
+        String sql = "SELECT * FROM hitsz_taste.orders WHERE create_at BETWEEN ? AND ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, startTimestamp);
             statement.setObject(2, endTimestamp);
@@ -208,7 +208,7 @@ public class OrderDAO implements DAO<Order> {
      */
     public List<Order> getOrderByUserIdAndDateRange(Long userId, Timestamp startTimestamp, Date endTimestamp) {
         logger.info("Getting orders for user with id {} between {} and {}", userId, startTimestamp, endTimestamp);
-        String sql = "SELECT * FROM hitsz_taste.orders WHERE user_id = ? AND timestamp BETWEEN ? AND ?";
+        String sql = "SELECT * FROM hitsz_taste.orders WHERE user_id = ? AND create_at BETWEEN ? AND ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, userId);
             statement.setObject(2, startTimestamp);

@@ -15,6 +15,6 @@ public class Dish implements IModel {
     private Long categoryId;
     private String name;
     private Float price;
-//    private String ingredients;
-//    private String description;
+   private String ingredients;
+   private String description;
 }

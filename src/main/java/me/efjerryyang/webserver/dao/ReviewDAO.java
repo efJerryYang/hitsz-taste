@@ -52,7 +52,7 @@ public class ReviewDAO implements DAO<Review> {
         String sql = "UPDATE hitsz_taste.reviews SET user_id = ?, rating = ?, comment = ?, create_at = ? WHERE review_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the review in the SQL statement
-            logger.debug("Setting review values in SQL statement: user_id = {}, rating = {}, comment = {}, timestamp = {}, review_id = {}", object.getUserId(), object.getRating(), object.getComment(), object.getCreateAt(), object.getReviewId());
+            logger.debug("Setting review values in SQL statement: user_id = {}, rating = {}, comment = {}, create_at = {}, review_id = {}", object.getUserId(), object.getRating(), object.getComment(), object.getCreateAt(), object.getReviewId());
             statement.setObject(1, object.getUserId());
             statement.setObject(2, object.getRating());
             statement.setObject(3, object.getComment());
@@ -71,10 +71,10 @@ public class ReviewDAO implements DAO<Review> {
     @Override
     public Review update(Review objectOld, Review objectNew) {
         logger.debug("Updating review with id: {}", objectOld.getReviewId());
-        String sql = "UPDATE hitsz_taste.reviews SET user_id = ?, rating = ?, comment = ?, timestamp = ? WHERE review_id = ?";
+        String sql = "UPDATE hitsz_taste.reviews SET user_id = ?, rating = ?, comment = ?, create_at = ? WHERE review_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the review in the SQL statement
-            logger.debug("Setting review values in SQL statement: user_id = {}, rating = {}, comment = {}, timestamp = {}, review_id = {}", objectNew.getUserId(), objectNew.getRating(), objectNew.getComment(), objectNew.getCreateAt(), objectOld.getReviewId());
+            logger.debug("Setting review values in SQL statement: user_id = {}, rating = {}, comment = {}, create_at = {}, review_id = {}", objectNew.getUserId(), objectNew.getRating(), objectNew.getComment(), objectNew.getCreateAt(), objectOld.getReviewId());
             statement.setObject(1, objectNew.getUserId());
             statement.setObject(2, objectNew.getRating());
             statement.setObject(3, objectNew.getComment());
