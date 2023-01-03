@@ -106,7 +106,7 @@ def select_contract_id():
 def next_discount_id():
     global discount_id
     discount_id += 1
-    discount_id_list.append(dish_id)
+    discount_id_list.append(discount_id)
     return discount_id
 
 
@@ -226,6 +226,9 @@ def select_role():
 
 
 def parse_column_names(create_stmt: str) -> List[str]:
+    """
+    Parse the column names from a CREATE TABLE statement
+    """
     # Split the CREATE TABLE statement into two parts: the column definitions and the primary key definition
     column_defs, _, primary_key_def = create_stmt.partition("primary key")
     # Split the column definitions into a list of individual column definitions
@@ -239,7 +242,26 @@ def parse_column_names(create_stmt: str) -> List[str]:
     return column_names
 
 
+def update_users_review_id():
+    """
+    Iterate through the review_id_list and update the review_id field of the orders table
+    """
+
+    global review_id_list
+
+    ret_stmt = ""
+    for i in range(len(review_id_list)):
+        current_order = select_order_id()
+        update_stmt = "UPDATE orders SET review_id = {} WHERE order_id = {}".format(
+            review_id_list[i], current_order)
+        ret_stmt += update_stmt + ";\n"
+    return ret_stmt
+
+
 def generate_sample_data(create_statements: List[str], insert_order: List[str]) -> str:
+    """
+    Generate sample data for the database.
+    """
     fake = Factory.create(locale='zh_CN')
     sql_script = ""
     for table_name in insert_order:
@@ -314,11 +336,11 @@ def generate_sample_data(create_statements: List[str], insert_order: List[str]) 
                     insert_stmt += "now(), "
                 elif col == 'end_timestamp':  # next year timestamp
                     if table_name == 'contracts':
-                        insert_stmt += "now() + interval '1 year', "
+                        insert_stmt += "now() + interval 1 year, "
                     elif table_name == 'dish_discounts':
-                        insert_stmt += "now() + interval '1 month', "
+                        insert_stmt += "now() + interval 1 month, "
                     else:
-                        insert_stmt += "now() + interval '1 day', "
+                        insert_stmt += "now() + interval 1 day, "
                 elif col == 'discount_id':
                     if table_name == 'discounts':
                         insert_stmt += "{}, ".format(next_discount_id())
@@ -376,7 +398,9 @@ def generate_sample_data(create_statements: List[str], insert_order: List[str]) 
                     else:
                         insert_stmt += "{}, ".format(select_order_id())
                 elif col == 'review_id':
-                    if table_name == 'orders':  # it is important to notice that, we insert review_id before create review data
+                    if table_name == 'orders':
+                        insert_stmt += "NULL, "
+                    elif table_name == 'reviews':
                         insert_stmt += "{}, ".format(next_review_id())
                     else:
                         insert_stmt += "{}, ".format(select_review_id())
@@ -385,6 +409,8 @@ def generate_sample_data(create_statements: List[str], insert_order: List[str]) 
                 else:
                     raise Exception("Unknown column: {}".format(col))
             sql_script += insert_stmt.strip()[:-1] + ");\n"
+        update_stmt = update_users_review_id()
+        sql_script += update_stmt
     return sql_script
 
 
