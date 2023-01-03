@@ -19,16 +19,16 @@ insert_order = [
     'reviews', 'merchant_users'
 ]
 
-user_id = 1000
-category_id = 0
-cafeteria_id = 0
-merchant_id = 0
-contract_id = 0
-discount_id = 0
-dish_id = 0
-order_id = 0
-review_id = 0
-role_id = 0
+user_id = [1000]
+category_id = [0]
+cafeteria_id = [0]
+merchant_id = [0]
+contract_id = [0]
+discount_id = [0]
+dish_id = [0]
+order_id = [0]
+review_id = [0]
+role_id = [0]
 
 user_id_list = []
 category_id_list = []
@@ -43,10 +43,10 @@ role_id_list = []
 
 
 # next id helper function and wrapper functions
-def next_id(id_name: int, id_list: List[int]) -> int:
-    id_name += 1
-    id_list.append(id_name)
-    return id_name
+def next_id(id_name: List[int], id_list: List[int]) -> int:
+    id_name[0] += 1
+    id_list.append(id_name[0])
+    return id_name[0]
 
 
 def next_user_id() -> int:
@@ -230,6 +230,20 @@ def update_users_review_id():
     return ret_stmt
 
 
+def update_users_password():
+    """
+    Iterate through the users table and update the password field using its corresponding sha256 hash (hex digest)
+    """
+
+    ret_stmt = ""
+    for i in range(len(user_id_list)):
+        current_user = user_id_list[i]
+        update_stmt = "UPDATE users SET password = (SELECT sha2(password, 256)) WHERE user_id = {}".format(
+            current_user)
+        ret_stmt += update_stmt + ";\n"
+    return ret_stmt
+
+
 def generate_sample_data(create_statements: List[str], insert_order: List[str]) -> str:
     """
     Generate sample data for the database.
@@ -381,8 +395,8 @@ def generate_sample_data(create_statements: List[str], insert_order: List[str]) 
                 else:
                     raise Exception("Unknown column: {}".format(col))
             sql_script += insert_stmt.strip()[:-1] + ");\n"
-        update_stmt = update_users_review_id()
-        sql_script += update_stmt
+    sql_script += update_users_review_id()
+    sql_script += update_users_password()
     return sql_script
 
 

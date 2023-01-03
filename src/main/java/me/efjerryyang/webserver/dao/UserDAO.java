@@ -242,8 +242,7 @@ public class UserDAO implements DAO<User> {
     }
 
     public User getByUsernameAndPassword(String username, String password) {
-        logger.info("Getting user with user" +
-                "username {} and password {}", username, password);
+        logger.info("Getting user with username {} and password {}", username, password);
         String sql = "SELECT * FROM users WHERE username = ? AND password = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, username);
