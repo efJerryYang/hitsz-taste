@@ -1,8 +1,8 @@
 package me.efjerryyang.webserver.controller;
 
 import me.efjerryyang.webserver.model.Dish;
-import me.efjerryyang.webserver.model.Merchant;
 import me.efjerryyang.webserver.service.*;
+import me.efjerryyang.webserver.view.BaseView;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 public class SearchController {
@@ -22,19 +21,23 @@ public class SearchController {
     private final DishService dishService;
     private final ValidationService validationService;
     private final ContractService contractService;
+    private final FilterService filterService;
+    private List<Dish> dishList = null;
 
     @Autowired
-    public SearchController(CafeteriaService cafeteriaService, DishService dishService, ValidationService validationService, MerchantService merchantService, ContractService contractService) {
+    public SearchController(CafeteriaService cafeteriaService, DishService dishService, ValidationService validationService, MerchantService merchantService, ContractService contractService, FilterService filterService) {
         this.cafeteriaService = cafeteriaService;
         this.dishService = dishService;
         this.validationService = validationService;
         this.merchantService = merchantService;
         this.contractService = contractService;
+        this.filterService = filterService;
     }
 
-    @GetMapping("/search")
+    @GetMapping("/home/search")
     public String search(@RequestParam("query") String query, Model model) {
         String updatedQuery;
+        System.out.println("query: " + query);
         if (!validationService.isJavascriptEnabled()) {
             try {
                 updatedQuery = validationService.sanitizeSearchQuery(query);
@@ -44,44 +47,32 @@ public class SearchController {
             }
             if (!updatedQuery.equals(query)) {
                 model.addAttribute("error", "Invalid special characters in search query");
+                model.addAttribute("query", updatedQuery);
                 return "home";
             }
         }
-        List<Dish> searchResults = dishService.searchDishes(query);
+        dishList = dishService.searchDishes(query);
         model.addAttribute("query", query);
-        model.addAttribute("searchResults", searchResults);
-        System.out.printf(searchResults.toString());
+        // TODO: return how many rows of query result
+        System.out.printf(dishList.toString());
+        List<BaseView> filterResult;
+        filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
+        model.addAttribute("filterResult", filterResult);
         return "home";
     }
 
-    @GetMapping("/filter")
+    @GetMapping("/home/filter")
     public String filter(@RequestParam(value = "cafeteria", required = false) Long cafeteriaId, @RequestParam(value = "merchant", required = false) Long merchantId, Model model) {
-        // Retrieve the list of merchants from the database
-        List<Merchant> merchants = merchantService.getAll();
-
-        // If a cafeteria and merchant are selected, filter the list of merchants by both cafeteria and merchant
-        if (cafeteriaId != null && merchantId != null) {
-            merchants = merchants.stream()
-                    .filter(merchant -> cafeteriaService.getAllByIds(contractService.getCafeteriaIdsByMerchantId(merchant.getMerchantId())).contains(cafeteriaService.getById(cafeteriaId))
-                            && merchant.getMerchantId().equals(merchantId))
-                    .collect(Collectors.toList());
+        if (dishList == null) {
+            model.addAttribute("error", "No search results to filter");
+            return "home";
         }
-        // If only a cafeteria is selected, filter the list of merchants by cafeteria
-        else if (cafeteriaId != null) {
-            merchants = merchants.stream()
-                    .filter(merchant -> cafeteriaService.getAllByIds(contractService.getCafeteriaIdsByMerchantId(merchant.getMerchantId())).contains(cafeteriaService.getById(cafeteriaId)))
-                    .collect(Collectors.toList());
-        }
-        // If only a merchant is selected, filter the list of merchants by merchant
-        else if (merchantId != null) {
-            merchants = merchants.stream().filter(merchant -> merchant.getMerchantId().equals(merchantId)).collect(Collectors.toList());
-        }
-
-        // Add the filtered list of merchants to the model
-        model.addAttribute("merchants", merchants);
-        // Render the template with the filtered list of merchants
+        List<BaseView> filterResult;
+        filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
+        model.addAttribute("filterResult", filterResult);
         return "home";
     }
 
+    // TODO: sort result by price/merchant name/cafeteria name/dish name
 }
 
