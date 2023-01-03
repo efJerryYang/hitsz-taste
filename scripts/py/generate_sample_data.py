@@ -292,11 +292,11 @@ def generate_sample_data(create_statements: List[str], insert_order: List[str]) 
                         insert_stmt += "{}, ".format(select_cafeteria_id())
                 elif col == 'name':
                     if table_name == 'cafeterias':
-                        insert_stmt += "'Cafeteria {}', ".format(category_id)
+                        insert_stmt += "'Cafeteria {}', ".format(cafeteria_id[0])
                     elif table_name == 'categories':
-                        insert_stmt += "'Category {}', ".format(category_id)
+                        insert_stmt += "'Category {}', ".format(category_id[0])
                     elif table_name == 'merchants':
-                        insert_stmt += "'Merchant {}', ".format(merchant_id)
+                        insert_stmt += "'Merchant {}', ".format(merchant_id[0])
                     elif table_name == 'dishes':
                         insert_stmt += "'{}', ".format(fake.sentences(nb=1)[0])
                     elif table_name == 'discounts':
