@@ -2,8 +2,10 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Campus Food Delivery Platform</title>
-    <meta charset="UTF-8"/>
-<!--    <link th:href="@{/home-style.css}" rel="stylesheet" type="text/css">-->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!--    <link th:href="@{/home-style.css}" rel="stylesheet" type="text/css">-->
     <style>
         form {
             width: 1000px;
@@ -17,6 +19,14 @@
 
         /* Center the form on the page */
         form, h1 {
+            text-align: center;
+        }
+
+        table, h2 {
+            text-align: center;
+        }
+
+        form, h2 {
             text-align: center;
         }
 
@@ -149,26 +159,6 @@
 </table>
 
 
-<!--&lt;!&ndash; Merchant list &ndash;&gt;-->
-<!--<h2>Cafeterias and merchants</h2>-->
-<!--<ul>-->
-<!--    <li th:each="merchant : ${merchants}">-->
-<!--        <h3 th:text="${merchant.name}"></h3>-->
-<!--        <p th:text="${merchant.description}"></p>-->
-<!--        <ul>-->
-<!--            <li th:each="dish : ${merchant.dishes}">-->
-<!--                <h4 th:text="${dish.name}"></h4>-->
-<!--                <p th:text="${dish.description}"></p>-->
-<!--                <p>Price: <span th:text="${dish.price}"></span></p>-->
-<!--                <form th:action="@{/addToOrder}" method="post">-->
-<!--                    <input type="hidden" name="dishId" th:value="${dish.id}">-->
-<!--                    <button type="submit">Add to order</button>-->
-<!--                </form>-->
-<!--            </li>-->
-<!--        </ul>-->
-<!--    </li>-->
-<!--</ul>-->
-
 <!--&lt;!&ndash; Order &ndash;&gt;-->
 <!--<h2>Your Order</h2>-->
 <!--<table>-->
@@ -194,10 +184,12 @@
 <!--        </td>-->
 <!--    </tr>-->
 <!--</table>-->
-<!--<p>Total: <span th:text="${order.total}"></span></p>-->
-<!--<form th:action="@{/placeOrder}" method="post">-->
-<!--    <button type="submit">Place order</button>-->
-<!--</form>-->
+
+
+<p>Total: <span th:text="${order.total}"></span></p>
+<form th:action="@{/placeOrder}" method="post">
+    <button type="submit">Place order</button>
+</form>
 <noscript>
     <p> Warning: JavaScript is disabled in your browser, your password will not be encrypted before being sent to the
         server.</p>
