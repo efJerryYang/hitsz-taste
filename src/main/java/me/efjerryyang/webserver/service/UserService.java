@@ -2,12 +2,14 @@ package me.efjerryyang.webserver.service;
 
 import me.efjerryyang.webserver.dao.UserDAO;
 import me.efjerryyang.webserver.model.User;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
-
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     // This layer is used to handle business logic over the data access layer
     // Even if the data access layer changes, this layer should provide the same interface to the controller layer
     private UserDAO userDAO;
@@ -33,6 +35,7 @@ public class UserService {
         }
         if (this.get(user) == null) {
             userDAO.create(user);
+            logger.info("User created: " + user);
         } else {
             throw new RuntimeException("User already exists");
         }

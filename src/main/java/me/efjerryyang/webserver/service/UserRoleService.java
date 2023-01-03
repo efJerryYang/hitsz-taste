@@ -25,7 +25,7 @@ public class UserRoleService {
         UserRole userRole = new UserRole();
         userRole.setUserId(userId);
         userRole.setRoleId(roleId);
-        userRole.setGrantTimestamp(new java.sql.Timestamp(System.currentTimeMillis()));
+        userRole.setGrantDate(new java.sql.Timestamp(System.currentTimeMillis()));
         return userRole;
     }
 

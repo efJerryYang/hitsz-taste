@@ -1,12 +1,8 @@
 package me.efjerryyang.webserver.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-import me.efjerryyang.webserver.model.Role;
-import me.efjerryyang.webserver.model.User;
-import me.efjerryyang.webserver.model.UserRole;
-import me.efjerryyang.webserver.service.UserRoleService;
-import me.efjerryyang.webserver.service.UserService;
-import me.efjerryyang.webserver.service.ValidationService;
+import me.efjerryyang.webserver.model.*;
+import me.efjerryyang.webserver.service.*;
 import me.efjerryyang.webserver.util.CryptoUtilHash;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,15 +18,21 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 public class SignupController {
     private static final Logger logger = LoggerFactory.getLogger(SignupController.class);
     private final UserService userService;
+    private final MerchantService merchantService;
     private final UserRoleService userRoleService;
+    private final MerchantUserService merchantUserService;
     private final ValidationService validationService;
     private User user = null;
     private Role role = null;
     private UserRole userRole = null;
+    private Merchant merchant = null;
+    private MerchantUser merchantUser = null;
 
-    public SignupController(UserService userService, UserRoleService userRoleService, ValidationService validationService) {
+    public SignupController(UserService userService, MerchantService merchantService, UserRoleService userRoleService, MerchantUserService merchantUserService, ValidationService validationService) {
         this.userService = userService;
+        this.merchantService = merchantService;
         this.userRoleService = userRoleService;
+        this.merchantUserService = merchantUserService;
         this.validationService = validationService;
     }
 
@@ -119,17 +121,43 @@ public class SignupController {
                 return "signup_staff";
             }
         }
+        if (merchant != null) {
+            merchant = null;
+        }
+        if (merchantUser != null) {
+            merchantUser = null;
+        }
+        if (user == null) {
+            throw new RuntimeException("User is null");
+        }
+        merchant = new Merchant();
+        merchantUser = new MerchantUser();
         try {
             user.setFirstname(firstname);
             user.setLastname(lastname);
             user.setIdNumber(idNumber);
-//            user.setJobTitle(jobTitle); // should be set in another table
-//            user.setCompany(company); // should be set in another table
+            merchant.setIsActive(false);
+            merchant.setMerchantId(merchantService.getNextId());
+            // set username as merchant name is not appropriate
+            merchant.setName(user.getUsername()); // should be done when verified
+            merchantUser.setUserId(user.getUserId());
+            merchantUser.setMerchantId(merchant.getMerchantId());
+            merchantUser.setJobTitle(jobTitle);
+            merchantUser.setCompany(company);
+            merchantUser.setUpdateTime(new java.sql.Timestamp(System.currentTimeMillis()));
         } catch (Exception e) {
             logger.error("Error: {}", e.getMessage());
         }
         try {
             userService.create(user);
+            role = Role.createRole("default");  // temporary solution, maybe use a map instead
+            userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
+            userRoleService.create(userRole);
+
+            merchantService.create(merchant);
+            merchantUser = merchantUserService.bindUserAndMerchant(user.getUserId(), merchant.getMerchantId());
+            merchantUserService.create(merchantUser);
+
         } catch (Exception e) {
             logger.error("Error creating user: {}", e.getMessage());
         }
@@ -231,6 +259,9 @@ public class SignupController {
 
         try {
             userService.create(user);
+            role = Role.createRole("default");  // temporary solution, maybe use a map instead
+            userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
+            userRoleService.create(userRole);
         } catch (Exception e) {
             logger.error("Error creating user: {}", e.getMessage());
         }
@@ -323,18 +354,12 @@ public class SignupController {
                 }
                 return "redirect:/notice_customer";
             case "admin":
-                role = Role.createRole("default");  // temporary solution, maybe use a map instead
-                userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
-                userRoleService.create(userRole);
                 model.addAttribute("username", username);
                 model.addAttribute("password", password); // hashed password
                 model.addAttribute("phone", phone);
                 model.addAttribute("email", email);
                 return "signup_admin";
             case "staff":
-                role = Role.createRole("default");  // temporary solution, maybe use a map instead
-                userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
-                userRoleService.create(userRole);
                 model.addAttribute("username", username);
                 model.addAttribute("password", password); // hashed password
                 model.addAttribute("phone", phone);

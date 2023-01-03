@@ -21,6 +21,14 @@ public class MerchantService {
         logger.info("MerchantService initialized");
     }
 
+    public void create(Merchant merchant) {
+        Merchant getByMerchantId = merchantDAO.getById(merchant.getMerchantId());
+        if (getByMerchantId != null) {
+            throw new RuntimeException("Merchant already exists");
+        }
+        merchantDAO.create(merchant);
+        logger.info("Merchant created: " + merchant);
+    }
     public List<Merchant> getAll() {
         return merchantDAO.getAll();
     }
@@ -33,4 +41,11 @@ public class MerchantService {
         return merchantDAO.getAllByNames(names);
     }
 
+    public List<Merchant> getAllByDishIds(List<Long> dishIds) {
+        return merchantDAO.getAllByDishIds(dishIds);
+    }
+
+    public Long getNextId() {
+        return merchantDAO.getNextId();
+    }
 }
