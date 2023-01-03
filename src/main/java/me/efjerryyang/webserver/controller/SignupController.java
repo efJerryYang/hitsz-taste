@@ -245,14 +245,17 @@ public class SignupController {
                 return "signup_admin";
             }
         }
+        if (user == null) {
+            throw new RuntimeException("User is null");
+        }
+        if (role != null) {
+            role = null;
+        }
+
         try {
             user.setAddress(address);
             user.setFirstname(firstname);
             user.setLastname(lastname);
-            user.setCreatedAt(new java.sql.Timestamp(System.currentTimeMillis()));
-//            user.setReferenceName(referenceName); // should be set in another table
-//            user.setReferenceContact(referenceContact); // should be set in another table
-//            user.setRole("admin"); // should be set in another table
         } catch (Exception e) {
             logger.error("Error: {}", e.getMessage());
         }
@@ -262,6 +265,8 @@ public class SignupController {
             role = Role.createRole("default");  // temporary solution, maybe use a map instead
             userRole = userRoleService.bindUserAndRole(user.getUserId(), role.getRoleId());
             userRoleService.create(userRole);
+            // TODO: notify reference by name and contact, then update the role from default to admin
+            logger.info("Notifying reference by name {} and contact {}", referenceName, referenceContact);
         } catch (Exception e) {
             logger.error("Error creating user: {}", e.getMessage());
         }
