@@ -41,9 +41,7 @@ public class LoginController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestParam(value = "username", defaultValue = "") String username,
-                        @RequestParam(value = "password", defaultValue = "") String password, Model model
-    ) {
+    public String login(@RequestParam(value = "username", defaultValue = "") String username, @RequestParam(value = "password", defaultValue = "") String password, Model model) {
         logger.info("username: {} password: {}", username, password);
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         String acceptHeader = request.getHeader("Accept");
@@ -71,6 +69,7 @@ public class LoginController {
         // the username passed in can be either phone or email or username
         String salt;
         User user;
+        //        00000000000000000000000000000000
         if (password.equals("c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646") && username.equals("root")) {
             salt = "f38140ea4774036cc005934d3733ea73";
             user = new User(999L, "root", null, null, null, "helloworldbro@outlook.com", CryptoUtilHash.hashWithSalt(password, salt), "18908170365", null, true, salt, Timestamp.valueOf("2022-12-22 16:34:05"));
@@ -82,12 +81,18 @@ public class LoginController {
                 // check if the password is correct
                 try {
                     salt = userService.getSaltByPhone(username);
-                    user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                    if (salt.equals("00000000000000000000000000000000")) {
+                        user = userService.getByUsernameAndPassword(username, password);
+                    } else {
+                        user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                    }
+                    if (user == null) {
+                        throw new Exception("User not found");
+                    }
                 } catch (Exception e) {
                     logger.error("Error: {}", e.getMessage());
                     model.addAttribute("error", "Invalid username or password");
                     model.addAttribute("username", username);
-                    model.addAttribute("password", password);
                     return "welcome";
                 }
                 // Login succeeded
@@ -98,12 +103,18 @@ public class LoginController {
                 // check if the password is correct
                 try {
                     salt = userService.getSaltByEmail(username);
-                    user = userService.getByEmailAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                    if (salt.equals("00000000000000000000000000000000")) {
+                        user = userService.getByUsernameAndPassword(username, password);
+                    } else {
+                        user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                    }
+                    if (user == null) {
+                        throw new Exception("User not found");
+                    }
                 } catch (Exception e) {
                     logger.error("Error: {}", e.getMessage());
                     model.addAttribute("error", "Invalid username or password");
                     model.addAttribute("username", username);
-//                model.addAttribute("password", password);
                     return "welcome";
                 }
                 // Login succeeded
@@ -114,12 +125,18 @@ public class LoginController {
                 // check if the password is correct
                 try {
                     salt = userService.getSaltByUsername(username);
-                    user = userService.getByUsernameAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                    if (salt.equals("00000000000000000000000000000000")) {
+                        user = userService.getByUsernameAndPassword(username, password);
+                    } else {
+                        user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                    }
+                    if (user == null) {
+                        throw new Exception("User not found");
+                    }
                 } catch (Exception e) {
                     logger.error("Error: {}", e.getMessage());
                     model.addAttribute("error", "Invalid username or password");
                     model.addAttribute("username", username);
-//                model.addAttribute("password", password);
                     return "welcome";
                 }
                 // Login succeeded
