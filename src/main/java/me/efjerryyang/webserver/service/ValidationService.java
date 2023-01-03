@@ -65,7 +65,6 @@ public class ValidationService {
     }
 
     public boolean isPhone(String phone) {
-
         return phone.matches("^\\d{3}-\\d{3}-\\d{4}$") || phone.matches("^\\d{10,11}$") || phone.matches("^\\+?86\\d{11}$");
     }
 
