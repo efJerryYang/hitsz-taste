@@ -4,96 +4,17 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <title>Sign Up</title>
-    <style>
-        /* Add some styling to position the form on the right side of the page */
-        form {
-            /*float: right;*/
-            width: 500px;
-            margin: auto;
-        }
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
-        /* Add some spacing between form fields */
-        form div {
-            margin: 10px 0;
-        }
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-        /* Center the form on the page */
-        form, h1 {
-            text-align: center;
-        }
-
-        /* Center the title and description */
-        h1, p {
-            text-align: center;
-        }
-
-        /* Align and set the same size for the input boxes */
-        label, input {
-            display: inline-block;
-            width: 120px;
-            text-align: left;
-            margin-right: 10px;
-        }
-
-        /* Set the size of the login button */
-        input[type="submit"] {
-            width: auto;
-            margin-right: 100px;
-            height: auto;
-        }
-
-
-        noscript {
-            color: red;
-            font-weight: bold;
-        }
-
-        div.nojs {
-            display: none;
-        }
-
-        #message-container {
-            text-align: center;
-        }
-
-        .warning {
-            color: red;
-        }
-
-        .radio-group {
-            display: flex;
-        }
-
-        div.radio-group {
-            margin-left: 20px;
-            display: inline-block;
-        }
-
-        .radio-group label {
-            display: inline-block;
-            text-align: center;
-            vertical-align: middle;
-            margin-right: 20px;
-            font-size: 16px;
-            color: #666;
-        }
-
-        .radio-group input[type="radio"] {
-            vertical-align: middle;
-            margin-right: 5px;
-        }
-
-        .radio-group input[type="radio"]:checked + label {
-            color: #333;
-            font-weight: bold;
-        }
-
-    </style>
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
 </head>
 <body>
-<h1>Sign Up</h1>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 <script src="/validate.js"></script>
 <script>
@@ -172,38 +93,70 @@
         document.getElementById("jsEnabled").value = "true";
     }
 </script>
-<!-- Use the form to get the user's input -->
-<form name="signupForm" th:action="@{/signup}" onsubmit="return validateSignupForm()" method="post">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" th:value="${username}" th:required="required"/><br><br>
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" th:value="${password}" th:required="required"/><br><br>
-    <label for="phone">Phone Number:</label>
-    <input type="phone" id="phone" name="phone" th:value="${phone}" th:required="required"/><br><br>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" th:value="${email}" th:required="required"/><br><br>
-    <div class="radio-group">
-        <label for="radio1">
-            Customer
-            <input type="radio" id="radio1" name="options" value="customer" th:checked="${options == 'customer'}"/>
-        </label>
-        <label for="radio2">
-            Staff
-            <input type="radio" id="radio2" name="options" value="staff" th:checked="${options == 'staff'}"/>
-        </label>
-        <label for="radio3">
-            Admin
-            <input type="radio" id="radio3" name="options" value="admin" th:checked="${options == 'admin'}"/>
-        </label>
-    </div>
-    <input type="submit" value="Submit"/>
-    <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
-    <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
-    <div id="message-container">
-        <!-- The error message will be inserted here -->
-    </div>
-</form>
+<div class="container">
+    <h1 class="text-center">Sign Up</h1>
 
+    <form name="signupForm" class="form-horizontal" th:action="@{/signup}" onsubmit="return validateSignupForm()"
+          method="post">
+        <div class="form-group">
+            <label for="username" class="col-sm-5 control-label">Username:</label>
+            <div class="col-sm-4 col-md-3">
+                <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="password" class="col-sm-5 control-label">Password:</label>
+            <div class="col-sm-4 col-md-3">
+                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="phone" class="col-sm-5 control-label">Phone:</label>
+            <div class="col-sm-4 col-md-3">
+                <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="email" class="col-sm-5 control-label">Email:</label>
+            <div class="col-sm-4 col-md-3">
+                <input type="text" class="form-control" name="email" id="email" placeholder="Email">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-5 control-label">Options:</label>
+            <div class="col-sm-4 col-md-3">
+                <div class="btn-group btn-group-toggle radio-group" data-toggle="buttons">
+                    <label class="btn btn-secondary active">
+                        <input type="radio" name="options" id="radio1" value="customer" autocomplete="off" checked
+                               th:checked="${options == 'customer'}"/> Customer
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="radio2" value="staff" autocomplete="off"
+                               th:checked="${options == 'staff'}"/> Staff
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="radio3" value="admin" autocomplete="off"
+                               th:checked="${options == 'admin'}"/> Admin
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="message-container" class="text-center" style="color: red">
+            <!-- Warning messages will be inserted here -->
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-4 col-sm-4" style="text-align: center">
+                <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
+                <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-sm-offset-5 col-sm-4">
+                <button type="submit" class="btn btn-primary text-center">Sign Up</button>
+            </div>
+        </div>
+    </form>
+</div>
 <noscript>
     <p> Warning: JavaScript is disabled in your browser, your password will not be encrypted before being sent to the
         server.</p>
