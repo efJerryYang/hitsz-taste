@@ -27,11 +27,13 @@ public class MerchantUserDAO implements DAO<MerchantUser> {
     @Override
     public MerchantUser create(MerchantUser object) {
         logger.debug("Creating MerchantUser with user_id {}, and merchant_id {}", object.getUserId(), object.getMerchantId());
-        String sql = "INSERT INTO hitsz_taste.merchant_users (user_id, merchant_id, update_time) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO hitsz_taste.merchant_users (user_id, merchant_id, update_time, job_title, company) VALUES (?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, object.getUserId());
             statement.setObject(2, object.getMerchantId());
             statement.setObject(3, object.getUpdateTime());
+            statement.setObject(4, object.getJobTitle());
+            statement.setObject(5, object.getCompany());
             statement.executeUpdate();
             logger.info("Successfully created MerchantUser with user_id {}, and merchant_id {}", object.getUserId(), object.getMerchantId());
             return object;
@@ -45,11 +47,13 @@ public class MerchantUserDAO implements DAO<MerchantUser> {
     @Override
     public MerchantUser update(MerchantUser object) {
         logger.debug("Updating MerchantUser with user_id {}, and merchant_id {}", object.getUserId(), object.getMerchantId());
-        String sql = "UPDATE hitsz_taste.merchant_users SET update_time = ? WHERE user_id = ? AND merchant_id = ?";
+        String sql = "UPDATE hitsz_taste.merchant_users SET update_time = ?, job_title = ?, company = ? WHERE user_id = ? AND merchant_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, object.getUpdateTime());
-            statement.setObject(2, object.getUserId());
-            statement.setObject(3, object.getMerchantId());
+            statement.setObject(2, object.getJobTitle());
+            statement.setObject(3, object.getCompany());
+            statement.setObject(4, object.getUserId());
+            statement.setObject(5, object.getMerchantId());
             statement.executeUpdate();
             logger.info("Successfully updated MerchantUser with user_id {}, and merchant_id {}", object.getUserId(), object.getMerchantId());
             return object;
@@ -62,11 +66,13 @@ public class MerchantUserDAO implements DAO<MerchantUser> {
     @Override
     public MerchantUser update(MerchantUser objectOld, MerchantUser objectNew) {
         logger.debug("Updating MerchantUser with user_id {}, and merchant_id {}", objectOld.getUserId(), objectOld.getMerchantId());
-        String sql = "UPDATE hitsz_taste.merchant_users SET update_time = ? WHERE user_id = ? AND merchant_id = ?";
+        String sql = "UPDATE hitsz_taste.merchant_users SET update_time = ?, job_title = ?, company = ? WHERE user_id = ? AND merchant_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, objectNew.getUpdateTime());
-            statement.setObject(2, objectOld.getUserId());
-            statement.setObject(3, objectOld.getMerchantId());
+            statement.setObject(2, objectNew.getJobTitle());
+            statement.setObject(3, objectNew.getCompany());
+            statement.setObject(4, objectOld.getUserId());
+            statement.setObject(5, objectOld.getMerchantId());
             statement.executeUpdate();
             logger.info("Successfully updated MerchantUser with user_id {}, and merchant_id {}", objectOld.getUserId(), objectOld.getMerchantId());
             return objectNew;
@@ -82,7 +88,9 @@ public class MerchantUserDAO implements DAO<MerchantUser> {
         MerchantUser merchantUser = new MerchantUser();
         merchantUser.setUserId(resultSet.getObject("user_id", Long.class));
         merchantUser.setMerchantId(resultSet.getObject("merchant_id", Long.class));
-        merchantUser.setUpdateTime(resultSet.getObject("update_time", Date.class));
+        merchantUser.setUpdateTime(resultSet.getObject("update_time", Timestamp.class));
+        merchantUser.setJobTitle(resultSet.getObject("job_title", String.class));
+        merchantUser.setCompany(resultSet.getObject("company", String.class));
         return merchantUser;
     }
 

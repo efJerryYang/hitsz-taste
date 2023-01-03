@@ -31,6 +31,7 @@ public class RoleDAO implements DAO<Role> {
         String sql = "INSERT INTO hitsz_taste.roles (name, role_id) VALUES (?, ?)";
         try (java.sql.PreparedStatement statement = connection.prepareStatement(sql, java.sql.Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, object.getName());
+            statement.setObject(2, object.getRoleId());
             statement.executeUpdate();
             logger.info("Successfully created role with name = {}, role_id = {}", object.getName(), object.getRoleId());
             return object;

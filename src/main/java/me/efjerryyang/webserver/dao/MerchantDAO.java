@@ -26,7 +26,7 @@ public class MerchantDAO implements DAO<Merchant> {
     @Override
     public Merchant create(Merchant merchant) {
         logger.info("Creating merchant with id {} and name {}", merchant.getMerchantId(), merchant.getName());
-        String sql = "INSERT INTO hitsz_taste.merchants (merchant_id, name, active) VALUES (?, ?, ?)";
+        String sql = "INSERT INTO hitsz_taste.merchants (merchant_id, name, is_active) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, merchant.getMerchantId());
             statement.setObject(2, merchant.getName());
@@ -47,7 +47,7 @@ public class MerchantDAO implements DAO<Merchant> {
     @Override
     public Merchant update(Merchant merchant) {
         logger.info("Updating merchant with id {} and name {}", merchant.getMerchantId(), merchant.getName());
-        String sql = "UPDATE hitsz_taste.merchants SET name = ?, active = ? WHERE merchant_id = ?";
+        String sql = "UPDATE hitsz_taste.merchants SET name = ?, is_active = ? WHERE merchant_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the merchant in the SQL statement
             logger.debug("Setting merchant values in SQL statement: name = {}, merchant_id = {}", merchant.getName(), merchant.getMerchantId());
@@ -67,7 +67,7 @@ public class MerchantDAO implements DAO<Merchant> {
     @Override
     public Merchant update(Merchant objectOld, Merchant objectNew) {
         logger.info("Updating merchant with id {} and name {}", objectOld.getMerchantId(), objectOld.getName());
-        String sql = "UPDATE hitsz_taste.merchants SET name = ?, active = ? WHERE merchant_id = ?";
+        String sql = "UPDATE hitsz_taste.merchants SET name = ?, is_active = ? WHERE merchant_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the merchant in the SQL statement
             logger.debug("Setting merchant values in SQL statement: name = {}, merchant_id = {}", objectNew.getName(), objectNew.getMerchantId());
@@ -90,7 +90,7 @@ public class MerchantDAO implements DAO<Merchant> {
         Merchant merchant = new Merchant();
         merchant.setMerchantId(resultSet.getLong("merchant_id"));
         merchant.setName(resultSet.getString("name"));
-        merchant.setIsActive(resultSet.getBoolean("active"));
+        merchant.setIsActive(resultSet.getBoolean("is_active"));
         return merchant;
     }
 
@@ -158,6 +158,35 @@ public class MerchantDAO implements DAO<Merchant> {
         }
     }
 
+    public List<Merchant> getAllByDishIds(List<Long> dishIds) {
+        logger.info("Getting all merchants by dish ids");
+        String sql = "SELECT * FROM hitsz_taste.merchants WHERE merchant_id IN (SELECT merchant_id FROM hitsz_taste.dishes WHERE dish_id IN (";
+        for (int i = 0; i < dishIds.size(); i++) {
+            sql += "?";
+            if (i != dishIds.size() - 1) {
+                sql += ", ";
+            }
+        }
+        sql += "))";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            for (int i = 0; i < dishIds.size(); i++) {
+                statement.setObject(i + 1, dishIds.get(i));
+            }
+            ResultSet resultSet = statement.executeQuery();
+            List<Merchant> merchants = new ArrayList<>();
+            while (resultSet.next()) {
+                Merchant merchant = getFromResultSet(resultSet);
+                merchants.add(merchant);
+                logger.debug("Added merchant with id {} to list of merchants", merchant.getMerchantId());
+            }
+            logger.info("Successfully retrieved all merchants by dish ids");
+            return merchants;
+        } catch (SQLException e) {
+            logger.error("Error retrieving merchants from database", e);
+            return null;
+        }
+    }
+
     public void deleteById(Long merchantId) {
         logger.info("Deleting merchant with id {}", merchantId);
         String sql = "DELETE FROM hitsz_taste.merchants WHERE merchant_id = ?";
@@ -170,9 +199,9 @@ public class MerchantDAO implements DAO<Merchant> {
         }
     }
 
-    public void activeById(Long merchantId) {
+    public void activateById(Long merchantId) {
         logger.info("Activating merchant with id {}", merchantId);
-        String sql = "UPDATE hitsz_taste.merchants SET active = true WHERE merchant_id = ?";
+        String sql = "UPDATE hitsz_taste.merchants SET is_active = true WHERE merchant_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, merchantId);
 
@@ -185,7 +214,7 @@ public class MerchantDAO implements DAO<Merchant> {
 
     public void disableById(Long merchantId) {
         logger.info("Deactivating merchant with id {}", merchantId);
-        String sql = "UPDATE hitsz_taste.merchants SET active = false WHERE merchant_id = ?";
+        String sql = "UPDATE hitsz_taste.merchants SET is_active = false WHERE merchant_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, merchantId);
             statement.executeUpdate();
@@ -197,7 +226,7 @@ public class MerchantDAO implements DAO<Merchant> {
 
     public List<Merchant> getAllActive() {
         logger.info("Getting all active merchants");
-        String sql = "SELECT * FROM hitsz_taste.merchants WHERE active = true";
+        String sql = "SELECT * FROM hitsz_taste.merchants WHERE is_active = true";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             List<Merchant> merchants = new ArrayList<>();
@@ -216,7 +245,7 @@ public class MerchantDAO implements DAO<Merchant> {
 
     public List<Merchant> getAllInactive() {
         logger.info("Getting all inactive merchants");
-        String sql = "SELECT * FROM hitsz_taste.merchants WHERE active = false";
+        String sql = "SELECT * FROM hitsz_taste.merchants WHERE is_active = false";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             ResultSet resultSet = statement.executeQuery();
             List<Merchant> merchants = new ArrayList<>();

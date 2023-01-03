@@ -50,7 +50,7 @@ public class DishDiscountDAO implements DAO<DishDiscount> {
     public DishDiscount update(DishDiscount object) {
         logger.info("Updating dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
                 object.getDishId(), object.getDiscountId(), object.getStartTimestamp(), object.getEndTimestamp());
-        String sql = "UPDATE hitsz_taste.dish_discounts SET start_date = ?, end_date = ? WHERE dish_id = ? AND discount_id = ?";
+        String sql = "UPDATE hitsz_taste.dish_discounts SET start_timestamp = ?, end_timestamp = ? WHERE dish_id = ? AND discount_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, object.getStartTimestamp());
             statement.setObject(2, object.getEndTimestamp());
@@ -70,7 +70,7 @@ public class DishDiscountDAO implements DAO<DishDiscount> {
     public DishDiscount update(DishDiscount objectOld, DishDiscount objectNew) {
         logger.info("Updating dish discount with dish_id = {} and discount_id = {}, date range = {} to {}",
                 objectOld.getDishId(), objectOld.getDiscountId(), objectOld.getStartTimestamp(), objectOld.getEndTimestamp());
-        String sql = "UPDATE hitsz_taste.dish_discounts SET dish_id = ?, discount_id = ?, start_date = ?, end_date = ? WHERE dish_id = ? AND discount_id = ?";
+        String sql = "UPDATE hitsz_taste.dish_discounts SET dish_id = ?, discount_id = ?, start_timestamp = ?, end_timestamp = ? WHERE dish_id = ? AND discount_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, objectNew.getDishId());
             statement.setObject(2, objectNew.getDiscountId());

@@ -16,5 +16,5 @@ import java.sql.Timestamp;
 public class UserRole implements IModel {
     private Long userId;
     private Integer roleId;
-    private Timestamp grantTimestamp;
+    private Timestamp grantDate;
 }
