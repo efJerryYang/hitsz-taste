@@ -1,10 +1,9 @@
 import os
 import random
-import faker
-import sqlparse
-
-from faker import Factory
 from typing import List, Tuple
+
+import sqlparse
+from faker import Factory
 
 # Because the salting is done by xor'ing the data with a random number
 # the salt can be set to 0 to indicate that the data is not salted.
@@ -43,124 +42,97 @@ review_id_list = []
 role_id_list = []
 
 
-def next_user_id():
-    global user_id
-    user_id += 1
-    user_id_list.append(user_id)
-    return user_id
+# next id helper function and wrapper functions
+def next_id(id_name: int, id_list: List[int]) -> int:
+    id_name += 1
+    id_list.append(id_name)
+    return id_name
 
 
-def select_user_id():
-    r = random.randint(0, len(user_id_list) - 1)
-    return user_id_list[r]
+def next_user_id() -> int:
+    return next_id(user_id, user_id_list)
 
 
-def next_category_id():
-    global category_id
-    category_id += 1
-    category_id_list.append(category_id)
-    return category_id
+def next_category_id() -> int:
+    return next_id(category_id, category_id_list)
 
 
-def select_category_id():
-    r = random.randint(0, len(category_id_list) - 1)
-    return category_id_list[r]
+def next_cafeteria_id() -> int:
+    return next_id(cafeteria_id, cafeteria_id_list)
 
 
-def next_cafeteria_id():
-    global cafeteria_id
-    cafeteria_id += 1
-    cafeteria_id_list.append(cafeteria_id)
-    return cafeteria_id
+def next_merchant_id() -> int:
+    return next_id(merchant_id, merchant_id_list)
 
 
-def select_cafeteria_id():
-    r = random.randint(0, len(cafeteria_id_list) - 1)
-    return cafeteria_id_list[r]
+def next_contract_id() -> int:
+    return next_id(contract_id, contract_id_list)
 
 
-def next_merchant_id():
-    global merchant_id
-    merchant_id += 1
-    merchant_id_list.append(merchant_id)
-    return merchant_id
+def next_discount_id() -> int:
+    return next_id(discount_id, discount_id_list)
 
 
-def select_merchant_id():
-    r = random.randint(0, len(merchant_id_list) - 1)
-    return merchant_id_list[r]
+def next_dish_id() -> int:
+    return next_id(dish_id, dish_id_list)
 
 
-def next_contract_id():
-    global contract_id
-    contract_id += 1
-    contract_id_list.append(contract_id)
-    return contract_id
+def next_order_id() -> int:
+    return next_id(order_id, order_id_list)
 
 
-def select_contract_id():
-    r = random.randint(0, len(contract_id_list) - 1)
-    return contract_id_list[r]
+def next_review_id() -> int:
+    return next_id(review_id, review_id_list)
 
 
-def next_discount_id():
-    global discount_id
-    discount_id += 1
-    discount_id_list.append(discount_id)
-    return discount_id
+def next_role_id() -> int:
+    return next_id(role_id, role_id_list)
 
 
-def select_discount_id():
-    r = random.randint(0, len(discount_id_list) - 1)
-    return discount_id_list[r]
+# select id helper function and wrapper functions
+def select_id(id_list: List[int]) -> int:
+    r = random.randint(0, len(id_list) - 1)
+    return id_list[r]
 
 
-def next_dish_id():
-    global dish_id
-    dish_id += 1
-    dish_id_list.append(dish_id)
-    return dish_id
+def select_user_id() -> int:
+    return select_id(user_id_list)
 
 
-def select_dish_id():
-    r = random.randint(0, len(dish_id_list) - 1)
-    return dish_id_list[r]
+def select_category_id() -> int:
+    return select_id(category_id_list)
 
 
-def next_order_id():
-    global order_id
-    order_id += 1
-    order_id_list.append(order_id)
-    return order_id
+def select_cafeteria_id() -> int:
+    return select_id(cafeteria_id_list)
 
 
-def select_order_id():
-    r = random.randint(0, len(order_id_list) - 1)
-    return order_id_list[r]
+def select_merchant_id() -> int:
+    return select_id(merchant_id_list)
 
 
-def next_review_id():
-    global review_id
-    review_id += 1
-    review_id_list.append(review_id)
-    return review_id
+def select_contract_id() -> int:
+    return select_id(contract_id_list)
 
 
-def select_review_id():
-    r = random.randint(0, len(review_id_list) - 1)
-    return review_id_list[r]
+def select_discount_id() -> int:
+    return select_id(discount_id_list)
 
 
-def next_role_id():
-    global role_id
-    role_id += 1
-    role_id_list.append(role_id)
-    return role_id
+def select_dish_id() -> int:
+    return select_id(dish_id_list)
 
 
-def select_role_id():
-    r = random.randint(0, len(role_id_list) - 1)
-    return role_id_list[r]
+def select_order_id() -> int:
+    return select_id(order_id_list)
+
+
+def select_review_id() -> int:
+    return select_id(review_id_list)
+
+
+def select_role_id() -> int:
+    return select_id(role_id_list)
 
 
 def select_job_title():

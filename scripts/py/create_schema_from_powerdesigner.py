@@ -1,7 +1,7 @@
-import re
 import os
-import sqlparse
 from typing import List, Tuple
+
+import sqlparse
 
 proper_order = [
     'cafeterias', 'categories', 'merchants', 'contracts',
@@ -76,7 +76,7 @@ def reorder_tables(sql: str, proper_order: List[str]) -> str:
 
     # Generate the reordered SQL script
     reordered_stmts = prep_drop_alters + reordered_tables + \
-        post_alters_constraints + other_statements
+                      post_alters_constraints + other_statements
     reordered_sql = '\n'.join([str(stmt) for stmt in reordered_stmts])
     # reindent format not good
     # return sqlparse.format(reordered_sql, keyword_case='upper', identifier_case='lower', reintend=True, reindent_aligned=True, comma_first=True)
@@ -85,6 +85,7 @@ def reorder_tables(sql: str, proper_order: List[str]) -> str:
 
     # leave the format as it is
     return reordered_sql
+
 
 def locate_src_dest_sql() -> Tuple[str, str]:
     """
@@ -119,6 +120,7 @@ def main():
     reordered_sql = reorder_tables(sql, proper_order)
     with open(dest_sql_file, 'w') as f:
         f.write(reordered_sql)
+
 
 if __name__ == "__main__":
     main()

@@ -1,8 +1,8 @@
 import base64
 import getpass
 import os
-import sys
 
+import sys
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 
@@ -99,8 +99,10 @@ def locate_classpath_resouces():
     ...
     """
     # Locate the classpath directory
-    classpath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "src", "main", "resources")
+    classpath = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "src",
+                             "main", "resources")
     return classpath
+
 
 def locate_dest_file():
     """
@@ -109,6 +111,7 @@ def locate_dest_file():
     # Locate the destination file
     dest_file = os.path.join(locate_classpath_resouces(), "application.properties")
     return dest_file
+
 
 def main():
     print(locate_classpath_resouces())
@@ -126,7 +129,8 @@ def main():
     print("\n+--------+")
     print("| Warning |")
     print("+--------+")
-    print("    The next step will overwrite the 'application.properties' file in the classpath 'src/main/resources/'.\n")
+    print(
+        "    The next step will overwrite the 'application.properties' file in the classpath 'src/main/resources/'.\n")
     # ask the user to confirm
     confirm = input("Do you want to continue? (y/n): ")
     if confirm == "y":
@@ -136,7 +140,9 @@ def main():
         print("\nAborted.")
     # print(
     #     "\nNow, you can move the file 'application.properties' to the classpath 'src/main/resources/'.\n\nAnd you should guarantee the encrypted password to be set to the environment variable 'ENCRYPTED_PASSWORD' on your operating system.\n")
-    print("\nNow, the file 'application.properties' has been generated in the classpath 'src/main/resources/'.\n\nAnd you should guarantee the encrypted password to be set to the environment variable 'ENCRYPTED_PASSWORD' on your operating system.\n")
+    print(
+        "\nNow, the file 'application.properties' has been generated in the classpath 'src/main/resources/'.\n\nAnd you should guarantee the encrypted password to be set to the environment variable 'ENCRYPTED_PASSWORD' on your operating system.\n")
+
 
 if __name__ == "__main__":
     main()
