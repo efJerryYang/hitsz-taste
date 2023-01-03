@@ -1,6 +1,7 @@
 package me.efjerryyang.webserver.service;
 
 import me.efjerryyang.webserver.dao.ContractDAO;
+import me.efjerryyang.webserver.model.Contract;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,5 +27,9 @@ public class ContractService {
 
     public List<Long> getCafeteriaIdsByMerchantId(Long merchantId) {
         return contractDAO.getCafeteriaIdsByMerchantId(merchantId);
+    }
+
+    public List<Contract> getAll() {
+        return contractDAO.getAll();
     }
 }

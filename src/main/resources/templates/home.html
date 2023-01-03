@@ -3,7 +3,7 @@
 <head>
     <title>Campus Food Delivery Platform</title>
     <meta charset="UTF-8"/>
-    <link th:href="@{/home-style.css}" rel="stylesheet" type="text/css">
+<!--    <link th:href="@{/home-style.css}" rel="stylesheet" type="text/css">-->
     <style>
         form {
             width: 1000px;
@@ -102,7 +102,7 @@
 </script>
 <!-- Search form -->
 <div class="search-container">
-    <form name="search-form" th:action="@{/search}" method="get">
+    <form name="search-form" th:action="@{/home/search}" method="get">
         <div>
             <label for="query">Search for dishes:</label>
             <input type="text" id="query" name="query" th:value="${query}"
@@ -118,7 +118,7 @@
 
 
 <!-- Filter form -->
-<form th:action="@{/filter}" method="get">
+<form th:action="@{/home/filter}" method="get">
     <label for="cafeteria">Filter by cafeteria:</label>
     <select id="cafeteria" name="cafeteria">
         <option value="">All cafeterias</option>
@@ -136,15 +136,16 @@
 <!-- Dish table -->
 <table>
     <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Description</th>
+        <th>Dish Name</th>
+        <th>Price</th>
+        <th>Cafeteria Name</th>
+        <th>Merchant Name</th>
     </tr>
-    <tr th:each="merchant : ${merchants}">
-        <td th:text="${merchant.merchantId}"></td>
-        <td th:text="${merchant.name}"></td>
-        <!--        <td th:text="${merchant.description}"></td>-->
-    </tr>
+    <tr th:each="row : ${filterResult}">
+        <td th:text="${row.getDishName()}"></td>
+        <td th:text="${row.getPrice()}"></td>
+        <td th:text="${row.getCafeteriaName()}"></td>
+        <td th:text="${row.getMerchantName()}"></td>
 </table>
 
 
