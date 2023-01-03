@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +14,7 @@ import java.sql.Date;
 public class MerchantUser implements IModel {
     private Long merchantId;
     private Long userId;
-    private Date updateTime;
+    private Timestamp updateTime;
     private String jobTitle;
     private String Company;
 }
