@@ -4,7 +4,7 @@ function sanitizeSearchQuery(query) {
     // Remove any JavaScript event handlers from the query
     query = query.replace(/on\w+\s*=\s*("|')[^"']*("|')/g, "");
     // Remove any potentially malicious characters from the query
-    query = query.replace(/[^\w\s-]/g, "");
+    query = query.replace(/[^\w\s-\u4e00-\u9fa5]/g, "");
     // Trim leading and trailing whitespace
     query = query.trim();
     // Check if the query contains any SQL injection keywords
