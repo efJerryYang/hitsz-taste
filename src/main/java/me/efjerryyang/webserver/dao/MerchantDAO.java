@@ -310,4 +310,22 @@ public class MerchantDAO implements DAO<Merchant> {
             return null;
         }
     }
+
+    public Long getNextId() {
+        logger.info("Getting next merchant id");
+        String sql = "SELECT MAX(merchant_id) FROM hitsz_taste.merchants";
+        try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                Long nextId = resultSet.getLong(1) + 1;
+                logger.info("Successfully retrieved next merchant id: {}", nextId);
+                return nextId;
+            } else {
+                logger.info("Successfully retrieved next merchant id: 1");
+                return 1L;
+            }
+        } catch (SQLException e) {
+            logger.error("Error retrieving next merchant id from database", e);
+            return null;
+        }
+    }
 }

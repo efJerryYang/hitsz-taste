@@ -137,4 +137,24 @@ public class MerchantUserDAO implements DAO<MerchantUser> {
             logger.error("Error deleting MerchantUser from database", e);
         }
     }
+
+    public MerchantUser getByUserIdAndMerchantId(Long userId, Long merchantId) {
+        logger.debug("Getting MerchantUser with user_id {}, and merchant_id {}", userId, merchantId);
+        String sql = "SELECT * FROM hitsz_taste.merchant_users WHERE user_id = ? AND merchant_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, userId);
+            statement.setObject(2, merchantId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                logger.info("Successfully got MerchantUser with user_id {}, and merchant_id {}", userId, merchantId);
+                return getFromResultSet(resultSet);
+            } else {
+                logger.info("MerchantUser with user_id {}, and merchant_id {} does not exist", userId, merchantId);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error getting MerchantUser from database", e);
+            return null;
+        }
+    }
 }
