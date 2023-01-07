@@ -1,5 +1,6 @@
 package me.efjerryyang.webserver.controller;
 
+import jakarta.servlet.http.HttpSession;
 import me.efjerryyang.webserver.model.Dish;
 import me.efjerryyang.webserver.service.*;
 import me.efjerryyang.webserver.view.BaseView;
@@ -17,6 +18,8 @@ import java.util.List;
 @Controller
 public class SearchController {
     private static final Logger logger = LoggerFactory.getLogger(SearchController.class);
+    @Autowired
+    private HttpSession session;
     private final CafeteriaService cafeteriaService;
     private final MerchantService merchantService;
     private final DishService dishService;
