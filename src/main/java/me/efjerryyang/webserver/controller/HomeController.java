@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class HomeController {
@@ -24,5 +25,27 @@ public class HomeController {
             model.addAttribute("username", session.getAttribute("username"));
         }
         return "home";
+    }
+
+    @PostMapping("/home/updateOrder")
+    public String updateOrder() {
+        logger.info("HomeController.order() called");
+
+        return "redirect:/home";
+    }
+
+    @PostMapping("/home/removeOrder")
+    public String removeOrder() {
+        logger.info("HomeController.removeOrder() called");
+        return "redirect:/home";
+    }
+
+    @PostMapping("/home/checkout")
+    public String checkout() {
+        logger.info("HomeController.checkout() called");
+        if (session.getAttribute("username") == null) {
+            return "redirect:/login";
+        }
+        return "redirect:/home";
     }
 }
