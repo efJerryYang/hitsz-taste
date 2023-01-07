@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
-
-import java.sql.Timestamp;
 // password: 1234567890
 // hashed password: c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646
 
@@ -69,85 +67,77 @@ public class LoginController {
         // the username passed in can be either phone or email or username
         String salt;
         User user;
-        //        00000000000000000000000000000000
-        if (password.equals("c775e7b757ede630cd0aa1113bd102661ab38829ca52a6422ab782862f268646") && username.equals("root")) {
-            salt = "f38140ea4774036cc005934d3733ea73";
-            user = new User(999L, "root", null, null, null, "helloworldbro@outlook.com", CryptoUtilHash.hashWithSalt(password, salt), "18908170365", null, true, salt, Timestamp.valueOf("2022-12-22 16:34:05"));
-            session.setAttribute("username", user.getUsername());
-            return "redirect:/home";
-        } else { // Currently disabled, use a test account for testing
-            if (validationService.isPhone(username)) {
-                // username is a phone number
-                // check if the password is correct
-                try {
-                    salt = userService.getSaltByPhone(username);
-                    if (salt.equals("00000000000000000000000000000000")) {
-                        user = userService.getByPhoneAndPassword(username, password);
-                    } else {
-                        user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-                    }
-                    if (user == null) {
-                        throw new Exception("User not found");
-                    }
-                } catch (Exception e) {
-                    logger.error("Error: {}", e.getMessage());
-                    model.addAttribute("error", "Invalid username or password");
-                    model.addAttribute("username", username);
-                    return "welcome";
+        if (validationService.isPhone(username)) {
+            // username is a phone number
+            // check if the password is correct
+            try {
+                salt = userService.getSaltByPhone(username);
+                if (salt.equals("00000000000000000000000000000000")) {
+                    user = userService.getByPhoneAndPassword(username, password);
+                } else {
+                    user = userService.getByPhoneAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
                 }
-                // Login succeeded
-                session.setAttribute("username", user.getUsername());
-                return "redirect:/home";
-            } else if (validationService.isEmail(username)) {
-                // username is an email
-                // check if the password is correct
-                try {
-                    salt = userService.getSaltByEmail(username);
-                    if (salt.equals("00000000000000000000000000000000")) {
-                        user = userService.getByEmailAndPassword(username, password);
-                    } else {
-                        user = userService.getByEmailAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-                    }
-                    if (user == null) {
-                        throw new Exception("User not found");
-                    }
-                } catch (Exception e) {
-                    logger.error("Error: {}", e.getMessage());
-                    model.addAttribute("error", "Invalid username or password");
-                    model.addAttribute("username", username);
-                    return "welcome";
+                if (user == null) {
+                    throw new Exception("User not found");
                 }
-                // Login succeeded
-                session.setAttribute("username", user.getUsername());
-                return "redirect:/home";
-            } else if (validationService.isUsername(username)) {
-                // username is a username
-                // check if the password is correct
-                try {
-                    salt = userService.getSaltByUsername(username);
-                    if (salt.equals("00000000000000000000000000000000")) {
-                        user = userService.getByUsernameAndPassword(username, password);
-                    } else {
-                        user = userService.getByUsernameAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
-                    }
-                    if (user == null) {
-                        throw new Exception("User not found");
-                    }
-                } catch (Exception e) {
-                    logger.error("Error: {}", e.getMessage());
-                    model.addAttribute("error", "Invalid username or password");
-                    model.addAttribute("username", username);
-                    return "welcome";
-                }
-                // Login succeeded
-                session.setAttribute("username", user.getUsername());
-                return "redirect:/home";
-            } else {
-                // this should never happen
-                // username is not a phone number, email or username
+            } catch (Exception e) {
+                logger.error("Error: {}", e.getMessage());
                 model.addAttribute("error", "Invalid username or password");
+                model.addAttribute("username", username);
                 return "welcome";
             }
+            // Login succeeded
+            session.setAttribute("username", user.getUsername());
+            return "redirect:/home";
+        } else if (validationService.isEmail(username)) {
+            // username is an email
+            // check if the password is correct
+            try {
+                salt = userService.getSaltByEmail(username);
+                if (salt.equals("00000000000000000000000000000000")) {
+                    user = userService.getByEmailAndPassword(username, password);
+                } else {
+                    user = userService.getByEmailAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                }
+                if (user == null) {
+                    throw new Exception("User not found");
+                }
+            } catch (Exception e) {
+                logger.error("Error: {}", e.getMessage());
+                model.addAttribute("error", "Invalid username or password");
+                model.addAttribute("username", username);
+                return "welcome";
+            }
+            // Login succeeded
+            session.setAttribute("username", user.getUsername());
+            return "redirect:/home";
+        } else if (validationService.isUsername(username)) {
+            // username is a username
+            // check if the password is correct
+            try {
+                salt = userService.getSaltByUsername(username);
+                if (salt.equals("00000000000000000000000000000000")) {
+                    user = userService.getByUsernameAndPassword(username, password);
+                } else {
+                    user = userService.getByUsernameAndPassword(username, CryptoUtilHash.hashWithSalt(password, salt));
+                }
+                if (user == null) {
+                    throw new Exception("User not found");
+                }
+            } catch (Exception e) {
+                logger.error("Error: {}", e.getMessage());
+                model.addAttribute("error", "Invalid username or password");
+                model.addAttribute("username", username);
+                return "welcome";
+            }
+            // Login succeeded
+            session.setAttribute("username", user.getUsername());
+            return "redirect:/home";
+        } else {
+            // this should never happen
+            // username is not a phone number, email or username
+            model.addAttribute("error", "Invalid username or password");
+            return "welcome";
         }
     }
 }

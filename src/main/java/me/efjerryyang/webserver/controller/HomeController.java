@@ -1,5 +1,6 @@
 package me.efjerryyang.webserver.controller;
 
+import jakarta.servlet.http.HttpSession;
 import me.efjerryyang.webserver.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,11 +13,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class HomeController {
     public static final Logger logger = LoggerFactory.getLogger(HomeController.class);
     @Autowired
+    private HttpSession session;
+    @Autowired
     private UserService userService;
 
     @GetMapping("/home")
     public String home(Model model) {
         logger.info("HomeController.home() called");
+        if (session.getAttribute("username") != null) {
+            model.addAttribute("username", session.getAttribute("username"));
+        }
         return "home";
     }
 }
