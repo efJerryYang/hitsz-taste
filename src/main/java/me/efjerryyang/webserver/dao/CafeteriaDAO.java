@@ -217,6 +217,7 @@ public class CafeteriaDAO implements DAO<Cafeteria> {
             return null;
         }
     }
+
     public List<Cafeteria> getAllMatching(String query) {
         return null;
     }

@@ -29,6 +29,7 @@ public class MerchantService {
         merchantDAO.create(merchant);
         logger.info("Merchant created: " + merchant);
     }
+
     public List<Merchant> getAll() {
         return merchantDAO.getAll();
     }

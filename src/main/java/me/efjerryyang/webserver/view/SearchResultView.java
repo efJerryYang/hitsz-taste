@@ -1,15 +1,7 @@
 package me.efjerryyang.webserver.view;
 
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import me.efjerryyang.webserver.model.Contract;
-import me.efjerryyang.webserver.model.Dish;
-import me.efjerryyang.webserver.model.Merchant;
 import me.efjerryyang.webserver.service.CafeteriaService;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SearchResultView extends BaseView implements IView {

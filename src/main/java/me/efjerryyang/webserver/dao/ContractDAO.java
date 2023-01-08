@@ -1,7 +1,6 @@
 package me.efjerryyang.webserver.dao;
 
 import me.efjerryyang.webserver.model.Contract;
-import me.efjerryyang.webserver.model.Merchant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

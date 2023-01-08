@@ -1,8 +1,8 @@
 import base64
 import getpass
 import os
-
 import sys
+
 from Crypto.Cipher import AES
 from Crypto.Util.Padding import pad
 
@@ -138,8 +138,6 @@ def main():
         print("\nDone.")
     else:
         print("\nAborted.")
-    # print(
-    #     "\nNow, you can move the file 'application.properties' to the classpath 'src/main/resources/'.\n\nAnd you should guarantee the encrypted password to be set to the environment variable 'ENCRYPTED_PASSWORD' on your operating system.\n")
     print(
         "\nNow, the file 'application.properties' has been generated in the classpath 'src/main/resources/'.\n\nAnd you should guarantee the encrypted password to be set to the environment variable 'ENCRYPTED_PASSWORD' on your operating system.\n")
 

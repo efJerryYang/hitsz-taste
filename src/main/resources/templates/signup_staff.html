@@ -3,7 +3,7 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 
     <title>Sign Up</title>
     <style>
@@ -162,29 +162,29 @@
         document.getElementById("jsEnabled").value = "true";
     }
 </script>
-<form name="staffForm" th:action="@{/signup_staff}" onsubmit="return validateStaffForm()" method="post">
+<form method="post" name="staffForm" onsubmit="return validateStaffForm()" th:action="@{/signup_staff}">
     <label for="username">Username:</label>
-    <input type="text" name="username" id="username" th:value="${username}" required readonly
-           class="readonly-field"/><br><br>
+    <input class="readonly-field" id="username" name="username" readonly required th:value="${username}"
+           type="text"/><br><br>
     <label for="password">Password:</label>
-    <input type="password" name="password" id="password" th:value="${password}" required readonly
-           class="readonly-field"/><br><br>
+    <input class="readonly-field" id="password" name="password" readonly required th:value="${password}"
+           type="password"/><br><br>
     <label for="phone">Phone:</label>
-    <input type="text" name="phone" id="phone" th:value="${phone}" required readonly class="readonly-field"/><br><br>
+    <input class="readonly-field" id="phone" name="phone" readonly required th:value="${phone}" type="text"/><br><br>
     <label for="email">Email:</label>
-    <input type="text" name="email" id="email" th:value="${email}" required readonly class="readonly-field"/><br><br>
+    <input class="readonly-field" id="email" name="email" readonly required th:value="${email}" type="text"/><br><br>
     <label for="firstname">First Name:</label>
-    <input type="text" name="firstname" id="firstname" th:value="${firstname}" th:required="required"/><br><br>
+    <input id="firstname" name="firstname" th:required="required" th:value="${firstname}" type="text"/><br><br>
     <label for="lastname">Last Name:</label>
-    <input type="text" name="lastname" id="lastname" th:value="${lastname}" th:required="required"/><br><br>
+    <input id="lastname" name="lastname" th:required="required" th:value="${lastname}" type="text"/><br><br>
     <label for="idNumber">ID Number:</label>
-    <input type="text" name="idNumber" id="idNumber" th:value="${idNumber}" th:required="required"/><br><br>
+    <input id="idNumber" name="idNumber" th:required="required" th:value="${idNumber}" type="text"/><br><br>
     <label for="jobTitle">Job Title:</label>
-    <input type="text" name="jobTitle" id="jobTitle" th:value="${jobTitle}" th:required="required"/><br><br>
+    <input id="jobTitle" name="jobTitle" th:required="required" th:value="${jobTitle}" type="text"/><br><br>
     <label for="company">Company:</label>
-    <input type="text" name="company" id="company" th:value="${company}" th:required="required"/><br><br>
+    <input id="company" name="company" th:required="required" th:value="${company}" type="text"/><br><br>
     <input type="submit" value="Submit"/>
-    <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
+    <input id="jsEnabled" name="jsEnabled" type="hidden" value="false"/>
     <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
     <div id="message-container">
         <!-- The error message will be inserted here -->

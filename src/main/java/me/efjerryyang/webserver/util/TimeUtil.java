@@ -10,6 +10,7 @@ public class TimeUtil {
     public static Timestamp longToTimestamp(long time) {
         return new Timestamp(time);
     }
+
     public static String timestampToDatetime(Timestamp timestamp, boolean removeMilli) {
         logger.info("timestampToDatetime: {}", timestamp);
         // "yyyy-mm-dd hh:mm:ss.fffffffff".length() = 29
