@@ -35,8 +35,10 @@
     function homePageSearch() {
         // Get the search query from the form
         const query = document.getElementById("query").value;
+        console.log("Before: " + query);
         // Sanitize the search query
         const sanitizedQuery = sanitizeSearchQuery(query);
+        console.log("After: " + sanitizedQuery);
         // Update the form with the sanitized query
         document.getElementById("query").value = sanitizedQuery;
         // jsEnabled
