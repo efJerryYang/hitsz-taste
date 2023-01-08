@@ -22,6 +22,8 @@ public class HomeController {
     public String home(Model model) {
         logger.info("HomeController.home() called");
         if (session.getAttribute("username") != null) {
+            session.setAttribute("isLoggedIn", true);
+            session.setAttribute("lastActivity", System.currentTimeMillis());
             model.addAttribute("username", session.getAttribute("username"));
         }
         return "home";
