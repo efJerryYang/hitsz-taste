@@ -4,7 +4,6 @@ import me.efjerryyang.webserver.model.Contract;
 import me.efjerryyang.webserver.model.Dish;
 import me.efjerryyang.webserver.model.Merchant;
 import me.efjerryyang.webserver.view.BaseView;
-import me.efjerryyang.webserver.view.IView;
 import me.efjerryyang.webserver.view.SearchResultView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

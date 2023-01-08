@@ -2,11 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 
     <title>Signup Notice</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" rel="stylesheet">
 </head>
 <body>
 <div class="container mt-5">
@@ -15,7 +15,7 @@
         <p>Congratulations, you have successfully signed up for a staff account!</p>
         <p>Your account is currently being verified by the administrator. You will receive an email when your account
             has been approved, and you can login as a staff.</p>
-        <p>You can now <a th:href="@{/login}" class="alert-link">login</a> with your new account, but you will not have
+        <p>You can now <a class="alert-link" th:href="@{/login}">login</a> with your new account, but you will not have
             access to all features until your account has been approved.</p>
 </body>
 </html>

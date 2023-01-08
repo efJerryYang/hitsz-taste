@@ -201,7 +201,7 @@ public class OrderDAO implements DAO<Order> {
     /**
      * Get orders for a given user by date range
      *
-     * @param userId    User ID
+     * @param userId         User ID
      * @param startTimestamp Start date of the range
      * @param endTimestamp   End date of the range
      * @return List of orders for the given user in the given date range

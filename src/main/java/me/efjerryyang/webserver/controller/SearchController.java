@@ -17,14 +17,14 @@ import java.util.List;
 @Controller
 public class SearchController {
     private static final Logger logger = LoggerFactory.getLogger(SearchController.class);
-    @Autowired
-    private HttpSession session;
     private final CafeteriaService cafeteriaService;
     private final MerchantService merchantService;
     private final DishService dishService;
     private final ValidationService validationService;
     private final ContractService contractService;
     private final FilterService filterService;
+    @Autowired
+    private HttpSession session;
     private List<Dish> dishList = null;
 
     @Autowired

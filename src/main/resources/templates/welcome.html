@@ -3,17 +3,17 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
 
     <title>HITSZ Taste</title>
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" rel="stylesheet">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
-          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -26,32 +26,33 @@
         Simply login or sign up to start ordering.
     </p>
     <div class="container">
-        <form name="loginForm" class="form-horizontal" th:action="@{/login}" onsubmit="return validateLoginForm()" method="post">
+        <form class="form-horizontal" method="post" name="loginForm" onsubmit="return validateLoginForm()"
+              th:action="@{/login}">
             <div class="form-group">
-                <label for="username" class="col-sm-4 control-label">Username:</label>
+                <label class="col-sm-4 control-label" for="username">Username:</label>
                 <div class="col-sm-4 col-md-4">
-                    <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+                    <input class="form-control" id="username" name="username" placeholder="Username" type="text">
                 </div>
             </div>
             <div class="form-group">
-                <label for="password" class="col-sm-4 control-label">Password:</label>
+                <label class="col-sm-4 control-label" for="password">Password:</label>
                 <div class="col-sm-4 col-md-4">
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                    <input class="form-control" id="password" name="password" placeholder="Password" type="password">
                 </div>
             </div>
-            <div id="message-container" class="text-center" style="color: red">
+            <div class="text-center" id="message-container" style="color: red">
                 <!-- Warning messages will be inserted here -->
             </div>
             <div class="form-group">
                 <div class="col-sm-offset-4 col-sm-4" style="text-align: center">
-                    <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
+                    <input id="jsEnabled" name="jsEnabled" type="hidden" value="false"/>
                     <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
                 </div>
             </div>
             <div class="form-group text-center">
                 <div class="col-sm-8 col-sm-offset-2">
-                    <button type="submit" class="btn btn-primary">Login</button>
-                    <a th:href="@{/signup}" class="btn btn-link">Sign up</a>
+                    <button class="btn btn-primary" type="submit">Login</button>
+                    <a class="btn btn-link" th:href="@{/signup}">Sign up</a>
                 </div>
             </div>
         </form>
@@ -59,9 +60,9 @@
 
 </div>
 <!-- Latest compiled and minified JavaScript -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+<script crossorigin="anonymous"
         integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
+        src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>
 <script src="/validate.js"></script>
 <script>

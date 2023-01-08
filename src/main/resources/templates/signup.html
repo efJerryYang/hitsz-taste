@@ -3,10 +3,10 @@
       xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
     <title>Sign Up</title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" rel="stylesheet">
 
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
@@ -96,30 +96,30 @@
 <div class="container">
     <h1 class="text-center">Sign Up</h1>
 
-    <form name="signupForm" class="form-horizontal" th:action="@{/signup}" onsubmit="return validateSignupForm()"
-          method="post">
+    <form class="form-horizontal" method="post" name="signupForm" onsubmit="return validateSignupForm()"
+          th:action="@{/signup}">
         <div class="form-group">
-            <label for="username" class="col-sm-5 control-label">Username:</label>
+            <label class="col-sm-5 control-label" for="username">Username:</label>
             <div class="col-sm-4 col-md-3">
-                <input type="text" class="form-control" name="username" id="username" placeholder="Username">
+                <input class="form-control" id="username" name="username" placeholder="Username" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label for="password" class="col-sm-5 control-label">Password:</label>
+            <label class="col-sm-5 control-label" for="password">Password:</label>
             <div class="col-sm-4 col-md-3">
-                <input type="password" class="form-control" name="password" id="password" placeholder="Password">
+                <input class="form-control" id="password" name="password" placeholder="Password" type="password">
             </div>
         </div>
         <div class="form-group">
-            <label for="phone" class="col-sm-5 control-label">Phone:</label>
+            <label class="col-sm-5 control-label" for="phone">Phone:</label>
             <div class="col-sm-4 col-md-3">
-                <input type="text" class="form-control" name="phone" id="phone" placeholder="Phone">
+                <input class="form-control" id="phone" name="phone" placeholder="Phone" type="text">
             </div>
         </div>
         <div class="form-group">
-            <label for="email" class="col-sm-5 control-label">Email:</label>
+            <label class="col-sm-5 control-label" for="email">Email:</label>
             <div class="col-sm-4 col-md-3">
-                <input type="text" class="form-control" name="email" id="email" placeholder="Email">
+                <input class="form-control" id="email" name="email" placeholder="Email" type="text">
             </div>
         </div>
         <div class="form-group">
@@ -127,32 +127,32 @@
             <div class="col-sm-4 col-md-3">
                 <div class="btn-group btn-group-toggle radio-group" data-toggle="buttons">
                     <label class="btn btn-secondary active">
-                        <input type="radio" name="options" id="radio1" value="customer" autocomplete="off" checked
-                               th:checked="${options == 'customer'}"/> Customer
+                        <input autocomplete="off" checked id="radio1" name="options" th:checked="${options == 'customer'}" type="radio"
+                               value="customer"/> Customer
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="options" id="radio2" value="staff" autocomplete="off"
-                               th:checked="${options == 'staff'}"/> Staff
+                        <input autocomplete="off" id="radio2" name="options" th:checked="${options == 'staff'}" type="radio"
+                               value="staff"/> Staff
                     </label>
                     <label class="btn btn-secondary">
-                        <input type="radio" name="options" id="radio3" value="admin" autocomplete="off"
-                               th:checked="${options == 'admin'}"/> Admin
+                        <input autocomplete="off" id="radio3" name="options" th:checked="${options == 'admin'}" type="radio"
+                               value="admin"/> Admin
                     </label>
                 </div>
             </div>
         </div>
-        <div id="message-container" class="text-center" style="color: red">
+        <div class="text-center" id="message-container" style="color: red">
             <!-- Warning messages will be inserted here -->
         </div>
         <div class="form-group">
             <div class="col-sm-offset-4 col-sm-4" style="text-align: center">
-                <input type="hidden" id="jsEnabled" name="jsEnabled" value="false"/>
+                <input id="jsEnabled" name="jsEnabled" type="hidden" value="false"/>
                 <p style="background-color: yellow;" th:text="${error}">Error message will be placed here</p>
             </div>
         </div>
         <div class="form-group">
             <div class="col-sm-offset-5 col-sm-4">
-                <button type="submit" class="btn btn-primary text-center">Sign Up</button>
+                <button class="btn btn-primary text-center" type="submit">Sign Up</button>
             </div>
         </div>
     </form>

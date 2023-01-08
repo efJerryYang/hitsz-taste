@@ -13,6 +13,7 @@ public class UserRoleService {
     public UserRoleService(UserRoleDAO userRoleDAO) {
         this.userRoleDAO = userRoleDAO;
     }
+
     public void create(UserRole userRole) {
         UserRole getByUserIdAndRoleId = userRoleDAO.getByUserIdAndRoleId(userRole.getUserId(), userRole.getRoleId());
         if (getByUserIdAndRoleId != null) {
