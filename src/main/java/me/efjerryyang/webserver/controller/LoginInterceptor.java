@@ -13,6 +13,13 @@ public class LoginInterceptor implements HandlerInterceptor {
         HttpSession session = request.getSession();
         if (session.getAttribute("username") != null) {
             request.setAttribute("username", session.getAttribute("username"));
+            return true;
+        }
+        // Check if session has expired
+        if (session.isNew()) {
+            response.sendRedirect("/sessionExpired");
+            request.setAttribute("sessionExpired", true);
+            return false;
         }
         return true;
     }
