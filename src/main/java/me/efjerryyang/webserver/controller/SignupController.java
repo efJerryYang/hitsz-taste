@@ -39,6 +39,7 @@ public class SignupController {
     @GetMapping("/signup")
     public String signup(Model model) {
         logger.info("SignupController.signup() called");
+        logger.info("Model is: " + model);
         return "signup";
     }
 
