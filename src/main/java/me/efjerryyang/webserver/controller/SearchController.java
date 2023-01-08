@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -37,10 +36,11 @@ public class SearchController {
         this.contractService = contractService;
         this.filterService = filterService;
     }
+
     @GetMapping("/home/search")
     public String search(@RequestParam("query") String query, Model model) {
         String updatedQuery;
-        System.out.println("query: " + query);
+        logger.info("query=", query);
         if (!validationService.isJavascriptEnabled()) {
             try {
                 updatedQuery = validationService.sanitizeSearchQuery(query);
@@ -61,6 +61,7 @@ public class SearchController {
         List<BaseView> filterResult;
         filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
         model.addAttribute("filterResult", filterResult);
+        model.addAttribute("username", session.getAttribute("username"));
         return "home";
     }
 
@@ -73,6 +74,7 @@ public class SearchController {
         List<BaseView> filterResult;
         filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
         model.addAttribute("filterResult", filterResult);
+        model.addAttribute("username", session.getAttribute("username"));
         return "home";
     }
 

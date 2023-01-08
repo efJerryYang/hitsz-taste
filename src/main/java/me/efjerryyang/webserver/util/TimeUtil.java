@@ -7,6 +7,9 @@ import java.sql.Timestamp;
 public class TimeUtil {
     private static final Logger logger = org.slf4j.LoggerFactory.getLogger(TimeUtil.class);
 
+    public static Timestamp longToTimestamp(long time) {
+        return new Timestamp(time);
+    }
     public static String timestampToDatetime(Timestamp timestamp, boolean removeMilli) {
         logger.info("timestampToDatetime: {}", timestamp);
         // "yyyy-mm-dd hh:mm:ss.fffffffff".length() = 29
