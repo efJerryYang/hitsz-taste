@@ -7,6 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
@@ -18,19 +20,29 @@ public class OrderService {
         logger.info("OrderService initialized");
     }
 
-    public Order createOrder() {
-        Order order = new Order();
-        order.setOrderId(getNextId());
-        return order;
+    public void create(Order order) {
+        orderDAO.create(order);
+        logger.info("Order created: " + order);
+    }
+    public void update(Order order) {
+        orderDAO.update(order);
+        logger.info("Order updated: " + order);
     }
 
-    public void updateOrder() {
+    public Order getById(Long orderId) {
+        return orderDAO.getById(orderId);
     }
 
-    public void removeOrder() {
+    public List<Order> getAll() {
+        return orderDAO.getAll();
     }
-
-    public void checkout() {
+    public void cancel(Long orderId) {
+        orderDAO.cancel(orderId);
+        logger.info("Order cancelled: " + orderId);
+    }
+    public void cancel(Order order) {
+        orderDAO.cancel(order);
+        logger.info("Order cancelled: " + order);
     }
 
     public Long getNextId() {

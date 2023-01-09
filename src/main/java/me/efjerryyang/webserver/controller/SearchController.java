@@ -2,6 +2,7 @@ package me.efjerryyang.webserver.controller;
 
 import jakarta.servlet.http.HttpSession;
 import me.efjerryyang.webserver.model.Dish;
+import me.efjerryyang.webserver.model.User;
 import me.efjerryyang.webserver.service.*;
 import me.efjerryyang.webserver.view.BaseView;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ public class SearchController {
     private final CafeteriaService cafeteriaService;
     private final MerchantService merchantService;
     private final DishService dishService;
+    private final UserService userService;
     private final ValidationService validationService;
     private final ContractService contractService;
     private final FilterService filterService;
@@ -29,11 +31,12 @@ public class SearchController {
     private List<Dish> dishList = null;
 
     @Autowired
-    public SearchController(CafeteriaService cafeteriaService, DishService dishService, ValidationService validationService, MerchantService merchantService, ContractService contractService, FilterService filterService) {
+    public SearchController(CafeteriaService cafeteriaService, DishService dishService, ValidationService validationService, MerchantService merchantService, UserService userService, ContractService contractService, FilterService filterService) {
         this.cafeteriaService = cafeteriaService;
         this.dishService = dishService;
         this.validationService = validationService;
         this.merchantService = merchantService;
+        this.userService = userService;
         this.contractService = contractService;
         this.filterService = filterService;
     }
@@ -82,6 +85,14 @@ public class SearchController {
         model.addAttribute("order", session.getAttribute("editingOrder"));
         model.addAttribute("filterResult", session.getAttribute("filterResult"));
         if (session.getAttribute("username") != null) {
+            User user = userService.getByUsername((String) session.getAttribute("username"));
+            if (user.getFirstname() != null && user.getLastname() != null) {
+                if (validationService.isChineseFirstnameOrLastname(user.getFirstname()) && validationService.isChineseFirstnameOrLastname(user.getLastname())) {
+                    model.addAttribute("name", user.getLastname() + user.getFirstname());
+                } else {
+                    model.addAttribute("name", user.getFirstname() + " " + user.getLastname());
+                }
+            }
             model.addAttribute("orderItemList", session.getAttribute("orderItemList"));
             model.addAttribute("dishMap", session.getAttribute("dishMap"));
             System.out.println("OrderItemList: " + session.getAttribute("orderItemList"));

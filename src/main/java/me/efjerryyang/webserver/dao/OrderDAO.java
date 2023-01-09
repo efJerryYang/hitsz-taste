@@ -243,5 +243,41 @@ public class OrderDAO implements DAO<Order> {
             return null;
         }
     }
+    // TODO: change 'cancelled' status to OrderStatus.CANCELLED
+    public void cancel(Long orderId) {
+        logger.info("Cancelling order with id {}", orderId);
+        String sql = "UPDATE hitsz_taste.orders SET status = ? WHERE order_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, "cancelled");
+            statement.setObject(2, orderId);
+            statement.executeUpdate();
+            logger.info("Successfully cancelled order with id {}", orderId);
+        } catch (SQLException e) {
+            logger.error("Error cancelling order with id {} from database", orderId, e);
+        }
+    }
 
+    public void cancel(Order order) {
+        cancel(order.getOrderId());
+    }
+
+    public Order getById(Long orderId) {
+        logger.info("Getting order with id {}", orderId);
+        String sql = "SELECT * FROM hitsz_taste.orders WHERE order_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, orderId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                Order order = getFromResultSet(resultSet);
+                logger.info("Successfully retrieved order with id {}", orderId);
+                return order;
+            } else {
+                logger.info("No order with id {} found", orderId);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error retrieving order with id {} from database", orderId, e);
+            return null;
+        }
+    }
 }
