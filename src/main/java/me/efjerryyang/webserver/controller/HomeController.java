@@ -8,6 +8,7 @@ import me.efjerryyang.webserver.model.User;
 import me.efjerryyang.webserver.service.DishService;
 import me.efjerryyang.webserver.service.OrderService;
 import me.efjerryyang.webserver.service.UserService;
+import me.efjerryyang.webserver.service.ValidationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,8 @@ public class HomeController {
     private DishService dishService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private ValidationService validationService;
 
     @GetMapping("/home")
     public String home(Model model) {
@@ -43,6 +46,14 @@ public class HomeController {
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("lastActivity", System.currentTimeMillis());
             model.addAttribute("username", session.getAttribute("username"));
+            User user = userService.getByUsername((String) session.getAttribute("username"));
+            if (user.getFirstname() != null && user.getLastname() != null) {
+                if (validationService.isChineseFirstnameOrLastname(user.getFirstname()) && validationService.isChineseFirstnameOrLastname(user.getLastname())) {
+                    model.addAttribute("name", user.getLastname() + user.getFirstname());
+                } else {
+                    model.addAttribute("name", user.getFirstname() + " " + user.getLastname());
+                }
+            }
         }
         if (session.getAttribute("editingOrder") == null) {
             order = new Order();
@@ -50,17 +61,39 @@ public class HomeController {
             order.setTotalPrice(0.0f);
             orderItemList = new ArrayList<>();
             dishMap = new HashMap<>();
+            initializeOrderWithCheckoutForm();
+            System.out.println(order);
             session.setAttribute("editingOrder", order);
             session.setAttribute("orderItemList", orderItemList);
             session.setAttribute("dishMap", dishMap);
         } else {
             order = (Order) session.getAttribute("editingOrder");
+            initializeOrderWithCheckoutForm(); // cannot be removed, or the form will not fill the boxes using order
         }
         model.addAttribute("filterResult", session.getAttribute("filterResult"));
         model.addAttribute("order", order);
         model.addAttribute("orderItemList", orderItemList);
         model.addAttribute("dishMap", dishMap);
         return "home";
+    }
+
+    private void initializeOrderWithCheckoutForm() {
+        String username = null;
+        try {
+            username = (String) session.getAttribute("username");
+        } catch (NullPointerException nullPointerException) {
+            logger.error("Error retrieve 'username' attribute from session: {}", nullPointerException.getMessage());
+        }
+        // initialize username, address, contact with default value
+        if (username != null && !username.isEmpty()) {
+            user = userService.getByUsername(username);
+            order.setUserId(user.getUserId());
+            if (user.getAddress() != null && !user.getAddress().isEmpty()) {
+                order.setAddress(user.getAddress());
+            }
+            order.setContact(user.getPhone());
+            order.setStatus("pending");
+        }
     }
 
     @PostMapping("/home/addDishToOrder")
@@ -101,22 +134,6 @@ public class HomeController {
             total += dishService.getPrice(dishId);
         }
         order.setTotalPrice(total);
-        String username = null;
-        try {
-            username = (String) session.getAttribute("username");
-        } catch (NullPointerException nullPointerException) {
-            logger.error("Error retrieve 'username' attribute from session: {}", nullPointerException.getMessage());
-        }
-        // initialize username, address, contact with default value
-        if (username != null && !username.isEmpty()) {
-            user = userService.getByUsername(username);
-            order.setUserId(user.getUserId());
-            if (user.getAddress() != null && !user.getAddress().isEmpty()) {
-                order.setAddress(user.getAddress());
-            }
-            order.setContact(user.getPhone());
-            order.setStatus("pending");
-        }
         session.setAttribute("editingOrder", order);
         session.setAttribute("orderItemList", orderItemList);
         session.setAttribute("dishMap", dishMap);
