@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.sql.Timestamp;
 import java.util.*;
 
 @Controller
@@ -54,33 +55,50 @@ public class HomeController {
                     model.addAttribute("name", user.getFirstname() + " " + user.getLastname());
                 }
             }
+            if (orderItemList == null) {
+                orderItemList = new ArrayList<>();
+                logger.info("Created new orderItemList");
+            }
+            if (dishMap == null) {
+                dishMap = new HashMap<>();
+                logger.info("Created new dishMap");
+            }
+            session.setAttribute("orderItemList", orderItemList);
+            session.setAttribute("dishMap", dishMap);
         }
         if (session.getAttribute("editingOrder") == null) {
             order = new Order();
             order.setOrderId(orderService.getNextId());
             order.setTotalPrice(0.0f);
-            orderItemList = new ArrayList<>();
-            dishMap = new HashMap<>();
-            initializeOrderWithCheckoutForm();
-            System.out.println(order);
             session.setAttribute("editingOrder", order);
-            session.setAttribute("orderItemList", orderItemList);
-            session.setAttribute("dishMap", dishMap);
+            logger.info("Created new order");
         } else {
+            if (dishMap != null && dishMap.isEmpty() && session.getAttribute("username") != null) {
+                order.setUserId(userService.getByUsername((String) session.getAttribute("username")).getUserId());
+                logger.info("The first time to load the order with a valid username");
+                initializeOrderWithCheckoutForm();
+            }
             order = (Order) session.getAttribute("editingOrder");
-            initializeOrderWithCheckoutForm(); // cannot be removed, or the form will not fill the boxes using order
+            System.out.println(order);
         }
+
         model.addAttribute("filterResult", session.getAttribute("filterResult"));
         model.addAttribute("order", order);
         model.addAttribute("orderItemList", orderItemList);
         model.addAttribute("dishMap", dishMap);
+        if (session.getAttribute("errorMessage") != null) {
+            model.addAttribute("errorCheckout", session.getAttribute("errorMessage"));
+            session.removeAttribute("errorMessage");
+        }
         return "home";
     }
 
     private void initializeOrderWithCheckoutForm() {
+        logger.info("HomeController.initializeOrderWithCheckoutForm() called");
         String username = null;
         try {
             username = (String) session.getAttribute("username");
+            logger.info("username: {}", username);
         } catch (NullPointerException nullPointerException) {
             logger.error("Error retrieve 'username' attribute from session: {}", nullPointerException.getMessage());
         }
@@ -88,11 +106,15 @@ public class HomeController {
         if (username != null && !username.isEmpty()) {
             user = userService.getByUsername(username);
             order.setUserId(user.getUserId());
+            logger.info("order.getUserId(): {}", order.getUserId());
             if (user.getAddress() != null && !user.getAddress().isEmpty()) {
                 order.setAddress(user.getAddress());
+                logger.info("order.getAddress(): {}", order.getAddress());
             }
             order.setContact(user.getPhone());
+            logger.info("order.getContact(): {}", order.getContact());
             order.setStatus("pending");
+            logger.info("order.getStatus(): {}", order.getStatus());
         }
     }
 
@@ -156,7 +178,7 @@ public class HomeController {
         logger.info("Dish id selected: " + dishId + ", quantity: " + quantity);
         if (dishMap.containsKey(dishId)) {
             logger.info("Dish already in map");
-        } else{
+        } else {
             logger.info("Dish not in map, adding to map");
             dishMap.put(dishId, dishService.getById(dishId));
         }
@@ -238,11 +260,64 @@ public class HomeController {
     }
 
     @PostMapping("/home/checkout")
-    public String checkout() {
+    public String checkout(@RequestParam String name, @RequestParam String contact, @RequestParam String address, Model model) {
         logger.info("HomeController.checkout() called");
         if (session.getAttribute("username") == null) {
             return "redirect:/login";
         }
-        return "redirect:/home";
+        try {
+            order = (Order) session.getAttribute("editingOrder");
+        } catch (NullPointerException nullPointerException) {
+            logger.error("Error retrieve 'editingOrder' attribute from session with null pointer: {}", nullPointerException.getMessage());
+        }
+        if (order.getTotalPrice() < 0.0 + 1e2) {
+            logger.error("No dish selected");
+            session.setAttribute("errorMessage", "No dish selected");
+            return "redirect:/home";
+        }
+        // 理论上这里应该给 order 加一个 name 属性，但是我不想重写数据库了
+        // 所以我直接摆烂了，不处理姓名异常的情况
+        // TODO: add an attribute 'name' to order
+//        order.setCustomerName(name);
+        order.setContact(contact);
+        order.setAddress(address);
+        session.setAttribute("editingOrder", order);
+        logger.info("Post order: {}", order);
+        if (!validationService.isName(name)) {
+            logger.info("Invalid name");
+            session.setAttribute("errorMessage", "Invalid name");
+            return "redirect:/home";
+        } else if (!(validationService.isPhone(contact) || validationService.isEmail(contact))) {
+            logger.info("Invalid contact");
+            session.setAttribute("errorMessage", "Invalid phone or email");
+            return "redirect:/home";
+        } else if (!validationService.isAddress(address)) {
+            logger.info("Invalid address");
+            session.setAttribute("errorMessage", "Invalid address");
+            return "redirect:/home";
+        }
+        // save order
+        // TODO: separate orders for different cafeterias
+        //  Possible solution is to separate an order with suborders, but this will cause an update to the database
+        //  And a Cart is necessary now, because order should be responsible for an merchant or cafeteria
+        //  Cart (customer) -> order (cafeteria) -> suborder (merchant)
+        //  A customer may order food in different cafeteria, so a cart should create multiple orders if contains dish in different cafeterias; then suborders are distributed to merchants
+        //  In this way, a createAt may belong to multiple orders of the same customer
+        try {
+            order.setCreateAt(new Timestamp(System.currentTimeMillis()));
+            orderService.create(order);
+            logger.info("Order created: {}", order);
+        } catch (Exception e) {
+            logger.error("Error saving order: {}", e.getMessage());
+            session.setAttribute("errorMessage", "Error saving order");
+            return "redirect:/home";
+        }
+
+        // remove session attributes in home controller and search controller (all in home page)
+        session.removeAttribute("orderItemList"); // HomeController
+        session.removeAttribute("dishMap");
+        session.removeAttribute("editingOrder");
+        session.removeAttribute("filterResult"); // SearchController
+        return "redirect:/orders";
     }
 }

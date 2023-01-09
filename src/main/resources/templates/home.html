@@ -162,7 +162,6 @@
     <form method="post" th:action="@{/home/checkout}">
         <div class="form-group">
             <label for="name">Name:</label>
-<!--            if it is chinease-->
             <input class="form-control" id="name" name="name" placeholder="Enter your name" th:value="${name}"
                    type="text">
         </div>
@@ -173,11 +172,13 @@
                    type="text">
         </div>
         <div class="form-group">
-            <label for="phone">Phone:</label>
-            <input class="form-control" id="phone" name="phone" placeholder="Enter your phone number or email"
+            <label for="contact">Phone:</label>
+            <input class="form-control" id="contact" name="contact" placeholder="Enter your phone number or email"
                    th:value="${order.getContact()}"
                    type="text">
         </div>
+        <p style="background-color: yellow; text-align: center" th:text="${errorCheckout}">Error message will be placed
+            here</p>
         <button class="btn btn-primary" type="submit">Checkout</button>
     </form>
 </div>
