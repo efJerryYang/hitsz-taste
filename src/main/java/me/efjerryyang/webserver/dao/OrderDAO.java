@@ -226,4 +226,22 @@ public class OrderDAO implements DAO<Order> {
         }
     }
 
+    public Long getNextId() {
+        logger.info("Getting next order id");
+        String sql = "SELECT MAX(order_id) FROM hitsz_taste.orders";
+        try (PreparedStatement statement = connection.prepareStatement(sql); ResultSet resultSet = statement.executeQuery()) {
+            if (resultSet.next()) {
+                Long nextId = resultSet.getLong(1) + 1;
+                logger.info("Successfully retrieved next order id {}", nextId);
+                return nextId;
+            } else {
+                logger.info("Successfully retrieved next order id 1");
+                return 1L;
+            }
+        } catch (SQLException e) {
+            logger.error("Error retrieving next order id from database", e);
+            return null;
+        }
+    }
+
 }
