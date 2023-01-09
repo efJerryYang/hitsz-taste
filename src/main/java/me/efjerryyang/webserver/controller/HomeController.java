@@ -107,7 +107,7 @@ public class HomeController {
         } catch (NullPointerException nullPointerException) {
             logger.error("Error retrieve 'username' attribute from session: {}", nullPointerException.getMessage());
         }
-
+        // initialize username, address, contact with default value
         if (username != null && !username.isEmpty()) {
             user = userService.getByUsername(username);
             order.setUserId(user.getUserId());
@@ -134,8 +134,51 @@ public class HomeController {
 
 
     @PostMapping("/home/removeDishFromOrder")
-    public String removeDishFromOrder() {
+    public String removeDishFromOrder(@RequestParam Long dishId, Model model) {
         logger.info("HomeController.removeDishFromOrder() called");
+        if (session.getAttribute("username") == null) {
+            return "redirect:/login";
+        }
+        try {
+            order = (Order) session.getAttribute("editingOrder");
+        } catch (NullPointerException nullPointerException) {
+            logger.error("Error retrieve 'editingOrder' attribute from session with null pointer: {}", nullPointerException.getMessage());
+        }
+//        // remove dish from map
+//        logger.info("Dish id selected: " + dishId);
+//        if (dishMap.containsKey(dishId)) {
+//            logger.info("Dish already in map, removing from map");
+//            dishMap.remove(dishId);
+//        } else {
+//            logger.info("Dish not in map");
+//        }
+
+        // remove order item from list
+        float total = 0;
+        Long[] tempArray = new Long[orderItemList.size()];
+        // set temp array to zeros
+        Arrays.fill(tempArray, 0L);
+        int tempIndex = 0;
+        for (OrderItem orderItem : orderItemList) {
+            if (Objects.equals(orderItem.getDishId(), dishId)) {
+                tempArray[tempIndex++] = orderItem.getDishId();
+            } else {
+                total += dishService.getPrice(orderItem.getDishId()) * orderItem.getQuantity();
+            }
+        }
+        order.setTotalPrice(total);
+        for (Long orderId : tempArray) {
+            if (orderId != 0) {
+                orderItemList.removeIf(orderItem -> Objects.equals(orderItem.getDishId(), dishId));
+                logger.info("Item removed: {}", dishMap.get(dishId));
+            }
+        }
+
+        session.setAttribute("editingOrder", order);
+        session.setAttribute("orderItemList", orderItemList);
+        session.setAttribute("dishMap", dishMap);
+        model.addAttribute("orderItemList", orderItemList);
+        model.addAttribute("dishMap", dishMap);
         return "redirect:/home";
     }
 
