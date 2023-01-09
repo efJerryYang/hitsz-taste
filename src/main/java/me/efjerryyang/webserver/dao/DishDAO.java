@@ -301,4 +301,23 @@ public class DishDAO implements DAO<Dish> {
     }
 
 
+    public Float getPrice(Long dishId) {
+        logger.info("Getting price of dish by id {}", dishId);
+        String sql = "SELECT price FROM hitsz_taste.dishes WHERE dish_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, dishId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                Float price = resultSet.getFloat("price");
+                logger.info("Successfully retrieved price of dish by id {}", dishId);
+                return price;
+            } else {
+                logger.info("No dish found with id {}", dishId);
+                return null;
+            }
+        } catch (SQLException e) {
+            logger.error("Error retrieving price of dish by id {} from database", dishId, e);
+            return null;
+        }
+    }
 }

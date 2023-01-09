@@ -25,4 +25,14 @@ public class DishService {
             return dishDAO.getAllMatching(query);
         }
     }
+
+    public Float getPrice(Long dishId) {
+        logger.info("DishService.getPrice() called");
+        return dishDAO.getPrice(dishId);
+    }
+
+    public Dish getById(Long dishId) {
+        logger.info("DishService.getById() called");
+        return dishDAO.getById(dishId);
+    }
 }

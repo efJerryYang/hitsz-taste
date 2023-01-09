@@ -40,7 +40,7 @@ public class SearchController {
     @GetMapping("/home/search")
     public String search(@RequestParam("query") String query, Model model) {
         String updatedQuery;
-        logger.info("query=", query);
+        logger.info("query= {}", query);
         if (!validationService.isJavascriptEnabled()) {
             try {
                 updatedQuery = validationService.sanitizeSearchQuery(query);
@@ -57,11 +57,12 @@ public class SearchController {
         dishList = dishService.searchDishes(query);
         model.addAttribute("query", query);
         // TODO: return how many rows of query result
-        System.out.printf(dishList.toString());
+        System.out.println(dishList.toString());
         List<BaseView> filterResult;
         filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
+        session.setAttribute("filterResult", filterResult);
         model.addAttribute("filterResult", filterResult);
-        model.addAttribute("username", session.getAttribute("username"));
+        updateModelWithSession(model);
         return "home";
     }
 
@@ -73,11 +74,16 @@ public class SearchController {
         }
         List<BaseView> filterResult;
         filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
+        session.setAttribute("filterResult", filterResult);
         model.addAttribute("filterResult", filterResult);
-        model.addAttribute("username", session.getAttribute("username"));
+        updateModelWithSession(model);
         return "home";
     }
 
+    private void updateModelWithSession(Model model) {
+        model.addAttribute("username", session.getAttribute("username"));
+        model.addAttribute("order", session.getAttribute("editingOrder"));
+    }
     // TODO: sort result by price/merchant name/cafeteria name/dish name
 }
 

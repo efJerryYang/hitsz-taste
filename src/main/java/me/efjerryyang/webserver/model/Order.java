@@ -18,6 +18,6 @@ public class Order implements IModel {
     private Float totalPrice;
     private String address;
     private String contact;
-    private String status;
+    private String status; // available status: pending, processing, delivering, completed, cancelled
     private Timestamp createAt;
 }
