@@ -135,17 +135,21 @@ public class OrderDAO implements DAO<Order> {
         }
     }
 
-    @Override
-    public void delete(Order order) {
-        logger.info("Deleting order with order_id {}", order.getOrderId());
+    public void delete(Long orderId) {
+        logger.info("Deleting order with order_id {}", orderId);
         String sql = "DELETE FROM hitsz_taste.orders WHERE order_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setObject(1, order.getOrderId());
+            statement.setObject(1, orderId);
             statement.executeUpdate();
-            logger.info("Successfully deleted order with id {}", order.getOrderId());
+            logger.info("Successfully deleted order with id {}", orderId);
         } catch (SQLException e) {
             logger.error("Error deleting order from database", e);
         }
+    }
+
+    @Override
+    public void delete(Order order) {
+        delete(order.getOrderId());
     }
 
     /**
@@ -243,6 +247,7 @@ public class OrderDAO implements DAO<Order> {
             return null;
         }
     }
+
     // TODO: change 'cancelled' status to OrderStatus.CANCELLED
     public void cancel(Long orderId) {
         logger.info("Cancelling order with id {}", orderId);

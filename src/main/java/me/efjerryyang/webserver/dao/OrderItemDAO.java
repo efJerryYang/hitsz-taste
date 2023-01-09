@@ -154,4 +154,21 @@ public class OrderItemDAO implements DAO<OrderItem> {
             return null;
         }
     }
+
+    public void createAll(List<OrderItem> orderItemList) {
+        logger.info("Creating all order items, total number: {}", orderItemList.size());
+        String sql = "INSERT INTO hitsz_taste.order_items (order_id, dish_id, quantity) VALUES (?, ?, ?)";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            for (OrderItem orderItem : orderItemList) {
+                statement.setObject(1, orderItem.getOrderId());
+                statement.setObject(2, orderItem.getDishId());
+                statement.setObject(3, orderItem.getQuantity());
+                statement.addBatch();
+            }
+            statement.executeBatch();
+            logger.info("Successfully created all order items, total number: {}", orderItemList.size());
+        } catch (SQLException e) {
+            logger.error("Error creating all order items in database", e);
+        }
+    }
 }

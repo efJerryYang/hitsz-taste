@@ -48,4 +48,13 @@ public class OrderService {
     public Long getNextId() {
         return orderDAO.getNextId();
     }
+
+    public void delete(Long orderId) {
+        orderDAO.delete(orderId);
+        logger.info("Order deleted: " + orderId);
+    }
+    public void delete(Order order) {
+        orderDAO.delete(order);
+        logger.info("Order deleted: " + order);
+    }
 }
