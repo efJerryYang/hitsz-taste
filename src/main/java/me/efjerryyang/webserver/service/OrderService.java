@@ -24,6 +24,7 @@ public class OrderService {
         orderDAO.create(order);
         logger.info("Order created: " + order);
     }
+
     public void update(Order order) {
         orderDAO.update(order);
         logger.info("Order updated: " + order);
@@ -36,10 +37,12 @@ public class OrderService {
     public List<Order> getAllByUserId(Long userId) {
         return orderDAO.getAllByUserId(userId);
     }
+
     public void cancel(Long orderId) {
         orderDAO.cancel(orderId);
         logger.info("Order cancelled: " + orderId);
     }
+
     public void cancel(Order order) {
         orderDAO.cancel(order);
         logger.info("Order cancelled: " + order);
@@ -53,6 +56,7 @@ public class OrderService {
         orderDAO.delete(orderId);
         logger.info("Order deleted: " + orderId);
     }
+
     public void delete(Order order) {
         orderDAO.delete(order);
         logger.info("Order deleted: " + order);

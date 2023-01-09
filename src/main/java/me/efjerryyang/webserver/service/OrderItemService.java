@@ -21,11 +21,12 @@ public class OrderItemService {
         logger.info("OrderItemService initialized");
     }
 
-    public void create(OrderItem orderItem){
+    public void create(OrderItem orderItem) {
         orderItemDAO.create(orderItem);
         logger.info("OrderItem created: " + orderItem);
     }
-    public void createAll(List<OrderItem> orderItemList)  {
+
+    public void createAll(List<OrderItem> orderItemList) {
         orderItemDAO.createAll(orderItemList);
         logger.info("OrderItem created: " + orderItemList);
     }

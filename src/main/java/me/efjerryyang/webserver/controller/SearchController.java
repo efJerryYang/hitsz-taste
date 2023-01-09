@@ -68,18 +68,6 @@ public class SearchController {
         return "home";
     }
 
-    @GetMapping("/home/filter")
-    public String filter(@RequestParam(value = "cafeteria", required = false) Long cafeteriaId, @RequestParam(value = "merchant", required = false) Long merchantId, Model model) {
-        if (dishList == null) {
-            model.addAttribute("error", "No search results to filter");
-            return "home";
-        }
-        filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
-        session.setAttribute("filterResult", filterResult);
-        updateModelWithSession(model);
-        return "home";
-    }
-
     private void updateModelWithSession(Model model) {
         model.addAttribute("username", session.getAttribute("username"));
         model.addAttribute("order", session.getAttribute("editingOrder"));
@@ -98,6 +86,18 @@ public class SearchController {
             System.out.println("OrderItemList: " + session.getAttribute("orderItemList"));
             System.out.println("DishMap: " + session.getAttribute("dishMap"));
         }
+    }
+
+    @GetMapping("/home/filter")
+    public String filter(@RequestParam(value = "cafeteria", required = false) Long cafeteriaId, @RequestParam(value = "merchant", required = false) Long merchantId, Model model) {
+        if (dishList == null) {
+            model.addAttribute("error", "No search results to filter");
+            return "home";
+        }
+        filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
+        session.setAttribute("filterResult", filterResult);
+        updateModelWithSession(model);
+        return "home";
     }
     // TODO: sort result by price/merchant name/cafeteria name/dish name
 }
