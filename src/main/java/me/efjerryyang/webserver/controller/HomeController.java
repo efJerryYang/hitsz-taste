@@ -143,9 +143,47 @@ public class HomeController {
     }
 
     @PostMapping("/home/updateOrder")
-    public String updateOrder() {
+    public String updateOrder(@RequestParam Long dishId, @RequestParam Long quantity, Model model) {
         logger.info("HomeController.order() called");
-
+        if (session.getAttribute("username") == null) {
+            return "redirect:/login";
+        }
+        try {
+            order = (Order) session.getAttribute("editingOrder");
+        } catch (NullPointerException nullPointerException) {
+            logger.error("Error retrieve 'editingOrder' attribute from session with null pointer: {}", nullPointerException.getMessage());
+        }
+        logger.info("Dish id selected: " + dishId + ", quantity: " + quantity);
+        if (dishMap.containsKey(dishId)) {
+            logger.info("Dish already in map");
+        } else{
+            logger.info("Dish not in map, adding to map");
+            dishMap.put(dishId, dishService.getById(dishId));
+        }
+        // create order item and update selected one
+        OrderItem orderItem = new OrderItem();
+        orderItem.setDishId(dishId);
+        orderItem.setOrderId(order.getOrderId());
+        orderItem.setQuantity(quantity);
+        boolean isDishExisted = false;
+        float total = 0;
+        for (int i = 0; i < orderItemList.size(); i++) {
+            if (Objects.equals(orderItemList.get(i).getDishId(), dishId)) {
+                orderItemList.get(i).setQuantity(quantity);
+                isDishExisted = true;
+            }
+            total += dishService.getPrice(orderItemList.get(i).getDishId()) * orderItemList.get(i).getQuantity();
+        }
+        if (!isDishExisted) {
+            orderItemList.add(orderItem);
+            total += dishService.getPrice(dishId) * quantity;
+        }
+        order.setTotalPrice(total);
+        session.setAttribute("editingOrder", order);
+        session.setAttribute("orderItemList", orderItemList);
+        session.setAttribute("dishMap", dishMap);
+        model.addAttribute("orderItemList", orderItemList);
+        model.addAttribute("dishMap", dishMap);
         return "redirect:/home";
     }
 
