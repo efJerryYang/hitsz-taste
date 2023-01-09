@@ -33,8 +33,8 @@ public class OrderService {
         return orderDAO.getById(orderId);
     }
 
-    public List<Order> getAll() {
-        return orderDAO.getAll();
+    public List<Order> getAllByUserId(Long userId) {
+        return orderDAO.getAllByUserId(userId);
     }
     public void cancel(Long orderId) {
         orderDAO.cancel(orderId);
