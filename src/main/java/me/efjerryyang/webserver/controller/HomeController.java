@@ -5,10 +5,7 @@ import me.efjerryyang.webserver.model.Dish;
 import me.efjerryyang.webserver.model.Order;
 import me.efjerryyang.webserver.model.OrderItem;
 import me.efjerryyang.webserver.model.User;
-import me.efjerryyang.webserver.service.DishService;
-import me.efjerryyang.webserver.service.OrderService;
-import me.efjerryyang.webserver.service.UserService;
-import me.efjerryyang.webserver.service.ValidationService;
+import me.efjerryyang.webserver.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +21,7 @@ import java.util.*;
 @Controller
 public class HomeController {
     public static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+    private Boolean initFlag = null;
     private Order order = null;
     private User user = null;
     private List<OrderItem> orderItemList;
@@ -34,16 +32,21 @@ public class HomeController {
     @Autowired
     private OrderService orderService;
     @Autowired
+    private OrderItemService orderItemService;
+    @Autowired
     private DishService dishService;
     @Autowired
     private UserService userService;
     @Autowired
     private ValidationService validationService;
-
+    // TODO: add updateAll and removeAll buttons
     @GetMapping("/home")
     public String home(Model model) {
         logger.info("HomeController.home() called");
         if (session.getAttribute("username") != null) {
+            if (initFlag == null) {
+                initFlag = true;
+            }
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("lastActivity", System.currentTimeMillis());
             model.addAttribute("username", session.getAttribute("username"));
@@ -73,15 +76,16 @@ public class HomeController {
             session.setAttribute("editingOrder", order);
             logger.info("Created new order");
         } else {
-            if (dishMap != null && dishMap.isEmpty() && session.getAttribute("username") != null) {
-                order.setUserId(userService.getByUsername((String) session.getAttribute("username")).getUserId());
-                logger.info("The first time to load the order with a valid username");
-                initializeOrderWithCheckoutForm();
-            }
             order = (Order) session.getAttribute("editingOrder");
             System.out.println(order);
         }
-
+        if (initFlag != null && initFlag) {
+            initFlag = false;
+            order.setUserId(userService.getByUsername((String) session.getAttribute("username")).getUserId());
+            logger.info("The first time to load the order with a valid username");
+            initializeOrderWithCheckoutForm();
+        }
+        logger.info("Order: " + order);
         model.addAttribute("filterResult", session.getAttribute("filterResult"));
         model.addAttribute("order", order);
         model.addAttribute("orderItemList", orderItemList);
@@ -307,6 +311,15 @@ public class HomeController {
             order.setCreateAt(new Timestamp(System.currentTimeMillis()));
             orderService.create(order);
             logger.info("Order created: {}", order);
+            // save order items
+            try {
+                orderItemService.createAll(orderItemList);
+            } catch (Exception e) {
+                logger.error("Error saving order items: {}", e.getMessage());
+                session.setAttribute("errorMessage", "Error saving order items");
+                orderService.delete(order.getOrderId());
+                throw new Exception("Error saving order items");
+            }
         } catch (Exception e) {
             logger.error("Error saving order: {}", e.getMessage());
             session.setAttribute("errorMessage", "Error saving order");
