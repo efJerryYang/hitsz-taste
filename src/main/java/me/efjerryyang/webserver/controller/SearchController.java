@@ -23,6 +23,7 @@ public class SearchController {
     private final ValidationService validationService;
     private final ContractService contractService;
     private final FilterService filterService;
+    private List<BaseView> filterResult;
     @Autowired
     private HttpSession session;
     private List<Dish> dishList = null;
@@ -58,10 +59,8 @@ public class SearchController {
         model.addAttribute("query", query);
         // TODO: return how many rows of query result
         System.out.println(dishList.toString());
-        List<BaseView> filterResult;
         filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
         session.setAttribute("filterResult", filterResult);
-        model.addAttribute("filterResult", filterResult);
         updateModelWithSession(model);
         return "home";
     }
@@ -72,10 +71,8 @@ public class SearchController {
             model.addAttribute("error", "No search results to filter");
             return "home";
         }
-        List<BaseView> filterResult;
         filterResult = filterService.createViewList(dishList, merchantService.getAllByDishIds(filterService.getDishIds(dishList)), contractService.getAll());
         session.setAttribute("filterResult", filterResult);
-        model.addAttribute("filterResult", filterResult);
         updateModelWithSession(model);
         return "home";
     }
@@ -83,6 +80,13 @@ public class SearchController {
     private void updateModelWithSession(Model model) {
         model.addAttribute("username", session.getAttribute("username"));
         model.addAttribute("order", session.getAttribute("editingOrder"));
+        model.addAttribute("filterResult", session.getAttribute("filterResult"));
+        if (session.getAttribute("username") != null) {
+            model.addAttribute("orderItemList", session.getAttribute("orderItemList"));
+            model.addAttribute("dishMap", session.getAttribute("dishMap"));
+            System.out.println("OrderItemList: " + session.getAttribute("orderItemList"));
+            System.out.println("DishMap: " + session.getAttribute("dishMap"));
+        }
     }
     // TODO: sort result by price/merchant name/cafeteria name/dish name
 }

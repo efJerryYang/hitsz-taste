@@ -48,9 +48,11 @@ public class HomeController {
             order = new Order();
             order.setOrderId(orderService.getNextId());
             order.setTotalPrice(0.0f);
-            session.setAttribute("editingOrder", order);
             orderItemList = new ArrayList<>();
             dishMap = new HashMap<>();
+            session.setAttribute("editingOrder", order);
+            session.setAttribute("orderItemList", orderItemList);
+            session.setAttribute("dishMap", dishMap);
         } else {
             order = (Order) session.getAttribute("editingOrder");
         }
@@ -115,7 +117,9 @@ public class HomeController {
             order.setContact(user.getPhone());
             order.setStatus("pending");
         }
-
+        session.setAttribute("editingOrder", order);
+        session.setAttribute("orderItemList", orderItemList);
+        session.setAttribute("dishMap", dishMap);
         model.addAttribute("orderItemList", orderItemList);
         model.addAttribute("dishMap", dishMap);
         return "redirect:/home";
