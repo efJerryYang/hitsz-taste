@@ -159,7 +159,7 @@ public class OrderDAO implements DAO<Order> {
      * @param endTimestamp   End date of the range
      * @return List of orders in the given date range
      */
-    public List<Order> getOrderByDateRange(Timestamp startTimestamp, Timestamp endTimestamp) {
+    public List<Order> getAllByDateRange(Timestamp startTimestamp, Timestamp endTimestamp) {
         logger.info("Getting orders between {} and {}", startTimestamp, endTimestamp);
         String sql = "SELECT * FROM hitsz_taste.orders WHERE create_at BETWEEN ? AND ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -184,7 +184,7 @@ public class OrderDAO implements DAO<Order> {
      * @param userId User ID
      * @return List of orders for the given user
      */
-    public List<Order> getOrderByUserId(Long userId) {
+    public List<Order> getAllByUserId(Long userId) {
         logger.info("Getting orders for user with id {}", userId);
         String sql = "SELECT * FROM hitsz_taste.orders WHERE user_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {

@@ -3,6 +3,7 @@ package me.efjerryyang.webserver.controller;
 import jakarta.servlet.http.HttpSession;
 import me.efjerryyang.webserver.model.Order;
 import me.efjerryyang.webserver.service.OrderService;
+import me.efjerryyang.webserver.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,16 +25,29 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
+    @Autowired
+    private UserService userService;
     private List<Order> histOrderList;
 
     @GetMapping("/orders")
-    public String loadOrder(){
+    public String loadOrder(Model model) {
         logger.info("OrderController.loadOrder() called");
-        if (histOrderList == null) {
-            histOrderList = orderService.getAll();
+        String username = null;
+        try {
+            username = (String) session.getAttribute("username");
+            logger.info("username: {}", username);
+        } catch (NullPointerException nullPointerException) {
+            logger.error("Error retrieve 'username' attribute from session: {}", nullPointerException.getMessage());
         }
+        if (username != null && histOrderList == null) {
+            histOrderList = orderService.getAllByUserId(userService.getByUsername(username).getUserId());
+        } else if (username == null) {
+            return "redirect:/login";
+        }
+        model.addAttribute("histOrderList", histOrderList);
         return "orders";
     }
+
     @PostMapping("/orders")
     public String showHistory(@RequestParam(value = "sort", defaultValue = "createAt") String sort,
                               @RequestParam(value = "dir", defaultValue = "asc") String dir,
@@ -55,5 +69,4 @@ public class OrderController {
         model.addAttribute("histOrderList", histOrderList);
         return "orders";
     }
-
 }

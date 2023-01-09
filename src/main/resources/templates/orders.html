@@ -23,18 +23,22 @@
         <thead>
         <tr>
             <th>
-                <a th:href="@{/orders(sort=createAt,dir=${sort == 'createAt' && dir == 'asc' ? 'desc' : 'asc'})}" class="sort-link">Create Time</a>
+                <a th:href="@{/orders(sort=createAt,dir=${sort == 'createAt' && dir == 'asc' ? 'desc' : 'asc'})}"
+                   class="sort-link">Create Time</a>
             </th>
             <th>Status</th>
             <th>Total</th>
+            <th>Contact</th>
             <th>Action</th>
         </tr>
         </thead>
         <tbody>
         <tr th:each="order : ${histOrderList}">
-            <td th:text="${order.getContact()}">Create Time</td>
+            <td th:text="${#dates.format(order.getCreateAt(), 'yyyy-MM-dd HH:mm:SS')}">Create Time</td>
+<!--            <td th:text="${order.getCreateAt()()}">Create Time</td>-->
             <td th:text="${order.getStatus()}">Status</td>
             <td th:text="${order.getTotalPrice()}">Total Price</td>
+            <td th:text="${order.getContact()}">Contact</td>
             <td>
                 <a th:href="@{/order(id=${order.getOrderId()})}" class="btn btn-primary">View</a>
             </td>
