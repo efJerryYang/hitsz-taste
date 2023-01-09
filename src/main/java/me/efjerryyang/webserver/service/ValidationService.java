@@ -74,6 +74,13 @@ public class ValidationService {
         return name.matches("^[\u4e00-\u9fa5a-zA-Z\\s]+$");
     }
 
+    public boolean isChineseFirstnameOrLastname(String name) {
+        return name.matches("^[\u4e00-\u9fa5]{1,2}$");
+    }
+
+    public boolean isEnglishFirstnameOrLastname(String name) {
+        return name.matches("^[a-zA-Z]{1,20}$");
+    }
     public boolean isRole(String role) {
         return role.matches("^(admin|staff|customer|default)$");
     }

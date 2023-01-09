@@ -162,19 +162,20 @@
     <form method="post" th:action="@{/home/checkout}">
         <div class="form-group">
             <label for="name">Name:</label>
+<!--            if it is chinease-->
             <input class="form-control" id="name" name="name" placeholder="Enter your name" th:value="${name}"
                    type="text">
         </div>
         <div class="form-group">
             <label for="address">Address:</label>
             <input class="form-control" id="address" name="address" placeholder="Enter your delivery address"
-                   th:value="${address}"
+                   th:value="${order.getAddress()}"
                    type="text">
         </div>
         <div class="form-group">
             <label for="phone">Phone:</label>
             <input class="form-control" id="phone" name="phone" placeholder="Enter your phone number or email"
-                   th:value="${phone}"
+                   th:value="${order.getContact()}"
                    type="text">
         </div>
         <button class="btn btn-primary" type="submit">Checkout</button>
