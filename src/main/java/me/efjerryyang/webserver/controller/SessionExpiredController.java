@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class SessionExpiredController {
     private static final long ONE_MINUTE_IN_MILLIS = 60 * 1000;
-    public static final long SESSION_TIMEOUT = ONE_MINUTE_IN_MILLIS;
     private static final long ONE_HOUR_IN_MILLIS = 60 * ONE_MINUTE_IN_MILLIS;
     private static final long ONE_DAY_IN_MILLIS = 24 * ONE_HOUR_IN_MILLIS;
+    public static final long SESSION_TIMEOUT = ONE_HOUR_IN_MILLIS / 4;
     @Autowired
     private HttpSession session;
 
