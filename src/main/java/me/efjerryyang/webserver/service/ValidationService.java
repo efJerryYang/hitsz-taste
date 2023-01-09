@@ -81,6 +81,7 @@ public class ValidationService {
     public boolean isEnglishFirstnameOrLastname(String name) {
         return name.matches("^[a-zA-Z]{1,20}$");
     }
+
     public boolean isRole(String role) {
         return role.matches("^(admin|staff|customer|default)$");
     }

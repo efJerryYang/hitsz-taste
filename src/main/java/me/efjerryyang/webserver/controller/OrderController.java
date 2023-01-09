@@ -49,9 +49,7 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public String showHistory(@RequestParam(value = "sort", defaultValue = "createAt") String sort,
-                              @RequestParam(value = "dir", defaultValue = "asc") String dir,
-                              Model model) {
+    public String showHistory(@RequestParam(value = "sort", defaultValue = "createAt") String sort, @RequestParam(value = "dir", defaultValue = "asc") String dir, Model model) {
         if (sort.equals("createAt")) {
             if (dir.equals("asc")) {
                 histOrderList.sort(Comparator.comparing(Order::getCreateAt));

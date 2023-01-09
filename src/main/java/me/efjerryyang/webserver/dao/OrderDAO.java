@@ -135,6 +135,11 @@ public class OrderDAO implements DAO<Order> {
         }
     }
 
+    @Override
+    public void delete(Order order) {
+        delete(order.getOrderId());
+    }
+
     public void delete(Long orderId) {
         logger.info("Deleting order with order_id {}", orderId);
         String sql = "DELETE FROM hitsz_taste.orders WHERE order_id = ?";
@@ -145,11 +150,6 @@ public class OrderDAO implements DAO<Order> {
         } catch (SQLException e) {
             logger.error("Error deleting order from database", e);
         }
-    }
-
-    @Override
-    public void delete(Order order) {
-        delete(order.getOrderId());
     }
 
     /**
@@ -248,6 +248,10 @@ public class OrderDAO implements DAO<Order> {
         }
     }
 
+    public void cancel(Order order) {
+        cancel(order.getOrderId());
+    }
+
     // TODO: change 'cancelled' status to OrderStatus.CANCELLED
     public void cancel(Long orderId) {
         logger.info("Cancelling order with id {}", orderId);
@@ -260,10 +264,6 @@ public class OrderDAO implements DAO<Order> {
         } catch (SQLException e) {
             logger.error("Error cancelling order with id {} from database", orderId, e);
         }
-    }
-
-    public void cancel(Order order) {
-        cancel(order.getOrderId());
     }
 
     public Order getById(Long orderId) {

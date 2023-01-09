@@ -39,6 +39,7 @@ public class HomeController {
     private UserService userService;
     @Autowired
     private ValidationService validationService;
+
     // TODO: add updateAll and removeAll buttons
     @GetMapping("/home")
     public String home(Model model) {
