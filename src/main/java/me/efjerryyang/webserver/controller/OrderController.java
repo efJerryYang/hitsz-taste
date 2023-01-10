@@ -45,7 +45,7 @@ public class OrderController {
             return "redirect:/login";
         }
         model.addAttribute("histOrderList", histOrderList);
-        return "orders";
+        return "history_order";
     }
 
     @PostMapping("/orders")
@@ -65,6 +65,6 @@ public class OrderController {
         }
         session.setAttribute("histOrderList", histOrderList);
         model.addAttribute("histOrderList", histOrderList);
-        return "orders";
+        return "history_order";
     }
 }

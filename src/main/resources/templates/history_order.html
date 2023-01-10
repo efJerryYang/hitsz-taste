@@ -9,6 +9,15 @@
 </head>
 <body>
 <div class="container mt-5">
+    <div style="position: absolute; right: 10px; top: 10px;">
+        <div style="font-weight: bold" th:if="${username != null}">
+            Welcome, [[${username}]]!
+        </div>
+        <div style="color: red" th:if="${username == null}">
+            You are not logged in.
+            <a href="/login">Login</a>
+        </div>
+    </div>
     <h2>Orders</h2>
     <div class="form-group mt-3">
         <label for="orderStatusSelect">Order Status:</label>
