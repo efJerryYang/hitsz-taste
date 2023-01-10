@@ -157,4 +157,22 @@ public class MerchantUserDAO implements DAO<MerchantUser> {
             return null;
         }
     }
+
+    public List<Long> getMerchantIdByUserId(Long userId) {
+        logger.debug("Getting MerchantUser with user_id {}", userId);
+        String sql = "SELECT merchant_id FROM hitsz_taste.merchant_users WHERE user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, userId);
+            ResultSet resultSet = statement.executeQuery();
+            List<Long> merchantIds = new ArrayList<>();
+            while (resultSet.next()) {
+                merchantIds.add(resultSet.getObject("merchant_id", Long.class));
+            }
+            logger.info("Successfully got MerchantUser with user_id {}", userId);
+            return merchantIds;
+        } catch (SQLException e) {
+            logger.error("Error getting MerchantUser from database", e);
+            return null;
+        }
+    }
 }

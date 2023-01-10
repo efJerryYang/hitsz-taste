@@ -30,4 +30,8 @@ public class OrderItemService {
         orderItemDAO.createAll(orderItemList);
         logger.info("OrderItem created: " + orderItemList);
     }
+
+    public List<OrderItem> getAll() {
+        return orderItemDAO.getAll();
+    }
 }

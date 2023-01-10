@@ -1,7 +1,9 @@
 package me.efjerryyang.webserver.service;
 
 import me.efjerryyang.webserver.dao.OrderDAO;
+import me.efjerryyang.webserver.model.Dish;
 import me.efjerryyang.webserver.model.Order;
+import me.efjerryyang.webserver.model.OrderItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,11 +14,15 @@ import java.util.List;
 @Service
 public class OrderService {
     private static final Logger logger = LoggerFactory.getLogger(OrderService.class);
-    private OrderDAO orderDAO;
+    private final OrderDAO orderDAO;
+    private final OrderItemService orderItemService;
+    private final DishService dishService;
 
     @Autowired
-    public OrderService(OrderDAO orderDAO) {
+    public OrderService(OrderDAO orderDAO, OrderItemService orderItemService, DishService dishService) {
         this.orderDAO = orderDAO;
+        this.orderItemService = orderItemService;
+        this.dishService = dishService;
         logger.info("OrderService initialized");
     }
 
@@ -60,5 +66,22 @@ public class OrderService {
     public void delete(Order order) {
         orderDAO.delete(order);
         logger.info("Order deleted: " + order);
+    }
+
+    // TODO: to be revised later
+    public List<Order> getAllByMerchantId(Long merchantId) {
+        List<Order> orderList = orderDAO.getAll();
+        List<OrderItem> orderItemList = orderItemService.getAll();
+        List<Dish> dishList = dishService.getAllByMerchantId(merchantId);
+        // according to the dish list of specific merchant, select the order items associated with the merchant
+        List<OrderItem> selectedOrderItemList = orderItemList.stream()
+                .filter(orderItem -> dishList.stream()
+                        .anyMatch(dish -> dish.getDishId().equals(orderItem.getDishId())))
+                .toList();
+        // according to the order items, select the orders associated with the merchant
+        return orderList.stream()
+                .filter(order -> selectedOrderItemList.stream()
+                        .anyMatch(orderItem -> orderItem.getOrderId().equals(order.getOrderId())))
+                .toList();
     }
 }

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Merchant Dashboard</title>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1" name="viewport">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" rel="stylesheet">
+</head>
+<body>
+<!-- Merchant Dashboard -->
+<div class="container mt-5">
+    <div style="position: absolute; right: 10px; top: 10px;">
+        <div style="font-weight: bold" th:if="${username != null}">
+            Welcome, [[${username}]]!
+        </div>
+        <div style="color: red" th:if="${username == null}">
+            You are not logged in.
+            <a href="/login">Login</a>
+        </div>
+    </div>
+    <h2 class="text-center mb-3">Merchant Dashboard</h2>
+    <div class="row">
+        <!-- Dishes -->
+        <div class="col-md-6">
+            <h4 class="mb-3">Dishes</h4>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Price</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="dish : ${dishList}">
+                    <td th:text="${dish.getName()}">Dish name</td>
+                    <td th:text="${dish.getPrice()}">Dish price</td>
+                    <td>
+                        <a th:href="@{/merchant/editDish(id=${dish.getDishId()})}" class="btn btn-primary mr-2">Edit</a>
+                        <form th:action="@{/merchant/deleteDish}" method="post">
+                            <input type="hidden" th:name="dishId" th:value="${dish.getDishId()}"/>
+                            <input type="submit" value="Delete" class="btn btn-danger"/>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <a href="/merchant/addDish" class="btn btn-primary">Add New Dish</a>
+        </div>
+        <!-- Orders -->
+        <div class="col-md-6">
+            <h4 class="mb-3">Orders</h4>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Create Time</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orderList}">
+                    <td th:text="${order.getCreateAt()}">Create Time</td>
+                    <td th:text="${order.getStatus()}">Status</td>
+                    <td th:text="${order.getTotalPrice()}">Total</td>
+                    <td>
+                        <a th:href="@{/order/{id}(id=${order.getOrderId()})}" class="btn btn-primary mr-2">View</a>
+                        <button class="btn btn-success take-order" th:data-order-id="${order.getOrderId()}">Take
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <table class="table table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>Create Time</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="order : ${orderList}">
+                    <td th:text="${order.getCreateAt()}">Create Time</td>
+                    <td th:text="${order.getStatus()}">Status</td>
+                    <td th:text="${order.getTotalPrice()}">Total</td>
+                    <td>
+                        <a th:href="@{/order/{id}(id=${order.getOrderId()})}" class="btn btn-primary mr-2">View</a>
+                        <form th:if="${order.status == 'pending'}" th:action="@{/merchant/takeOrder}" method="post"
+                              class="d-inline">
+                            <input type="hidden" th:name="orderId" th:value="${order.getOrderId()}"/>
+                            <input type="submit" value="Taken" class="btn btn-secondary"/>
+                        </form>
+                        <form th:if="${order.status == 'processing'}" th:action="@{/merchant/submitOrder}" method="post"
+                              class="d-inline">
+                            <input type="hidden" th:name="orderId" th:value="${order.getOrderId()}"/>
+                            <input type="submit" value="Submit" class="btn btn-success"/>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+</body>
+</html>

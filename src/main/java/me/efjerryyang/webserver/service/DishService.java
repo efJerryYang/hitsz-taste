@@ -35,4 +35,9 @@ public class DishService {
         logger.info("DishService.getById() called");
         return dishDAO.getById(dishId);
     }
+
+    public List<Dish> getAllByMerchantId(Long merchantId) {
+        logger.info("DishService.getAllByMerchantId() called");
+        return dishDAO.getAllByMerchantId(merchantId);
+    }
 }

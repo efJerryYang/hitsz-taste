@@ -49,4 +49,8 @@ public class MerchantService {
     public Long getNextId() {
         return merchantDAO.getNextId();
     }
+
+    public Merchant getById(Long merchantId) {
+        return merchantDAO.getById(merchantId);
+    }
 }

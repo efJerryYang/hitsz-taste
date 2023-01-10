@@ -30,5 +30,10 @@ public class MerchantUserService {
         return merchantUser;
     }
 
+    public Long getMerchantIdByUserId(Long userId) {
+        // TODO: now only support one merchant per user
+        return merchantUserDAO.getMerchantIdByUserId(userId).get(0);
+    }
+
 
 }
