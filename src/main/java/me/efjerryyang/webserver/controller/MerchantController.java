@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
@@ -26,7 +27,6 @@ public class MerchantController {
     private final MerchantUserService merchantUserService;
     @Autowired
     private HttpSession session;
-
     private List<Dish> dishList;
     private List<Order> orderList;
 
@@ -46,8 +46,7 @@ public class MerchantController {
             String username = session.getAttribute("username").toString();
             model.addAttribute("username", username);
             User user = userService.getByUsername(username);
-            Merchant merchant = null;
-
+            Merchant merchant;
             try {
                 merchant = merchantService.getById(merchantUserService.getMerchantIdByUserId(user.getUserId()));
                 if (merchant == null) {
@@ -58,6 +57,8 @@ public class MerchantController {
                 logger.error("Error retrieve merchant: {}", e.getMessage());
                 return "redirect:/dashboard";
             }
+            session.setAttribute("user", user);
+            session.setAttribute("merchant", merchant);
             if (merchantUserService.getMerchantIdByUserId(user.getUserId()) != null) {
 //                model.addAttribute("merchant", merchant);
                 model.addAttribute("merchantName", merchant.getName());
@@ -76,5 +77,37 @@ public class MerchantController {
             }
         }
         return "dashboard_merchant";
+    }
+
+    @PostMapping("/dashboard/merchant/takeOrder")
+    public String takeOrder(Long orderId) {
+        if (session.getAttribute("username") != null) {
+            String username = session.getAttribute("username").toString();
+            User user = (User) session.getAttribute("user");
+            Merchant merchant = (Merchant) session.getAttribute("merchant");
+            if (merchantUserService.getMerchantIdByUserId(user.getUserId()) != null) {
+                orderService.updateStatusById(orderId, "processing");
+                return "redirect:/dashboard/merchant";
+            } else {
+                return "redirect:/dashboard";
+            }
+        }
+        return "redirect:/dashboard/merchant";
+    }
+
+    @PostMapping("/dashboard/merchant/submitOrder")
+    public String submitOrder(Long orderId) {
+        if (session.getAttribute("username") != null) {
+            String username = session.getAttribute("username").toString();
+            User user = (User) session.getAttribute("user");
+            Merchant merchant = (Merchant) session.getAttribute("merchant");
+            if (merchantUserService.getMerchantIdByUserId(user.getUserId()) != null) {
+                orderService.updateStatusById(orderId, "completed");
+                return "redirect:/dashboard/merchant";
+            } else {
+                return "redirect:/dashboard";
+            }
+        }
+        return "redirect:/dashboard/merchant";
     }
 }

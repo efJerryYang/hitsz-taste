@@ -285,4 +285,17 @@ public class OrderDAO implements DAO<Order> {
             return null;
         }
     }
+
+    public void updateStatusById(Long orderId, String processing) {
+        logger.info("Updating order with id {} to status {}", orderId, processing);
+        String sql = "UPDATE hitsz_taste.orders SET status = ? WHERE order_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setObject(1, processing);
+            statement.setObject(2, orderId);
+            statement.executeUpdate();
+            logger.info("Successfully updated order with id {} to status {}", orderId, processing);
+        } catch (SQLException e) {
+            logger.error("Error updating order with id {} to status {} in database", orderId, processing, e);
+        }
+    }
 }

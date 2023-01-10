@@ -84,4 +84,9 @@ public class OrderService {
                         .anyMatch(orderItem -> orderItem.getOrderId().equals(order.getOrderId())))
                 .toList();
     }
+
+    public void updateStatusById(Long orderId, String processing) {
+        logger.info("Order status updated: " + orderId + " " + processing);
+        orderDAO.updateStatusById(orderId, processing);
+    }
 }
