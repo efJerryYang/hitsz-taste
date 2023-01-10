@@ -1,10 +1,10 @@
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2023/1/2 20:28:57                            */
+/* Created on:     2023/1/10 20:13:37                           */
 /*==============================================================*/
 
 
-drop trigger update_merchant_users_timestamp;
+drop trigger trigger_default_comment;
 
 alter table contracts 
    drop foreign key FK_CONTRACT_CONTRACTS_MERCHANT;
@@ -50,12 +50,6 @@ alter table user_roles
 
 alter table user_roles 
    drop foreign key FK_USER_ROL_USER_ROLE_ROLES;
-
-drop
-table if exists user_menu;
-
-drop
-table if exists dishes_with_discounts;
 
 drop table if exists cafeterias;
 
@@ -136,6 +130,8 @@ alter table user_roles
 
 drop table if exists user_roles;
 
+drop index idx_username on users;
+
 drop table if exists users;
 
 /*==============================================================*/
@@ -210,9 +206,9 @@ create table dishes
    primary key (dish_id)
 );
 
-/*==============================================================
-   Table: merchant_users
-  ==============================================================*/
+/*==============================================================*/
+/* Table: merchant_users                                        */
+/*==============================================================*/
 create table merchant_users
 (
    merchant_id          bigint not null  comment '',
@@ -316,28 +312,14 @@ create table users
 );
 
 /*==============================================================*/
-/* View: dishes_with_discounts                                  */
+/* Index: idx_username                                          */
 /*==============================================================*/
-create VIEW  dishes_with_discounts
-as
-SELECT d.dish_id, d.name, d.price, dd.discount_id, di.percentage, dd.start_date, dd.end_date
-FROM dishes d
-INNER JOIN dish_discounts dd ON d.dish_id = dd.dish_id
-INNER JOIN discounts di ON dd.discount_id = di.discount_id;
-
-/*==============================================================*/
-/* View: user_menu                                              */
-/*==============================================================*/
-create VIEW  user_menu
-as
-SELECT d.dish_id, d.name, d.price, c.name AS category, m.name AS merchant, ca.location
-FROM dishes d
-INNER JOIN categories c ON d.category_id = c.category_id
-INNER JOIN contracts co ON d.merchant_id = co.merchant_id
-INNER JOIN cafeterias ca ON co.cafeteria_id = ca.cafeteria_id
-INNER JOIN merchants m ON d.merchant_id = m.merchant_id
-WHERE co.start_date <= CURRENT_DATE
-  AND co.end_date >= CURRENT_DATE;
+create index idx_username on users
+(
+   username,
+   phone,
+   email
+);
 
 alter table contracts add constraint FK_CONTRACT_CONTRACTS_MERCHANT foreign key (merchant_id)
       references merchants (merchant_id) on delete restrict on update restrict;
@@ -384,3 +366,13 @@ alter table user_roles add constraint FK_USER_ROL_USER_ROLE_USERS foreign key (u
 alter table user_roles add constraint FK_USER_ROL_USER_ROLE_ROLES foreign key (role_id)
       references roles (role_id) on delete restrict on update restrict;
 
+DELIMITER //
+CREATE TRIGGER trigger_set_default_comment 
+AFTER INSERT ON reviews
+FOR EACH ROW
+BEGIN
+    UPDATE reviews
+    SET comment = '默认评价'
+    WHERE OLD.review_id = NEW.review_id and (comment is null or comment ='');
+END //
+DELIMITER ;

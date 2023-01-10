@@ -1,4 +1,4 @@
-drop trigger update_merchant_users_timestamp;
+drop trigger trigger_default_comment;
 alter table contracts drop foreign key FK_CONTRACT_CONTRACTS_MERCHANT;
 alter table contracts drop foreign key FK_CONTRACT_CONTRACTS_CAFETERI;
 alter table dish_discounts drop foreign key FK_DISH_DIS_DISH_DISC_DISCOUNT;
@@ -14,8 +14,6 @@ alter table orders drop foreign key FK_ORDERS_USER_ORDE_USERS;
 alter table reviews drop foreign key FK_REVIEWS_USER_REVI_USERS;
 alter table user_roles drop foreign key FK_USER_ROL_USER_ROLE_USERS;
 alter table user_roles drop foreign key FK_USER_ROL_USER_ROLE_ROLES;
-drop table if exists user_menu;
-drop table if exists dishes_with_discounts;
 drop table if exists cafeterias;
 drop table if exists categories;
 alter table contracts drop foreign key FK_CONTRACT_CONTRACTS_MERCHANT;
@@ -44,6 +42,7 @@ drop table if exists roles;
 alter table user_roles drop foreign key FK_USER_ROL_USER_ROLE_ROLES;
 alter table user_roles drop foreign key FK_USER_ROL_USER_ROLE_USERS;
 drop table if exists user_roles;
+drop index idx_username on users;
 drop table if exists users;
 create table cafeterias (
     cafeteria_id bigint not null comment '',
@@ -182,3 +181,16 @@ alter table user_roles
 add constraint FK_USER_ROL_USER_ROLE_USERS foreign key (user_id) references users (user_id) on delete restrict on update restrict;
 alter table user_roles
 add constraint FK_USER_ROL_USER_ROLE_ROLES foreign key (role_id) references roles (role_id) on delete restrict on update restrict;
+DELIMITER // 
+CREATE TRIGGER trigger_set_default_comment
+AFTER
+INSERT ON reviews FOR EACH ROW BEGIN
+UPDATE reviews
+SET comment = '默认评价'
+WHERE OLD.review_id = NEW.review_id
+    and (
+        comment is null
+        or comment = ''
+    );
+END // 
+DELIMITER;
