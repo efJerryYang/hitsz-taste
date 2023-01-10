@@ -32,13 +32,15 @@ public class OrderController {
     @GetMapping("/orders")
     public String loadOrder(Model model) {
         logger.info("OrderController.loadOrder() called");
-        String username = null;
+        String username;
         try {
             username = (String) session.getAttribute("username");
             logger.info("username: {}", username);
         } catch (NullPointerException nullPointerException) {
             logger.error("Error retrieve 'username' attribute from session: {}", nullPointerException.getMessage());
+            return "redirect:/login";
         }
+        model.addAttribute("username", username);
         if (username != null && histOrderList == null) {
             histOrderList = orderService.getAllByUserId(userService.getByUsername(username).getUserId());
         } else if (username == null) {
