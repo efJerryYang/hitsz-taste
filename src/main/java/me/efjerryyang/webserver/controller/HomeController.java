@@ -43,10 +43,19 @@ public class HomeController {
     // TODO: add updateAll and removeAll buttons
     @GetMapping("/home")
     public String home(Model model) {
+        if (session.getAttribute("initFlag") != null) {
+            initFlag = (Boolean) session.getAttribute("initFlag");
+        } else {
+            initFlag = null;
+        }
         logger.info("HomeController.home() called");
+        logger.info("inig flat in home: {}", initFlag);
         if (session.getAttribute("username") != null) {
             if (initFlag == null) {
+                logger.info("init flag: null");
                 initFlag = true;
+                logger.info("init flag: true");
+                session.setAttribute("initFlag", initFlag);
             }
             session.setAttribute("isLoggedIn", true);
             session.setAttribute("lastActivity", System.currentTimeMillis());
@@ -81,7 +90,10 @@ public class HomeController {
             System.out.println(order);
         }
         if (initFlag != null && initFlag) {
+            logger.info("init flag: not null and true");
             initFlag = false;
+            logger.info("init flat: false");
+            session.setAttribute("initFlag", initFlag);
             order.setUserId(userService.getByUsername((String) session.getAttribute("username")).getUserId());
             logger.info("The first time to load the order with a valid username");
             initializeOrderWithCheckoutForm();
