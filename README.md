@@ -1,5 +1,6 @@
 # HITSZ Taste Platform
 
+> See the latest `README` and code at [HITSZ Taste](https://github.com/efJerryYang/hitsz-taste) 
 ## Database Password Setup
 
 ### Requirements
