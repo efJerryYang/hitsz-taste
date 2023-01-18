@@ -9,7 +9,7 @@
     <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
           integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" rel="stylesheet">
 </head>
-<body>
+<body id="homePage">
 
 <div class="container">
     <h1 class="text-center">Welcome to Campus Food Delivery Platform</h1>
@@ -32,6 +32,22 @@
 <script src="/validate.js"></script>
 <script src="/sanitize.js"></script>
 <script>
+    window.onload = function () {
+        let scrollPos = document.getElementById("pageScrollPos").dataset.scrollPos;
+        window.scrollTo(0, parseInt(scrollPos));
+        let tables = document.querySelectorAll("div");
+        tables.forEach(table => {
+            let tableId = table.dataset.tableId;
+            let scrollPos = table.dataset.scrollPos;
+            // set the scroll position of the table using the tableId and scrollPos values
+            let tableElement = document.getElementById(tableId);
+            tableElement.scrollTop = parseInt(scrollPos);
+
+        });
+
+    }
+
+
     function homePageSearch() {
         // Get the search query from the form
         const query = document.getElementById("query").value;
@@ -44,7 +60,38 @@
         // jsEnabled
         document.getElementById("jsEnabled").value = "true";
     }
+
+    window.addEventListener("scroll", function () {
+        let pageId = document.getElementById("homePage").id;
+        let pageScrollPos = window.scrollY;
+        let tables = [];
+        let tableElements = document.getElementsByClassName("table table-bordered table-striped")
+        if (tableElements != null) {
+            for (let i = 0; i < tableElements.length; i++) {
+                tables.push(
+                    {
+                        tableId: tableElements[i].id,
+                        tableScrollPos: tableElements[i].getBoundingClientRect().y
+                    });
+            }
+        }
+        fetch('/save-scroll-position', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({pageId: pageId, pageScrollPos: pageScrollPos, tables: tables}),
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Handle server's response
+            });
+    });
+
 </script>
+<div th:data="${pageScrollPos}" id="pageScrollPos"></div>
+<div th:data="${tableScrollMap}" id="tableScrollMap"></div>
+<div th:each="table : ${tables}" th:data-tableId="${table.key}" th:data-scrollPos="${table.value}"
+     style="display:none;"></div>
+
 <!-- Search form -->
 <div class="container md-5">
     <form class="form-inline justify-content-center" method="get" name="searchForm"
@@ -90,7 +137,7 @@
 <div class="container">
     <h2 class="text-center mt-5 mb-3">Dishes</h2>
     <div class="dish-list" style="overflow-y: scroll; height: 400px">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped" id="welcomeDishTable">
             <!-- table content -->
             <thead>
             <tr>
@@ -123,7 +170,7 @@
 <div class="container">
     <h2 class="text-center mt-5 mb-3">Your Order</h2>
     <div class="order" style="overflow-y: scroll; height: 300px">
-        <table class="table table-bordered table-striped">
+        <table class="table table-bordered table-striped" id="welcomeOrderTable">
             <thead>
             <tr>
                 <th>Name</th>

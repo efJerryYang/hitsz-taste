@@ -26,7 +26,7 @@ public class ContractDAO implements DAO<Contract> {
     @Override
     public Contract create(Contract contract) {
         logger.info("Creating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contract.getCafeteriaId(), contract.getMerchantId(), contract.getStartTimestamp(), contract.getEndTimestamp());
-        String sql = "INSERT INTO hitsz_taste.contracts (cafeteria_id, merchant_id, start_date, end_date) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO hitsz_taste.contracts (cafeteria_id, merchant_id, start_timestamp, end_timestamp) VALUES (?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setObject(1, contract.getCafeteriaId());
             statement.setObject(2, contract.getMerchantId());
@@ -45,7 +45,7 @@ public class ContractDAO implements DAO<Contract> {
     @Override
     public Contract update(Contract object) {
         logger.info("Updating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
-        String sql = "UPDATE hitsz_taste.contracts SET cafeteria_id = ?, merchant_id = ?, start_date = ?, end_date = ? WHERE cafeteria_id = ? AND merchant_id = ? AND start_date = ? AND end_date = ?";
+        String sql = "UPDATE hitsz_taste.contracts SET cafeteria_id = ?, merchant_id = ?, start_timestamp = ?, end_timestamp = ? WHERE cafeteria_id = ? AND merchant_id = ? AND start_timestamp = ? AND end_timestamp = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the contract in the SQL statement
             logger.debug("Setting contract values in SQL statement: cafeteria_id = {}, merchant_id = {}, start_date = {}, end_date = {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
@@ -69,7 +69,7 @@ public class ContractDAO implements DAO<Contract> {
     @Override
     public Contract update(Contract contractOld, Contract contractNew) {
         logger.info("Updating contract with cafeteria id {}, merchant id {}, start date {}, end date {}", contractOld.getCafeteriaId(), contractOld.getMerchantId(), contractOld.getStartTimestamp(), contractOld.getEndTimestamp());
-        String sql = "UPDATE hitsz_taste.contracts SET cafeteria_id = ?, merchant_id = ?, start_date = ?, end_date = ? WHERE cafeteria_id = ? AND merchant_id = ? AND start_date = ? AND end_date = ?";
+        String sql = "UPDATE hitsz_taste.contracts SET cafeteria_id = ?, merchant_id = ?, start_timestamp = ?, end_timestamp = ? WHERE cafeteria_id = ? AND merchant_id = ? AND start_timestamp = ? AND end_timestamp = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             // Set the values for the contract in the SQL statement
             logger.debug("Setting contract values in SQL statement: cafeteria_id = {}, merchant_id = {}, start_date = {}, end_date = {}", contractNew.getCafeteriaId(), contractNew.getMerchantId(), contractNew.getStartTimestamp(), contractNew.getEndTimestamp());
@@ -134,7 +134,7 @@ public class ContractDAO implements DAO<Contract> {
     @Override
     public void delete(Contract object) {
         logger.info("Deleting contract with cafeteria id {}, merchant id {}, start date {}, end date {}", object.getCafeteriaId(), object.getMerchantId(), object.getStartTimestamp(), object.getEndTimestamp());
-        String sql = "DELETE FROM hitsz_taste.contracts WHERE cafeteria_id = ? AND merchant_id = ? AND start_date = ? AND end_date = ?";
+        String sql = "DELETE FROM hitsz_taste.contracts WHERE cafeteria_id = ? AND merchant_id = ? AND start_timestamp = ? AND end_timestamp = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setObject(1, object.getCafeteriaId());
             statement.setObject(2, object.getMerchantId());

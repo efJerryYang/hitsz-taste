@@ -1,6 +1,7 @@
 package me.efjerryyang.webserver.controller;
 
 import jakarta.servlet.http.HttpSession;
+import me.efjerryyang.webserver.dto.PageScrollDTO;
 import me.efjerryyang.webserver.model.Dish;
 import me.efjerryyang.webserver.model.Order;
 import me.efjerryyang.webserver.model.OrderItem;
@@ -39,10 +40,24 @@ public class HomeController {
     private UserService userService;
     @Autowired
     private ValidationService validationService;
+    @Autowired
+    private CafeteriaService cafeteriaService;
+    @Autowired
+    private MerchantService merchantService;
+
 
     // TODO: add updateAll and removeAll buttons
     @GetMapping("/home")
     public String home(Model model) {
+        // update cafeterias and merchants
+        model.addAttribute("cafeterias", cafeteriaService.getAll());
+        model.addAttribute("merchants", merchantService.getAll());
+        System.out.println("Cafeteria count: " + cafeteriaService.getAll().size());
+        System.out.println("Merchant count: " + merchantService.getAll().size());
+        if (session.getAttribute("username") == null) {
+            // user not logged in, some attributes be filled with default values
+
+        }
         if (session.getAttribute("initFlag") != null) {
             initFlag = (Boolean) session.getAttribute("initFlag");
         } else {
@@ -106,6 +121,13 @@ public class HomeController {
         if (session.getAttribute("errorMessage") != null) {
             model.addAttribute("errorCheckout", session.getAttribute("errorMessage"));
             session.removeAttribute("errorMessage");
+        }
+
+        if (session.getAttribute("pageScrollDTO") != null) {
+            logger.info("pageScrollDTO is not null");
+            PageScrollDTO pageScrollDTO = (PageScrollDTO) session.getAttribute("pageScrollDTO");
+            model.addAttribute("pageScrollPos", pageScrollDTO.getPageScrollPos());
+            model.addAttribute("tableScrollMap", session.getAttribute("tableScrollMap"));
         }
         return "home";
     }
